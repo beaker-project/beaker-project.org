@@ -1,0 +1,16 @@
+% Copyright and licensing
+
+Except as noted below, all documentation on this web site is made available
+under the [Creative Commons Attribution-ShareAlike 3.0
+license](http://creativecommons.org/licenses/by-sa/3.0/legalcode). Code is made
+available under the [GNU General Public License
+version 2](http://www.gnu.org/licenses/gpl-2.0.html).
+
+Background images are from Subtle Patterns ([Fabric
+(Plaid)](http://subtlepatterns.com/?p=939) and [Rubber
+Grip](http://subtlepatterns.com/?p=573)). They are copyright Atle Mo, used
+under the Creative Commons Attribution 3.0 license.
+
+Icons are from the
+[Tango Icon Library](http://tango.freedesktop.org/Tango_Icon_Library)
+and are in the public domain.

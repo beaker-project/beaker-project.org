@@ -1,0 +1,194 @@
+#!/bin/sh
+# This script creates some KVM guests using libvirt, and then adds them to
+# Beaker as test systems.
+
+# These are the settings for the systems which we create below.
+systems="
+    virt-10;52:54:00:22:24:a4;192.168.122.10
+    virt-11;52:54:00:22:24:a5;192.168.122.11
+    virt-12;52:54:00:22:24:a6;192.168.122.12
+"
+
+# We need to collect a few details from the user again.
+echo "This script will create three virtual systems."
+echo -n "Do you want to proceed? (y/n) "
+read answer
+if [ "$answer" != "y" -a $answer != "Y" ]; then
+    exit 1
+fi
+
+echo -n "Please enter the admin login: "
+read admin
+
+echo -n "Please enter the password for $admin: "
+stty -echo
+trap "stty echo; exit" INT TERM EXIT
+read password
+stty echo
+
+# We need libvirtd to listen over TCP on the loopback interface; that is how
+# Beaker will communicate with it, in order to reboot the guest systems. For
+# production environments it is possible to use a more secure configuration,
+# such as over SSH using key authentication.
+sed -ie 's/^#LIBVIRTD_ARGS=.*/LIBVIRTD_ARGS="--listen"/' /etc/sysconfig/libvirtd
+sed -ie '
+    s/^#listen_tls = 0/listen_tls = 0/;
+    s/^#listen_tcp = 1/listen_tcp = 1/;
+    s/^#listen_addr.*/listen_addr = "127.0.0.1"/i;
+    s/^#auth_tcp = "sasl"/auth_tcp = "none"/' /etc/libvirt/libvirtd.conf
+service libvirtd restart
+
+# Replace the default libvirt network with one that supports PXE.
+function gen_qemu_network()
+{
+virsh net-destroy default
+( cat <<__EOF__
+<network>
+  <name>default</name>
+  <bridge name="virbr0" />
+  <mac address='52:54:00:BB:C:41'/>
+  <forward/>
+  <ip address="192.168.122.1" netmask="255.255.255.0">
+    <tftp root="/var/lib/tftpboot" />
+    <dhcp>
+      <range start="192.168.122.100" end="192.168.122.254" />
+__EOF__
+for system in $systems; do
+   PIFS=$IFS
+   IFS=";"
+   set -- $system
+   name=$1
+   mac=$2
+   ip=$3
+   IFS=$PIFS
+   echo "<host mac='$mac' name='$name' ip='$ip' />"
+done
+cat <<__EOF__
+      <bootp file="pxelinux.0" />
+    </dhcp>
+  </ip>
+</network>
+__EOF__
+) | virsh net-create
+}
+
+# Define a storage pool.
+## XXX isn't this already defined by default?
+function gen_qemu_pool()
+{
+virsh pool-create <<__EOF__
+<pool type='dir'>
+  <name>default</name>
+  <capacity>34183356416</capacity>
+  <allocation>12157771776</allocation>
+  <available>22025584640</available>
+  <source>
+  </source>
+  <target>
+    <path>/var/lib/libvirt/images</path>
+    <permissions>
+      <mode>0700</mode>
+      <owner>-1</owner>
+      <group>-1</group>
+    </permissions>
+  </target>
+</pool>
+__EOF__
+}
+
+# Create a libvirt volume.
+function gen_qemu_volume()
+{
+local name="$1"
+virsh vol-create default <<__EOF__
+<volume>
+  <name>$name.img</name>
+  <key>/var/lib/libvirt/images/$name.img</key>
+  <source>
+  </source>
+  <capacity>8589934592</capacity>
+  <allocation>8589950976</allocation>
+  <target>
+    <path>/var/lib/libvirt/images/$name.img</path>
+    <format type='raw'/>
+    <permissions>
+      <mode>0600</mode>
+      <owner>0</owner>
+      <group>0</group>
+    </permissions>
+  </target>
+</volume>
+__EOF__
+}
+
+# Create a libvirt guest to be added to Beaker.
+function gen_qemu_system()
+{
+local name="$1"
+local mac="$2"
+virsh define <<__EOF__
+<domain type='kvm'>
+  <name>$name</name>
+  <memory>1048576</memory>
+  <currentMemory>1048576</currentMemory>
+  <vcpu>1</vcpu>
+  <os>
+    <type arch='x86_64' machine='rhel6.1.0'>hvm</type>
+    <boot dev='network'/>
+    <boot dev='hd'/>
+    <bootmenu enable='no'/>
+  </os>
+  <clock offset='utc'/>
+  <devices>
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='raw' cache='none' io='threads'/>
+      <source file='/var/lib/libvirt/images/$name.img'/>
+      <target dev='vda' bus='virtio'/>
+    </disk>
+    <interface type='network'>
+      <mac address='$mac'/>
+      <source network='default'/>
+      <model type='virtio'/>
+    </interface>
+    <memballoon model='virtio'/>
+  </devices>
+</domain>
+__EOF__
+}
+
+# The lab controller for each system will be ourselves.
+hostname=$(hostname -f)
+
+gen_qemu_network
+gen_qemu_pool
+
+# Create the guests in libvirt, and record them in a CSV file which we will
+# upload to Beaker.
+tmpdir=$(mktemp -d)
+trap "rm -rf $tmpdir; exit" INT TERM EXIT
+echo "csv_type,fqdn,shared,arch,lab_controller,owner,secret,status,type" >$tmpdir/01-system.csv
+echo "csv_type,fqdn,power_address,power_id,power_type" >$tmpdir/02-power.csv
+for system in $systems; do
+   PIFS=$IFS
+   IFS=";"
+   set -- $system
+   name=$1
+   mac=$2
+   ip=$3
+   IFS=$PIFS
+   echo "system,$name,True,'x86_64,i386',$hostname,admin,False,Automated,Machine" >>$tmpdir/01-system.csv
+   echo "power,$name,qemu+tcp:localhost,$name,virsh" >>$tmpdir/02-power.csv
+   echo -e "$ip\t$name" >> /etc/hosts
+   gen_qemu_volume $name
+   gen_qemu_system $name $mac
+done
+# Log in to Beaker and upload the CSV files we created.
+curl -c $tmpdir/tmpcookie -d user_name=$admin -d password=$password -d login=1 http://localhost/bkr/login || exit 1
+for csv in $tmpdir/*.csv; do
+    curl -b $tmpdir/tmpcookie --form csv_file=@$csv http://localhost/bkr/csv/action_import
+done
+rm -rf $tmpdir
+trap - INT TERM EXIT
+
+# And we're done!
+echo "All Done!"

@@ -1,0 +1,134 @@
+% Developer guide
+
+Writing a patch
+---------------
+
+Start by cloning [Beaker's git
+repository](http://git.beaker-project.org/cgit/beaker/):
+
+    git clone git://git.beaker-project.org/beaker
+
+Your work should be based on the `develop` branch:
+
+    git checkout develop
+
+This branch will become the next Beaker release. If you want to test against
+the latest released version, you can use the `master` branch. For older
+releases, use the relevant git tag.
+
+You can start a development server using the `start-server.py` script, with
+`PYTHONPATH` adjusted for the git checkout:
+
+    cd Server/
+    PYTHONPATH=../Common:. ./start-server.py
+
+Before running the development server for the first time, you must create and
+populate its database. By default it uses the `beaker` database on localhost.
+This can be changed by editing `dev.cfg`.
+
+    mysql -uroot <<"EOF"
+    CREATE DATABASE beaker;
+    GRANT ALL ON beaker.* TO 'beaker'@'localhost' IDENTIFIED BY 'beaker';
+    EOF
+    PYTHONPATH=../Common:. python bkr/server/tools/init.py \
+        --user=admin \
+        --password=adminpassword \
+        --email=me@example.com
+
+The Beaker team uses
+[RHEL 6](http://www.redhat.com/products/enterprise-linux/server/) for
+development, testing, and deployment, therefore it is recommended to use RHEL 6
+when writing your patch. Beaker should also work on Fedora 16 or higher,
+although this configuration is not well tested.
+
+If you want to set up a complete Beaker testing environment (including a lab
+controller) with the ability to provision systems and run jobs, refer to the
+[Beaker in a box](in-a-box/) quick start guide, or the more detailed
+[Installation guide](guide/Installation.html).
+
+Testing your patch
+------------------
+
+Beaker has a large and thorough suite of integration tests, including many
+[Selenium/WebDriver](http://code.google.com/p/selenium/) browser tests. You
+should test your patch by running the test suite either locally or in Beaker,
+or both.
+
+Ideally you would first run your unit test for the new feature/fix:
+
+    cd IntegrationTests/
+    ./run-tests.sh -sv bkr.inttest.path_to_my_new_test
+
+after which you should run the whole suite:
+
+    ./run-tests.sh
+
+The `run-tests.sh` script is a thin wrapper around
+[nosetests](http://readthedocs.org/docs/nose/) which sets up `PYTHONPATH` for
+running from a git checkout.
+
+You can also run the Beaker test suite in Beaker (assuming you have access to a
+working Beaker instance) using the `/distribution/beaker/dogfood` task. If your
+Beaker instance doesn't already have a copy of this task, you can build it from
+Beaker's source under the `Tasks` subdirectory. You can base your job on this
+[sample dogfood job XML](sample-dogfood-job.xml).
+
+You can use [tito](https://github.com/dgoodwin/tito) to build Beaker RPMs for
+testing:
+
+    tito build --test --rpm
+
+or if you have Mock or Koji suitably configured, tito can generate an SRPM and
+you can build from that:
+
+    tito build --test --srpm --dist .el6
+
+Submitting your patch
+---------------------
+
+The Beaker project uses the [Gerrit](http://code.google.com/p/gerrit/) code
+review tool to manage patches. All patches are reviewed on Beaker's Gerrit
+installation before being merged:
+
+> [http://gerrit.beaker-project.org/](http://gerrit.beaker-project.org)
+
+New users can sign in using any OpenID account (preferably your [Fedora
+OpenID](http://fedoraproject.org/wiki/OpenID); avoid using Google Accounts). Be
+sure to configure your e-mail addresses and SSH keys in Gerrit after creating
+your account. Your SSH key is needed to authenticate you when pushing patches
+using git. The e-mail address in your git commits must also match one of the
+e-mail addresses you have registered in Gerrit.
+
+For convenience you can add the Gerrit server as a remote to your `.git/config`:
+
+    [remote "gerrit"]
+    url = git+ssh://gerrit.beaker-project.org:29418/beaker
+
+The basic workflow is:
+
+    git checkout -b myfeature develop
+    # hack hack hack
+    # test test test
+    git commit
+
+Once you're happy with the change and the test you have written for it, push it
+to Gerrit for review:
+
+    git push gerrit myfeature:refs/for/develop
+
+A new "change" in Gerrit will be created from your commit. Beaker developers
+can then review and merge it as appropriate. See the [Gerrit
+documentation](http://gerrit.googlecode.com/svn/documentation/2.2.1/index.html)
+for more info.
+
+If your patch fixes a bug, be sure to include a reference to the Bugzilla
+number as a footer line like "Bug: 123456" in the commit message
+([example](http://git.beaker-project.org/c/b/c9bd4bf)).
+
+To update the patch on an existing change, you can use `git commit --amend`.
+You must ensure that the correct Change-Id footer appears in your amended
+commit message. Refer to the Gerrit
+[Change-Id](http://gerrit.googlecode.com/svn/documentation/2.2.1/user-changeid.html)
+documentation for more details.
+
+<!-- vim: set filetype=markdown : -->

@@ -1,0 +1,36 @@
+{% extends '!layout.html' %}
+{% block extrahead %}
+  <meta name="viewport" content="width=device-width" />
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="../style.css" rel="stylesheet" type="text/css"/>
+{% endblock %}
+{% block header %}
+<div class="header">
+  <div class="body_element">
+    <div class="title">
+      <img src="../images/logo.png" alt="Beaker" />
+    </div>
+    <nav class="menu">
+      <a href="..">about</a>
+      <a href="../help.html">help</a>
+      <a href="../download.html">download</a>
+    </nav>
+  </div>
+</div>
+{% endblock %}
+{% block relbar1 %}{% endblock %}
+{% block relbar2 %}{% endblock %}
+{% block content %}
+<div class="main_content">
+  <nav class="body_element">{{ relbar() }}</nav>
+  <article class="body_element">
+    {{ self.body() }}
+  </article>
+  <nav class="body_element">{{ relbar() }}</nav>
+</div>
+{% endblock %}
+{% block footer %}
+<!-- XXX make a footer and put it here -->
+{% endblock %}

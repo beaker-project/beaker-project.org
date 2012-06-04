@@ -1,0 +1,5 @@
+[beaker-client]
+name=Beaker Client - RedHatEnterpriseLinux$releasever
+baseurl=http://beaker-project.org/yum/client/RedHatEnterpriseLinux$releasever/
+enabled=1
+gpgcheck=0

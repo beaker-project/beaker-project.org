@@ -1,0 +1,2 @@
+*.txt   whitespace=-trailing-space
+*.html  whitespace=-trailing-space

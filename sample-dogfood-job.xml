@@ -1,0 +1,38 @@
+<job retention_tag="scratch">
+    <whiteboard>
+        beaker-0.8.1 dogfood
+    </whiteboard>
+    <recipeSet>
+        <recipe ks_meta="selinux=disabled">
+            <repos>
+                <repo name="beaker_repo_server" url="http://repos.fedorapeople.org/repos/beaker/server/RedHatEnterpriseLinux6/"/>
+                <!-- harness repo is needed so that rhts-test-env and rhts-python versions match -->
+                <repo name="beaker_repo_harness" url="http://repos.fedorapeople.org/repos/beaker/harness/RedHatEnterpriseLinux6/" />
+            </repos>
+            <distroRequires>
+                <distro_name op="=" value="RHEL-6.2"/>
+                <distro_arch op="=" value="x86_64" />
+                <distro_variant op="=" value="Server" />
+            </distroRequires>
+            <hostRequires>
+                <system_type value="Machine"/>
+                <memory op="&gt;=" value="1000" />
+            </hostRequires>
+            <task name="/distribution/install" role="STANDALONE"/>
+            <task name="/distribution/beaker/setup" role="STANDALONE">
+                <params>
+                    <param name="RHTS_OPTION_STRONGER_AVC" value=""/>
+                    <param name="SOURCE" value="_repo"/>
+                    <param name="VERSION" value="0.8.1-3"/>
+                </params>
+            </task>
+            <task name="/distribution/beaker/dogfood" role="STANDLONE">
+                <params>
+                    <param name="RHTS_OPTION_STRONGER_AVC" value=""/>
+                    <param name="VERSION" value="0.8.1-3"/>
+                    <param name="BEAKER_SKIP_INIT_DB" value=""/>
+                </params>
+            </task>
+        </recipe>
+    </recipeSet>
+</job>

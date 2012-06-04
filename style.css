@@ -1,0 +1,99 @@
+@import url("http://fonts.googleapis.com/css?family=Cabin:400,700");
+
+body {
+    line-height: 1;
+    background: url("images/fabric_plaid.png");
+    font-family: Cabin, Cantarell, "Liberation Sans", sans-serif;
+    color: #666;
+    margin: 0;
+}
+/* div.line-block is a Sphinx thing */
+p, ul, ol, dt, dd, th, td, div.line-block {
+    line-height: 1.5em;
+    color: #777;
+}
+p {
+    text-align: justify;
+}
+a {
+    text-decoration: none;
+    color: #69c;
+}
+a:hover {
+    border-bottom: 1px dotted #69c;
+}
+
+code, tt {
+    font-family: "Luxi Mono", monospace;
+    /* The ex-height ratio on monospace faces is generally much larger than 
+     * that of our body font, so let's scale them down to match better. */
+    font-size: 0.9em;
+}
+pre {
+    line-height: 1.4em;
+    padding: 1.25em;
+    border-radius: 1em;
+    background: rgba(255,255,255,0.3);
+}
+
+article, section {
+    margin-bottom: 2em;
+    clear: both;
+}
+h1 {
+    text-align: center;
+    font-size: 2em;
+    padding-bottom: 0.5em;
+    border-bottom: 2px dotted #ddd;
+}
+h2 {
+    font-size: 1.5em;
+}
+
+.header {
+    background:url("images/rubber_grip.png");
+    padding-top:10px;
+    padding-bottom:10px;
+    box-shadow: 0 1px 0 #aaa,0 0 15px #444;
+}
+.body_element {
+    max-width: 80ex;
+    margin-left:auto;
+    margin-right:auto;
+    padding: 0 0.5em;
+    position:relative;
+}
+.header .title {
+    display:inline-block;
+}
+.menu {
+    display: inline-block;
+    position:absolute;
+    right:0;
+    top:12px;
+    font-weight:bold;
+    font-size:14px;
+    line-height:14px;
+}
+.menu a {
+    padding:4px 20px 8px 20px;
+    margin-left:5px;
+    border-radius:15px;
+    color:#ddd;
+    text-decoration:none;
+}
+.menu a:hover {
+    border:none;
+    background-color:#000;
+    color:white;
+    box-shadow: 0 -1px 0 #777 inset,0 1px 0 #111 inset,0 -15px 15px rgba(0,0,0,0.3) inset;
+}
+.menu a.active {
+    background-color:#3764a5;
+    color:white;
+    box-shadow: 0 1px 0 #777 inset,0 -1px 0 #111 inset,0 -15px 15px rgba(0,0,0,0.3) inset;
+}
+.main_content {
+    margin-top: 2em;
+    clear: both;
+}
