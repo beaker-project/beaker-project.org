@@ -1,6 +1,9 @@
 /*.html
 /guide/
-/in-a-box/*.html
+/in-a-box/beaker.ks.html
+/in-a-box/beaker-setup.html
+/in-a-box/beaker-distros.html
+/in-a-box/beaker-virt.html
 /man/.buildinfo
 /man/.doctrees/
 /man/_static/
