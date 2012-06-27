@@ -1,0 +1,9 @@
+Change-Id: Ic82de18ec4fca32cbbe8fe1fd03c93176f0be14c
+Verified+1: Dan Callaghan <dcallagh@redhat.com>
+Code-Review+1: Bill Peck <bpeck@redhat.com>
+Code-Review+2: Raymond Mancy <rmancy@redhat.com>
+Submitted-by: Dan Callaghan <dcallagh@redhat.com>
+Submitted-at: Wed, 27 Jun 2012 02:54:42 -0400
+Reviewed-on: http://gerrit.beaker-project.org/1154
+Project: beaker-project.org
+Branch: refs/heads/master
