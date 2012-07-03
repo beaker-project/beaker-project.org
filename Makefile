@@ -1,4 +1,4 @@
-
+MAJOR_VERSION = 0
 BEAKER ?= ../beaker
 SPHINXBUILD = $(shell sh -c 'command -v sphinx-1.0-build sphinx-build')
 SPHINXBUILDOPTS = -W
@@ -29,9 +29,9 @@ all: guide server-api man \
 guide::
 	# publican doesn't let us specify source or dest dirs, grumble
 	( cd $(BEAKER)/pub_doc/Beaker_Guide && \
-	  publican build --publish --common_content=$(shell pwd)/publican-common --formats=html --langs=en-US ) && \
+	  publican build --publish --common_content=../publican-Beaker --formats=html --langs=en-US ) && \
 	rm -rf $@ && \
-	cp -r $(BEAKER)/pub_doc/Beaker_Guide/publish/en-US/Beaker/0/html/Deployment_Guide $@
+	cp -r $(BEAKER)/pub_doc/Beaker_Guide/publish/en-US/Beaker/$(MAJOR_VERSION)/html/Deployment_Guide $@
 
 # This __requires__ insanity is needed in Fedora if multiple versions of CherryPy are installed.
 server-api::
