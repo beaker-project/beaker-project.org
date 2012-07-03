@@ -1,5 +1,0 @@
-[beaker-server]
-name=Beaker Server - RedHatEnterpriseLinux$releasever
-baseurl=http://beaker-project.org/yum/server/RedHatEnterpriseLinux$releasever/
-enabled=1
-gpgcheck=0

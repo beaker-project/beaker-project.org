@@ -17,7 +17,7 @@ OLD_TARBALLS = \
     releases/beaker-0.4.tar.bz2
 
 .PHONY: all
-all: guide server-api man \
+all: guide server-api man yum \
      schema/beaker-job.rng \
      releases/SHA1SUM releases/index.html $(DOWNLOADS) \
      in-a-box/beaker.ks.html \
@@ -70,6 +70,9 @@ releases/SHA1SUM: $(DOWNLOADS) releases.mk
 	mkdir -p $(dir $@)
 	( cd $(dir $@) && ls -rv $(notdir $(DOWNLOADS)) $(notdir $(OLD_TARBALLS)) | xargs sha1sum ) >$@
 
+yum::
+	./build-yum-repos.py --config yum-repos.conf --dest $@
+
 in-a-box/%.html: in-a-box/%
 	$(SHOCCO) $< >$@
 
@@ -82,7 +85,8 @@ in-a-box/%.html: in-a-box/%
 
 .PHONY: check
 check:
-# ideas: spell check everything, validate HTML, check for broken links, check yum repo deps
+# ideas: spell check everything, validate HTML, check for broken links
+	./check-yum-repos.py
 
 .PHONY: publish
 publish:
