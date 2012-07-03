@@ -12,7 +12,7 @@ p, ul, ol, dt, dd, th, td, div.line-block {
     line-height: 1.5em;
     color: #777;
 }
-p {
+p, li {
     text-align: justify;
 }
 a {
@@ -21,6 +21,12 @@ a {
 }
 a:hover {
     border-bottom: 1px dotted #69c;
+}
+hr {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 2px dotted #ddd;
 }
 
 code, tt {
