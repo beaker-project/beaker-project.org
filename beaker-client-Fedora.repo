@@ -1,5 +1,0 @@
-[beaker-client]
-name=Beaker Client - Fedora$releasever
-baseurl=http://beaker-project.org/yum/client/Fedora$releasever/
-enabled=1
-gpgcheck=0

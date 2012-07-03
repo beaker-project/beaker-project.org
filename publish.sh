@@ -34,6 +34,9 @@ git rev-parse HEAD >"$D/git-rev"
 # published.
 mkdir -p "$D/releases"
 cp -p --reflink=auto releases/*.tar.* releases/*.patch "$D/releases/"
+# Same with rpms for yum repos.
+mkdir -p "$D/yum/rpms"
+cp -p --reflink=auto yum/rpms/*.rpm "$D/yum/rpms/"
 
 make -j4 -C "$D" all
 
