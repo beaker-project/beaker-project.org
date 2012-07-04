@@ -29,6 +29,7 @@ fi
 D=$(mktemp -d)
 git archive HEAD | tar -x -C "$D"
 git rev-parse HEAD >"$D/git-rev"
+GIT_DIR="$BEAKER/.git" git rev-parse HEAD >"$D/git-rev-beaker"
 # We don't want to re-build tarballs or patches, because these are quite
 # expensive, and anyway they must never change once they've been
 # published.
