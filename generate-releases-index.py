@@ -89,7 +89,7 @@ html_template = MarkupTemplate('''
 <div class="header">
   <div class="body_element">
     <div class="title">
-      <img src="../images/logo.png" alt="Beaker" />
+      <a href="../"><img src="../images/logo.png" alt="Beaker" width="110" height="40" /></a>
     </div>
     <nav class="menu">
       <a href="../">about</a>

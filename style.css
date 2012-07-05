@@ -22,6 +22,9 @@ a {
 a:hover {
     border-bottom: 1px dotted #69c;
 }
+img {
+    border: none;
+}
 hr {
     border-top: none;
     border-left: none;
@@ -71,6 +74,9 @@ h2 {
 }
 .header .title {
     display:inline-block;
+}
+.header .title a:hover {
+    border: none;
 }
 .menu {
     display: inline-block;
