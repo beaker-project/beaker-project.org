@@ -2,12 +2,13 @@
 # vim: set fileencoding=utf8 :
 
 """
-Takes Beaker's spec file on stdin and writes out the Releases page to stdout, 
+Takes Beaker's spec file and writes out the Releases page (or feed) to stdout, 
 based on the contents of the %changelog section.
 """
 
 import sys
 import re
+import datetime
 from genshi import Markup
 from genshi.template import MarkupTemplate
 
@@ -34,7 +35,7 @@ _sha1sums = dict((line[42:].rstrip('\n'), line[:40]) for line in open('releases/
 def sha1(filename):
     return _sha1sums[filename]
 
-template = MarkupTemplate('''
+html_template = MarkupTemplate('''
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:py="http://genshi.edgewall.org/">
 <head>
@@ -81,6 +82,8 @@ template = MarkupTemplate('''
         margin: 0;
     }
   </style>
+  <link rel="profile" href="http://microformats.org/profile/hatom" />
+  <link rel="alternate" type="application/atom+xml" title="Atom feed" href="index.atom" />
 </head>
 <body>
 <div class="header">
@@ -106,19 +109,23 @@ template = MarkupTemplate('''
     ${release.version}<py:if test="release.release != '-1'">${release.release}</py:if>
 </span>
 
-<article py:for="release in releases">
-    <h2>${release_descr(release)}</h2>
+<article class="hentry" py:for="release in releases" id="beaker-${release.version}${release.release}">
+    <h2 class="entry-title">${release_descr(release)}</h2>
     <div class="date">
         <time datetime="${release.date}" pubdate="pubdate">${release.date.strftime('%-1d %B %Y')}</time>
     </div>
-    <div class="downloads">
+    <div class="author vcard">
+        <span class="fn" title="${release.name}" />
+        <a class="email" href="mailto:${release.email}" />
+    </div>
+    <div class="downloads entry-content">
         <p py:for="download in release.downloads"
            class="download ${'.tar' in download and 'tarball' or ''} ${'.patch' in download and 'patch' or ''}">
             <a href="${download}">${download}</a><br />
             <span class="hash">SHA1: <tt>${sha1(download)}</tt></span>
         </p>
     </div>
-    <ul class="changelog">
+    <ul class="changelog entry-content">
         <li py:for="change in release.changes">${linkify_bugzilla(strip_change_author(change))}</li>
     </ul>
 </article>
@@ -132,7 +139,62 @@ template = MarkupTemplate('''
 </html>
 ''')
 
+atom_template = MarkupTemplate('''
+<feed xmlns="http://www.w3.org/2005/Atom"
+      xmlns:py="http://genshi.edgewall.org/">
+<id>http://beaker-project.org/releases/index.atom</id>
+<title type="text">Beaker releases</title>
+<link rel="self" type="application/atom+xml" href="http://beaker-project.org/releases/index.atom" />
+<link rel="alternate" href="http://beaker-project.org/releases/" />
+
+<entry py:for="release in releases">
+    <id>http://beaker-project.org/releases/#beaker-${release.version}${release.release}</id>
+    <published>${release.date}T00:00:00Z</published>
+    <author>
+        <name>${release.name}</name>
+        <email>${release.email}</email>
+    </author>
+    <title type="text">
+        Beaker
+        <py:if test="release.release != '-1'">hotfix release</py:if>
+        ${release.version}<py:if test="release.release != '-1'">${release.release}</py:if>
+    </title>
+    <content type="xhtml">
+    <div xmlns="http://www.w3.org/1999/xhtml">
+        <p py:for="download in release.downloads">
+            <a href="${download}">${download}</a><br />
+            <span class="hash">SHA1: <tt>${sha1(download)}</tt></span>
+        </p>
+        <ul>
+            <li py:for="change in release.changes">${linkify_bugzilla(strip_change_author(change))}</li>
+        </ul>
+    </div>
+    </content>
+</entry>
+
+</feed>
+''')
+
 if __name__ == '__main__':
-    releases = list(changelog.parse(sys.stdin.read().decode('utf8')))
-    stream = template.generate(**globals())
-    sys.stdout.write(stream.render('xhtml', doctype='html5'))
+    from optparse import OptionParser
+    parser = OptionParser('usage: %prog [options] beaker.spec', description=__doc__)
+    parser.add_option('-f', '--format', type='choice', choices=['html', 'atom'],
+            help='Output format [default: %default]')
+    parser.set_defaults(format='html')
+    options, args = parser.parse_args()
+    if len(args) != 1:
+        parser.error('Specify beaker.spec to parse')
+
+    if args[0] == '-':
+        f = sys.stdin
+    else:
+        f = open(args[0], 'r')
+    releases = list(changelog.parse(f.read().decode('utf8')))
+    if options.format == 'html':
+        stream = html_template.generate(**globals())
+        sys.stdout.write(stream.render('xhtml', doctype='html5'))
+    elif options.format == 'atom':
+        stream = atom_template.generate(**globals())
+        sys.stdout.write(stream.render('xml'))
+    else:
+        assert False

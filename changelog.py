@@ -17,11 +17,9 @@ BAD_VER_RELS = [
 
 class Release(object):
 
-    def __init__(self, version, release, date, changes):
-        self.version = version
-        self.release = release
-        self.date = date
-        self.changes = changes
+    def __init__(self, **kwargs):
+        for k, v in kwargs.iteritems():
+            setattr(self, k, v)
 
     @property
     def downloads(self):
@@ -36,13 +34,14 @@ def parse(spec):
     releases = re.split(r'(?m)(^\*.*$)', changelog)
     releases.pop(0) # empty string
     while releases:
-        date, releaser, ver, rel = re.match(
-                r'\* \w{3} (\w{3} \d+ \d{4}) (.*?) ([\d.]+)(-.*)?',
+        date, name, email, ver, rel = re.match(
+                r'\* \w{3} (\w{3} \d+ \d{4}) (.*?) <(.*?)> ([\d.]+)(-.*)?',
                 releases.pop(0)).groups()
         changes = [c.replace('%%', '%') for c in re.split(r'(?m)^- ', releases.pop(0)) if c.split()]
         if ver + rel in BAD_VER_RELS:
             continue
         date = datetime.datetime.strptime(date, '%b %d %Y').date()
-        yield Release(ver, rel, date, changes)
+        yield Release(version=ver, release=rel, date=date, changes=changes,
+                name=name, email=email)
         if (ver, rel) == ('0.6.2', '-1'):
             break # don't bother with the really old stuff

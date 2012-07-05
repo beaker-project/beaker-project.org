@@ -19,7 +19,10 @@ OLD_TARBALLS = \
 .PHONY: all
 all: guide server-api man yum \
      schema/beaker-job.rng \
-     releases/SHA1SUM releases/index.html $(DOWNLOADS) \
+     releases/SHA1SUM \
+     releases/index.html \
+     releases/index.atom \
+     $(DOWNLOADS) \
      in-a-box/beaker.ks.html \
      in-a-box/beaker-setup.html \
      in-a-box/beaker-distros.html \
@@ -52,7 +55,11 @@ releases.mk: $(BEAKER)/beaker.spec generate-releases-mk.py changelog.py
 
 releases/index.html: $(BEAKER)/beaker.spec releases/SHA1SUM generate-releases-index.py changelog.py
 	mkdir -p $(dir $@)
-	./generate-releases-index.py <$< >$@
+	./generate-releases-index.py --format=html $< >$@
+
+releases/index.atom: $(BEAKER)/beaker.spec releases/SHA1SUM generate-releases-index.py changelog.py
+	mkdir -p $(dir $@)
+	./generate-releases-index.py --format=atom $< >$@
 
 releases/%.tar.gz:
 	mkdir -p $(dir $@)
