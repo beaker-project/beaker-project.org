@@ -73,8 +73,6 @@ wget -O /usr/local/sbin/beaker-setup http://beaker-project.org/in-a-box/beaker-s
 chmod 755 /usr/local/sbin/beaker-setup
 wget -O /usr/local/sbin/beaker-distros http://beaker-project.org/in-a-box/beaker-distros
 chmod 755 /usr/local/sbin/beaker-distros
-wget -O /usr/local/sbin/beaker-tasks http://beaker-project.org/in-a-box/beaker-tasks
-chmod 755 /usr/local/sbin/beaker-tasks
 wget -O /usr/local/sbin/beaker-virt http://beaker-project.org/in-a-box/beaker-virt
 chmod 755 /usr/local/sbin/beaker-virt
 cat <<EOF >>/etc/motd
