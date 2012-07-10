@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Search Beaker</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="style.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div class="header">
+  <div class="body_element">
+    <div class="title">
+      <a href="."><img src="images/logo.png" alt="Beaker" width="110" height="40" /></a>
+    </div>
+    <nav class="menu">
+      <a href=".">about</a>
+      <a href="help.html">help</a>
+      <a href="download.html">download</a>
+    </nav>
+  </div>
+</div>
+<div class="main_content">
+  <div class="body_element">
+    <div id="cse" style="width: 100%;">Loading</div>
+    <script src="http://www.google.com/jsapi" type="text/javascript"></script>
+    <script type="text/javascript"> 
+      google.load('search', '1', {language : 'en', style : google.loader.themes.MINIMALIST});
+      google.setOnLoadCallback(function() {
+        var customSearchOptions = {};
+        customSearchOptions['adoptions'] = {'layout': 'noTop'};
+        var customSearchControl = new google.search.CustomSearchControl(
+          '000379057217241479047:jjwkmhjefoc', customSearchOptions);
+        customSearchControl.setResultSetSize(google.search.Search.FILTERED_CSE_RESULTSET);
+        var options = new google.search.DrawOptions();
+        options.setAutoComplete(true);
+        customSearchControl.draw('cse', options);
+        function parseParamsFromUrl() {
+          var params = {};
+          var parts = window.location.search.substr(1).split('\x26');
+          for (var i = 0; i < parts.length; i++) {
+            var keyValuePair = parts[i].split('=');
+            var key = decodeURIComponent(keyValuePair[0]);
+            params[key] = keyValuePair[1] ?
+                decodeURIComponent(keyValuePair[1].replace(/\+/g, ' ')) :
+                keyValuePair[1];
+          }
+          return params;
+        }
+        var urlParams = parseParamsFromUrl();
+        var queryParamName = "q";
+        if (urlParams[queryParamName]) {
+          customSearchControl.execute(urlParams[queryParamName]);
+        }
+      }, true);
+    </script>
+  </div>
+</div>
+</body>
+<!-- vim: set sw=2 : -->
+</html>
