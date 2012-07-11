@@ -34,7 +34,7 @@ guide::
 	( cd $(BEAKER)/pub_doc/Beaker_Guide && \
 	  publican build --publish --common_content=../publican-brand --formats=html --langs=en-US ) && \
 	rm -rf $@ && \
-	cp -r $(BEAKER)/pub_doc/Beaker_Guide/publish/en-US/Beaker/$(MAJOR_VERSION)/html/Deployment_Guide $@
+	cp -r $(BEAKER)/pub_doc/Beaker_Guide/publish/en-US/Beaker/$(MAJOR_VERSION)/html/Beaker_Guide $@
 
 # This __requires__ insanity is needed in Fedora if multiple versions of CherryPy are installed.
 server-api::
