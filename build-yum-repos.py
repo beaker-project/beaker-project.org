@@ -220,7 +220,7 @@ def target_repos_from_config(*config_filenames):
         descr, _, rest = section.partition('.')
         if not rest:
             hub_url = koji_config.get(config.get(section, 'source'), 'server')
-            packages_url = koji_config.get(config.get(section, 'source'), 'pkgurl')
+            packages_url = koji_config.get(config.get(section, 'source'), 'topurl') + '/packages/'
             repos[descr] = TargetRepo(name=config.get(section, 'name'),
                     distro=config.get(section, 'distro'),
                     arches=config.get(section, 'arches').split(),
