@@ -214,7 +214,7 @@ def target_repos_from_config(*config_filenames):
     repos = {}
     testing_repos = {}
     skipped = set()
-    for section in config.sections():
+    for section in sorted(config.sections()):
         if section == 'scratch_build_ids':
             continue # skip it
         descr, _, rest = section.partition('.')
