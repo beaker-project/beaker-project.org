@@ -84,8 +84,12 @@ yum::
 in-a-box/%.html: in-a-box/%
 	$(SHOCCO) $< >$@
 
+# This is annoying... at some point pandoc started ignoring the -5 option,
+# instead you have to specify -t html5 to select HTML5 output.
+PANDOC_OUTPUT_OPTS=$(if $(shell pandoc --help | grep 'Output formats:.*html5'),-t html5,-t html -5)
+
 %.html: %.txt pandoc-before-body.html pandoc-after-body.html
-	pandoc -f markdown -t html -5 --standalone --section-divs --smart --css=style.css \
+	pandoc -f markdown $(PANDOC_OUTPUT_OPTS) --standalone --section-divs --smart --css=style.css \
 	    --include-in-header=pandoc-header.html \
 	    --include-before-body=pandoc-before-body.html \
 	    --include-after-body=pandoc-after-body.html \
