@@ -89,7 +89,8 @@ in-a-box/%.html: in-a-box/%
 PANDOC_OUTPUT_OPTS=$(if $(shell pandoc --help | grep 'Output formats:.*html5'),-t html5,-t html -5)
 
 %.html: %.txt pandoc-before-body.html pandoc-after-body.html
-	pandoc -f markdown $(PANDOC_OUTPUT_OPTS) --standalone --section-divs --smart --css=style.css \
+	pandoc -f markdown $(PANDOC_OUTPUT_OPTS) --standalone --section-divs \
+	    --smart --variable=lang=en --css=style.css \
 	    --include-in-header=pandoc-header.html \
 	    --include-before-body=pandoc-before-body.html \
 	    --include-after-body=pandoc-after-body.html \
