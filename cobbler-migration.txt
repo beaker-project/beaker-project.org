@@ -13,6 +13,18 @@ However, if your site is using any Cobbler functionality directly you may need
 to take steps to migrate the configuration to Beaker.
 
 
+Default root password for installed systems
+-------------------------------------------
+
+Since version 0.8.2 the root password for installed systems can be set globally
+by the Beaker administrator, as well as individually by each user. However if
+no password was set, the Cobbler default root password was inherited from the
+`default_password_crypted` setting in `/etc/cobbler/settings`.
+
+If you have not already set a global root password in Beaker, you may want to
+set it to the same password configured in Cobbler.
+
+
 Default kernel options
 ----------------------
 
