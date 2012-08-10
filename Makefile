@@ -1,6 +1,7 @@
+SHELL = /bin/bash
 MAJOR_VERSION = 0
 BEAKER ?= ../beaker
-SPHINXBUILD = $(shell sh -c 'command -v sphinx-1.0-build sphinx-build')
+SPHINXBUILD = $(shell command -v sphinx-1.0-build sphinx-build)
 SPHINXBUILDOPTS = -W
 SHOCCO=$(HOME)/work/shocco/shocco # XXX fix this
 
@@ -62,16 +63,37 @@ releases/index.atom: $(BEAKER)/beaker.spec releases/SHA1SUM generate-releases-in
 	mkdir -p $(dir $@)
 	./generate-releases-index.py --format=atom $< >$@
 
+$(OLD_TARBALLS):
+	mkdir -p $(dir $@)
+	cd $(dir $@) && curl -# -R -f -O http://beaker-project.org/$@
+
+# Release artefacts (tarballs and patches) must never change once they have 
+# been published. So when "building" one, we always first try to grab it from 
+# the public web site in case it has already been published. Only if it doesn't 
+# exist should we *actually* build it from scratch here.
+
 releases/%.tar.gz:
 	mkdir -p $(dir $@)
+	@echo "Trying to fetch release artefact $@" ; \
+	curl -# -R -f -o$@ http://beaker-project.org/$@ ; result=$$? ; \
+	if [ $$result -ne 22 ] ; then exit $$result ; fi ; \
+	echo "Release artefact $@ not published, building it" ; \
 	( cd $(BEAKER) && flock /tmp/tito tito build --tgz --tag=$*-1 ) && cp /tmp/tito/$*.tar.gz $@
 
 releases/%.tar.xz: releases/%.tar.gz
 	mkdir -p $(dir $@)
+	@echo "Trying to fetch release artefact $@" ; \
+	curl -# -R -f -o$@ http://beaker-project.org/$@ ; result=$$? ; \
+	if [ $$result -ne 22 ] ; then exit $$result ; fi ; \
+	echo "Release artefact $@ not published, building it" ; \
 	gunzip -c $< | xz >$@
 
 releases/%.patch:
 	mkdir -p $(dir $@)
+	@echo "Trying to fetch release artefact $@" ; \
+	curl -# -R -f -o$@ http://beaker-project.org/$@ ; result=$$? ; \
+	if [ $$result -ne 22 ] ; then exit $$result ; fi ; \
+	echo "Release artefact $@ not published, building it" ; \
 	( cd $(BEAKER) && flock /tmp/tito tito build --tgz --tag=$* ) && cp /tmp/tito/$*.patch $@
 
 releases/SHA1SUM: $(DOWNLOADS) releases.mk
