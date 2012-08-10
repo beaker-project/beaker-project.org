@@ -3,7 +3,6 @@ MAJOR_VERSION = 0
 BEAKER ?= ../beaker
 SPHINXBUILD = $(shell command -v sphinx-1.0-build sphinx-build)
 SPHINXBUILDOPTS = -W
-SHOCCO=$(HOME)/work/shocco/shocco # XXX fix this
 
 ARTICLES = COPYING.html dev-guide.html cobbler-migration.html
 
@@ -104,7 +103,7 @@ yum::
 	./build-yum-repos.py --config yum-repos.conf --dest $@
 
 in-a-box/%.html: in-a-box/%
-	$(SHOCCO) $< >$@
+	./shocco.sh $< >$@
 
 # This is annoying... at some point pandoc started ignoring the -5 option,
 # instead you have to specify -t html5 to select HTML5 output.
