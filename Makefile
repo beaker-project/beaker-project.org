@@ -32,7 +32,7 @@ all: guide server-api man yum \
 guide::
 	# publican doesn't let us specify source or dest dirs, grumble
 	( cd $(BEAKER)/pub_doc/Beaker_Guide && \
-	  publican clean && \
+	  publican clean --publish --common_content=../publican-brand && \
 	  publican build --publish --common_content=../publican-brand --formats=html --langs=en-US ) && \
 	rm -rf $@ && \
 	cp -r $(BEAKER)/pub_doc/Beaker_Guide/publish/en-US/Beaker/$(MAJOR_VERSION)/html/Beaker_Guide $@
