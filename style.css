@@ -32,6 +32,10 @@ hr {
     border-bottom: 2px dotted #ddd;
 }
 
+table {
+    border: 1
+}
+
 code, tt {
     font-family: "Luxi Mono", monospace;
     /* The ex-height ratio on monospace faces is generally much larger than 
@@ -43,6 +47,7 @@ pre {
     padding: 1.25em;
     border-radius: 1em;
     background: rgba(255,255,255,0.3);
+    overflow: auto;
 }
 
 article, section {

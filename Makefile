@@ -114,6 +114,7 @@ PANDOC_OUTPUT_OPTS=$(if $(shell pandoc --help | grep 'Output formats:.*html5'),-
 	pandoc -f markdown $(PANDOC_OUTPUT_OPTS) --standalone --section-divs \
 	    --smart --variable=lang=en --css=style.css \
 	    --include-in-header=pandoc-header.html \
+	    --toc \
 	    --include-before-body=pandoc-before-body.html \
 	    --include-after-body=pandoc-after-body.html \
 	    <$< >$@
