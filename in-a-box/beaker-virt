@@ -176,7 +176,7 @@ for system in $systems; do
    mac=$2
    ip=$3
    IFS=$PIFS
-   echo "system,$name,True,'x86_64,i386',$hostname,admin,False,Automated,Machine" >>$tmpdir/01-system.csv
+   echo "system,$name,True,\"x86_64,i386\",$hostname,admin,False,Automated,Machine" >>$tmpdir/01-system.csv
    echo "power,$name,qemu+tcp:localhost,$name,virsh" >>$tmpdir/02-power.csv
    echo -e "$ip\t$name" >> /etc/hosts
    gen_qemu_volume $name

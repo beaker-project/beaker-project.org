@@ -1,11 +1,11 @@
 
 # Beaker is developed and tested on Red Hat Enterprise Linux 6, but any
 # compatible distro should work as well.
-url --url=http://mirror.centos.org/centos/6.2/os/x86_64/
-repo --name=install --baseurl=http://mirror.centos.org/centos/6.2/os/x86_64/
-repo --name=updates --baseurl=http://mirror.centos.org/centos/6.2/updates/x86_64/
-repo --name=extras --baseurl=http://mirror.centos.org/centos/6.2/extras/x86_64/
-repo --name=cr --baseurl=http://mirror.centos.org/centos/6.2/cr/x86_64/
+url --url=http://mirror.centos.org/centos/6/os/x86_64/
+repo --name=install --baseurl=http://mirror.centos.org/centos/6/os/x86_64/
+repo --name=updates --baseurl=http://mirror.centos.org/centos/6/updates/x86_64/
+repo --name=extras --baseurl=http://mirror.centos.org/centos/6/extras/x86_64/
+repo --name=cr --baseurl=http://mirror.centos.org/centos/6/cr/x86_64/
 repo --name=beaker-server --baseurl=http://beaker-project.org/yum/server/RedHatEnterpriseLinux6/
 
 # If you're feeling adventurous, you could try Fedora instead. Bug reports are

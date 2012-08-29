@@ -86,11 +86,13 @@ popd
 rm -rf $tmpdir
 trap - INT TERM EXIT
 
-# The beaker-proxy and beaker-watchdog daemons run on the lab controller.
+# The beaker-proxy, beaker-watchdog, and beaker-provision daemons run on the lab controller.
 chkconfig beaker-proxy on
 service beaker-proxy start
 chkconfig beaker-watchdog on
 service beaker-watchdog start
+chkconfig beaker-provision on
+service beaker-provision start
 # The beaker-transfer daemon is not needed when the lab controller and the
 # scheduler are the same machine.
 #chkconfig beaker-transfer on

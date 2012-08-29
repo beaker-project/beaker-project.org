@@ -4,26 +4,26 @@
 echo "This script will import distros into Beaker."
 echo "The distros will not be mirrored locally."
 echo "The following distros will be imported:"
-echo " CentOS-5.7 x86_64"
-echo " CentOS-5.7 i386"
-echo " CentOS-6.2 x86_64"
-echo " CentOS-6.2 i386"
-echo " Fedora-15 x86_64"
-echo " Fedora-15 i386"
+echo " CentOS-5 x86_64"
+echo " CentOS-5 i386"
+echo " CentOS-6 x86_64"
+echo " CentOS-6 i386"
 echo " Fedora-16 x86_64"
 echo " Fedora-16 i386"
+echo " Fedora-17 x86_64"
+echo " Fedora-17 i386"
 echo -n "Do you want to proceed? (y/n) "
 read answer
 if [ "$answer" != "y" -a $answer != "Y" ]; then
     exit 1
 fi
 
-beaker-import http://mirror.centos.org/centos/5.7/os/x86_64/
-beaker-import http://mirror.centos.org/centos/5.7/os/i386/
-beaker-import http://mirror.centos.org/centos/6.2/os/x86_64/
-beaker-import http://mirror.centos.org/centos/6.2/os/i386/
-beaker-import http://download.fedoraproject.org/pub/fedora/linux/releases/15/Fedora/x86_64/os
-beaker-import http://download.fedoraproject.org/pub/fedora/linux/releases/15/Fedora/i386/os
+beaker-import http://mirror.centos.org/centos/5/os/x86_64/
+beaker-import http://mirror.centos.org/centos/5/os/i386/
+beaker-import http://mirror.centos.org/centos/6/os/x86_64/
+beaker-import http://mirror.centos.org/centos/6/os/i386/
+beaker-import http://download.fedoraproject.org/pub/fedora/linux/releases/17/Fedora/x86_64/os
+beaker-import http://download.fedoraproject.org/pub/fedora/linux/releases/17/Fedora/i386/os
 beaker-import http://download.fedoraproject.org/pub/fedora/linux/releases/16/Fedora/x86_64/os
 beaker-import http://download.fedoraproject.org/pub/fedora/linux/releases/16/Fedora/i386/os
 
