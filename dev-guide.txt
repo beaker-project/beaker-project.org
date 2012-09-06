@@ -48,11 +48,13 @@ controller) with the ability to provision systems and run jobs, refer to the
 Running Lab Controller processes in a development environment is currently not
 well tested.
 
-## Repo layout ##
+## Source code walk-through ##
 
-Please see the README file in the root directory of the source code repository.
+Please see the [README](http://git.beaker-project.org/cgit/beaker/tree/README)
+file in the root directory of Beaker's source tree for a detailed description
+of its layout.
 
-## Lab Controller ##
+### Lab Controller ###
 The lab controller is the intermediary point of communication between the
 lab machines, and the beaker server. It provides entry points for the following
 processes:
@@ -65,7 +67,7 @@ processes:
 These processes authenticate themselves using the credentials found in
 `/etc/beaker/labcontroller.conf`.
 
-### beaker-proxy ####
+#### beaker-proxy ####
 beaker-proxy is a process that binds to an open unprivileged port on the lab 
 controller. It provides an xmlrpc server that more or less forwards calls 
 made to it (from lab machines) onto the beaker server.
@@ -87,7 +89,7 @@ returns `bkr.server.taskactions.task_info`. The `hub` variable is a `HubProxy`
 class from `kobo.client`. `HubProxy` in turn is merely a thin wrapper 
 over `xmlrpclib.ServerProxy` that adds session based authentication management.
 
-### beaker-transfer ###
+#### beaker-transfer ####
 When provisioning a system in beaker, Beaker transfers various log files to 
 the lab controller as a matter of course. Even more log files are created when 
 running an actual recipe. By default, these logs are uploaded from the test 
@@ -98,7 +100,7 @@ specify a remote server where the log files can be moved to. Once configured,
 beaker-transfer is responsible for moving these files from the lab controller 
 to the remote server.
 
-### beaker-watchdog ###
+#### beaker-watchdog ####
 To ensure that recipes do not run on for longer than what they are expected to, 
 Beaker uses a watchdog process. This process keeps track of running recipes on 
 all test systems attached to a particular lab controller. If a recipe is 
@@ -123,7 +125,7 @@ Here is a breakdown of how the process works:
    local watchdog) and beaker-watchdog (also known as external watchdog) is
    ten minutes.
 
-### beaker-provision ###
+#### beaker-provision ####
 It is the responsibility of beaker-provision to handle the provisioning of a 
 system. Its main duties are creating boot loader images and power cycling 
 systems.
@@ -138,7 +140,7 @@ Here is a breakdown of how this process works:
    configuration file, and then power cycles the test system.
 4) The system boots and starts its install.
 
-## Server ##
+### Server ###
 The main focus of the beaker server is to maintain a distro and system 
 inventory, run tasks against this inventory, and display the results of those 
 tasks. Any interaction with this inventory must be via the server.
@@ -183,7 +185,7 @@ As a result of being built on TG, Beaker is an MVC inspired application.
 Whilst it mostly follows TG conventions, Beaker does sometimes go outside of 
 these when it's appropriate (and advantageous) to do so.
 
-### Model ###
+#### Model ####
 The `bkr.server.model` module primarily consists of Object Relational Mapped 
 (ORM) classes. Fundamentally, these are user defined python classes associated 
 to database tables, the objects of which are mapped to rows in the related table.
@@ -216,7 +218,7 @@ Some basic guidelines to follow when modifying model:
  * Remember to define relevant cascade options.
 
 
-### Controllers ###
+#### Controllers ####
 A controller is called when a HTTP request is made. The URL is translated to
 a particular controller. CherryPy is responsible for handling this method
 look-up. For example, a call to *http://beaker.example.com/tasks/executed*
@@ -236,7 +238,7 @@ task details, as well as methods designed to be called remotely to provide
 details of `Task` objects).
 
 
-### View ###
+#### View ####
 Both Kid templates and TG widgets are used to support the 'View' of MVC.
 Beaker uses TG widgets to provide re-usability of commonly rendered page
 elements. A widget encapsulates the template to be rendered, as well as any
@@ -251,7 +253,7 @@ Templates are used in one of two ways; by specifying a template in an 'expose'
 decorator; by setting the template variable in a widget, and then calling that
 widget's 'display' method. Examples of both will be shown in the patch walk-through.
 
-## Client ##
+### Client ###
 The beaker-client package provides shell commands that makes varied calls
 to the server. The format of the calls are `bkr <cmd> <options>`, where `<cmd>` 
 corresponds to a module in the  `bkr/client/commands`  directory. The modules 
