@@ -63,6 +63,9 @@ h1 {
 h2 {
     font-size: 1.5em;
 }
+nav#TOC {
+    border-bottom: 2px dotted #ddd;
+}
 
 .header {
     background:url("images/rubber_grip.png");
