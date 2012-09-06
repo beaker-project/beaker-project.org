@@ -116,7 +116,7 @@ PANDOC_OUTPUT_OPTS=$(if $(shell pandoc --help | grep 'Output formats:.*html5'),-
 	    --toc \
 	    --include-before-body=pandoc-before-body.html \
 	    --include-after-body=pandoc-after-body.html \
-	    <$< >$@
+	    <$< | ./pandoc-fixes.py >$@
 
 .PHONY: check
 check:
