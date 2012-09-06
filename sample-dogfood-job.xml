@@ -1,16 +1,18 @@
 <job retention_tag="scratch">
     <whiteboard>
-        beaker-0.8.1 dogfood
+        beaker dogfood
     </whiteboard>
     <recipeSet>
         <recipe ks_meta="selinux=disabled">
             <repos>
-                <repo name="beaker_repo_server" url="http://repos.fedorapeople.org/repos/beaker/server/RedHatEnterpriseLinux6/"/>
-                <!-- harness repo is needed so that rhts-test-env and rhts-python versions match -->
-                <repo name="beaker_repo_harness" url="http://repos.fedorapeople.org/repos/beaker/harness/RedHatEnterpriseLinux6/" />
+                <repo name="beaker_repo_server" url="http://beaker-project.org/yum/server/RedHatEnterpriseLinux6/" />
+                <!-- A normal job would not need to define the harness repo, 
+                     but when installing Beaker we need the rhts-test-env and 
+                     rhts-python versions to match exactly. -->
+                <repo name="beaker_repo_harness" url="http://beaker-project.org/yum/harness/RedHatEnterpriseLinux6/" />
             </repos>
             <distroRequires>
-                <distro_name op="=" value="RHEL-6.2"/>
+                <distro_name op="=" value="RHEL-6.3"/>
                 <distro_arch op="=" value="x86_64" />
                 <distro_variant op="=" value="Server" />
             </distroRequires>
@@ -23,14 +25,16 @@
                 <params>
                     <param name="RHTS_OPTION_STRONGER_AVC" value=""/>
                     <param name="SOURCE" value="_repo"/>
-                    <param name="VERSION" value="0.8.1-3"/>
+                    <!-- If you'd like to install a specific version, 
+                         you can pass it here and below. -->
+                    <!--<param name="VERSION" value="-0.9.3-6.el6eng"/>-->
                 </params>
             </task>
             <task name="/distribution/beaker/dogfood" role="STANDLONE">
                 <params>
                     <param name="RHTS_OPTION_STRONGER_AVC" value=""/>
-                    <param name="VERSION" value="0.8.1-3"/>
                     <param name="BEAKER_SKIP_INIT_DB" value=""/>
+                    <!--<param name="VERSION" value="-0.9.3-6.el6eng"/>-->
                 </params>
             </task>
         </recipe>
