@@ -117,3 +117,9 @@ nav#TOC {
     margin-top: 2em;
     clear: both;
 }
+
+/* Override the CSS rule from Pygments (used by Sphinx for highlighted code 
+ * blocks) that uglifies our code blocks: */
+.highlight {
+    background: none !important;
+}
