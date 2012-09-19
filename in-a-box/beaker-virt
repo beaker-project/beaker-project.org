@@ -45,8 +45,8 @@ virsh net-destroy default
 ( cat <<__EOF__
 <network>
   <name>default</name>
-  <bridge name="virbr0" />
-  <mac address='52:54:00:BB:C:41'/>
+  <bridge name="virbr1" />
+  <mac address='52:54:00:BB:C:19'/>
   <forward/>
   <ip address="192.168.122.1" netmask="255.255.255.0">
     <tftp root="/var/lib/tftpboot" />
@@ -69,14 +69,14 @@ cat <<__EOF__
   </ip>
 </network>
 __EOF__
-) | virsh net-create
+) | virsh net-create /dev/stdin
 }
 
 # Define a storage pool.
 ## XXX isn't this already defined by default?
 function gen_qemu_pool()
 {
-virsh pool-create <<__EOF__
+( cat <<__EOF__
 <pool type='dir'>
   <name>default</name>
   <capacity>34183356416</capacity>
@@ -94,13 +94,14 @@ virsh pool-create <<__EOF__
   </target>
 </pool>
 __EOF__
+) | virsh pool-create /dev/stdin
 }
 
 # Create a libvirt volume.
 function gen_qemu_volume()
 {
 local name="$1"
-virsh vol-create default <<__EOF__
+( cat <<__EOF__
 <volume>
   <name>$name.img</name>
   <key>/var/lib/libvirt/images/$name.img</key>
@@ -119,6 +120,7 @@ virsh vol-create default <<__EOF__
   </target>
 </volume>
 __EOF__
+) | virsh vol-create default /dev/stdin
 }
 
 # Create a libvirt guest to be added to Beaker.
@@ -126,7 +128,7 @@ function gen_qemu_system()
 {
 local name="$1"
 local mac="$2"
-virsh define <<__EOF__
+(cat  <<__EOF__
 <domain type='kvm'>
   <name>$name</name>
   <memory>1048576</memory>
@@ -151,9 +153,11 @@ virsh define <<__EOF__
       <model type='virtio'/>
     </interface>
     <memballoon model='virtio'/>
+    <graphics type='vnc' port='-1' autoport='yes' keymap='en-us'/>
   </devices>
 </domain>
 __EOF__
+) | virsh define /dev/stdin
 }
 
 # The lab controller for each system will be ourselves.
@@ -176,7 +180,7 @@ for system in $systems; do
    mac=$2
    ip=$3
    IFS=$PIFS
-   echo "system,$name,True,\"x86_64,i386\",$hostname,admin,False,Automated,Machine" >>$tmpdir/01-system.csv
+   echo "system,$name,True,\"x86_64,i386\",$hostname,$admin,False,Automated,Machine" >>$tmpdir/01-system.csv
    echo "power,$name,qemu+tcp:localhost,$name,virsh" >>$tmpdir/02-power.csv
    echo -e "$ip\t$name" >> /etc/hosts
    gen_qemu_volume $name
