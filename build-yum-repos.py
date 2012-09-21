@@ -134,7 +134,7 @@ class TargetRepo(object):
 
     def _mirror_rpms_for_build(self, buildinfo, rpms):
         for rpm in rpms:
-            if rpm['arch'] not in self.arches + ['noarch']:
+            if rpm['arch'] not in self.arches + ['noarch', 'src']:
                 continue
             if rpm['name'] not in self.rpm_names:
                 continue
@@ -159,7 +159,7 @@ class TargetRepo(object):
                 m = pattern.match(filename)
                 if m:
                     arch = m.group(1)
-                    if arch in self.arches + ['noarch']:
+                    if arch in self.arches + ['noarch', 'src']:
                         dest_filename = os.path.join(self.basedir, 'rpms', filename)
                         if os.path.exists(dest_filename):
                             print 'Skipping %s' % dest_filename
