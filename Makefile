@@ -125,4 +125,6 @@ check:
 
 .PHONY: publish
 publish:
+	git fetch beaker-project.org:/srv/www/beaker-project.org/git master:published
+	git fetch beaker-project.org:/srv/www/stage.beaker-project.org/git master:published
 	env BEAKER="$(abspath $(BEAKER))" ./publish.sh published
