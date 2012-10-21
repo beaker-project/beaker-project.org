@@ -12,8 +12,11 @@ from ConfigParser import SafeConfigParser
 import imp
 repoclosure = imp.load_source('repoclosure', '/usr/bin/repoclosure') # from yum-utils
 
-def check_deps(base_dir, local_repo, repo_urls, arches):
-    rc = repoclosure.RepoClosure(arch=['noarch'] + arches, config='/etc/yum/yum.conf')
+def check_deps(base_dir, local_repo, repo_urls, arches, build_deps=False):
+    closure_arches = ['noarch'] + arches
+    if build_deps:
+        closure_arches.append('src')
+    rc = repoclosure.RepoClosure(arch=closure_arches, config='/etc/yum/yum.conf')
     rc.setCacheDir(True)
     rc.repos.disableRepo('*')
     local_repo_id = local_repo.replace('/', '-')
@@ -53,7 +56,8 @@ def checks_from_config(base_dir, config):
         print 'Checking dependencies for %s' % section
         check_deps(base_dir, local_repo,
                 config.get(section, 'repos').split(),
-                config.get(section, 'arches').split())
+                config.get(section, 'arches').split(),
+                config.has_option(section, 'build-deps') and config.getboolean(section, 'build-deps'))
 
 if __name__ == '__main__':
     from optparse import OptionParser
