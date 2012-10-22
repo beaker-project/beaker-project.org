@@ -37,6 +37,13 @@ def check_deps(base_dir, local_repo, repo_urls, arches, build_deps=False):
     rc.pkgonly = list(set(pkg.name for pkg in
             rc.repos.getRepo(local_repo_id).getPackageSack().returnNewestByNameArch()))
     broken_deps = rc.getBrokenDeps()
+
+    # XXX annoying hack: this is due to UsrMove in Fedora 17 but I'm not sure how to fix it
+    for pkg in broken_deps:
+        broken_deps[pkg] = [breakage for breakage in broken_deps[pkg]
+                if breakage[0] != '/bin/python']
+    broken_deps = dict((pkg, broken) for pkg, broken in broken_deps.iteritems() if broken)
+
     if broken_deps:
         print '%r failed dependency check using repos:' % local_repo
         for repo_url in repo_urls:
