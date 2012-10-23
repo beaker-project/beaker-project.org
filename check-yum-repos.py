@@ -7,21 +7,26 @@ Script for checking dependencies in yum repos for Beaker
 import sys
 import os, os.path
 from ConfigParser import SafeConfigParser
+import urlparse
 
 # XXX dodgy
 import imp
 repoclosure = imp.load_source('repoclosure', '/usr/bin/repoclosure') # from yum-utils
 
-def check_deps(base_dir, local_repo, repo_urls, arches, build_deps=False):
+def check_deps(base, local_repo, repo_urls, arches, build_deps=False):
     closure_arches = ['noarch'] + arches
     if build_deps:
         closure_arches.append('src')
     rc = repoclosure.RepoClosure(arch=closure_arches, config='/etc/yum/yum.conf')
     rc.setCacheDir(True)
     rc.repos.disableRepo('*')
-    local_repo_id = local_repo.replace('/', '-')
-    rc.add_enable_repo(local_repo_id,
-            baseurls=['file://' + os.path.abspath(os.path.join(base_dir, local_repo))])
+    if not urlparse.urlparse(base).scheme:
+        base = 'file://' + os.path.abspath(base)
+    if not base.endswith('/'):
+        base += '/' # it's supposed to be a dir
+    local_repo_url = urlparse.urljoin(base, local_repo)
+    local_repo_id = local_repo_url.replace('/', '-')
+    rc.add_enable_repo(local_repo_id, baseurls=[local_repo_url])
     # Expand $arch in repo URLs
     for repo_url in list(repo_urls):
         if '$arch' in repo_url:
@@ -54,14 +59,11 @@ def check_deps(base_dir, local_repo, repo_urls, arches, build_deps=False):
                 print '    ' + repr(breakage)
         sys.exit(1)
 
-def checks_from_config(base_dir, config):
+def checks_from_config(base, config):
     for section in config.sections():
         local_repo, _, descr = section.partition('.')
-        if not os.path.exists(os.path.join(base_dir, local_repo)):
-            print 'Skipping nonexistent %s' % local_repo
-            continue
         print 'Checking dependencies for %s' % section
-        check_deps(base_dir, local_repo,
+        check_deps(base, local_repo,
                 config.get(section, 'repos').split(),
                 config.get(section, 'arches').split(),
                 config.has_option(section, 'build-deps') and config.getboolean(section, 'build-deps'))
@@ -70,11 +72,11 @@ if __name__ == '__main__':
     from optparse import OptionParser
     parser = OptionParser('usage: %prog [options]',
             description='Checks dependencies for Beaker repos according to a config file.')
-    parser.add_option('-d', '--base-dir', metavar='DIR',
-            help='look for repos under DIR [default: %default]')
+    parser.add_option('-d', '--base', metavar='LOCATION',
+            help='look for repos under LOCATION (either directory or absolute URL) [default: %default]')
     parser.add_option('-c', '--config', metavar='FILE', action='append', dest='config_filenames',
             help='load configuration from FILE')
-    parser.set_defaults(base_dir='yum', config_filenames=['repoclosure.conf'])
+    parser.set_defaults(base='yum', config_filenames=['repoclosure.conf'])
 
     options, args = parser.parse_args()
     if args:
@@ -82,4 +84,4 @@ if __name__ == '__main__':
 
     config = SafeConfigParser()
     config.read(options.config_filenames)
-    checks_from_config(options.base_dir, config)
+    checks_from_config(options.base, config)
