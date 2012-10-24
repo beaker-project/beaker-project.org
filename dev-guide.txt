@@ -1,5 +1,33 @@
 % Developer guide
 
+## Beaker Repository Structure ##
+
+Beaker consists of several different components. The largest and most
+critical are a set of web services that manage an inventory of hardware
+systems distributed across multiple labs and take care of provisioning
+systems appropriately and dispatching jobs to them.
+
+This is the software that is developed in the [main Beaker git
+repository](http://git.beaker-project.org/cgit/beaker/)
+(click link to browse). The bulk of this developer guide focuses on this
+component.
+
+However, http://git.beaker-project.org plays host to a few other components
+which are also considered part of the wider "Beaker project":
+
+* [beaker-project.org](http://git.beaker-project.org/cgit/beaker-project.org/):
+  The source for the project web site (including this developer's guide)
+* [beah](http://git.beaker-project.org/cgit/beah/): The test harness used
+  to communicate between running tests and the Beaker infrastructure. Other
+  test harnesses (such as autotest or STAF) are not yet officially supported.
+  Unlike the Beaker web services (which are only officially supported on the
+  platforms described below), the test harness must run on all operating
+  systems supported for testing.
+* [rhts](http://git.beaker-project.org/cgit/rhts/): The code in this repo
+  isn't part of Beaker as such, it's a collection of utilities designed
+  to help with writing and running Beaker test cases.
+
+
 ## Running Beaker ##
 
 Start by cloning [Beaker's git
@@ -15,15 +43,27 @@ This branch will become the next Beaker release. If you want to test against
 the latest released version, you can use the `master` branch. For older
 releases, use the relevant git tag.
 
-You can start a development server using the `start-server.py` script, with
-`PYTHONPATH` adjusted for the git checkout:
+Beaker currently only supports MySQL with InnoDB as the database backend (it
+does use SQL Alchemy internally though, so porting it to an alternate backend
+shouldn't be too difficult). On RHEL and Fedora systems, MySQL can easily
+be installed with:
 
-    cd Server/
-    PYTHONPATH=../Common:. ./start-server.py
+    # yum install mysql
+
+For Beaker development, the following settings should be added to
+`/etc/my.cnf` in the `[mysqld]` section before starting the MySQL daemon:
+
+    default-storage-engine=INNODB
+    max_allowed_packet=50M
+    character-set-server=utf8
+
+Once these settings are in place, start the database daemon:
+
+    # service mysqld start
 
 Before running the development server for the first time, you must create and
-populate its database. By default it uses the `beaker` database on localhost.
-This can be changed by editing `dev.cfg`.
+populate its database (your working directory should be the `Server`
+subdirectory of your local clone of the main beaker project):
 
     mysql -uroot <<"EOF"
     CREATE DATABASE beaker;
@@ -33,7 +73,16 @@ This can be changed by editing `dev.cfg`.
         --user=admin \
         --password=adminpassword \
         --email=me@example.com
-    EOF
+
+By default this uses the `beaker` database on localhost. This can be changed
+by editing `dev.cfg` and updating the above configuration commands
+appropriately.
+
+You can then start a development server using the `start-server.py` script,
+with `PYTHONPATH` adjusted for the git checkout:
+
+    cd Server/
+    PYTHONPATH=../Common:. ./start-server.py
 
 The Beaker team uses
 [RHEL 6](http://www.redhat.com/products/enterprise-linux/server/) for
@@ -491,12 +540,30 @@ Beaker has a large and thorough suite of integration tests, including many
 should test your patch by running the test suite either locally or in Beaker,
 or both.
 
-Ideally you would first run your unit test for the new feature/fix:
+In order to run the test suite locally, you must create the additional
+test database in your local MySQL instance:
+
+    mysql -uroot <<"EOF"
+    CREATE DATABASE beaker_test;
+    GRANT ALL ON beaker_test.* TO 'beaker'@'localhost' IDENTIFIED BY 'beaker';
+    EOF
+
+In addition, the necessary Selenium support is not yet available as an RPM,
+so it is necessary to download
+[this jar file](http://code.google.com/p/selenium/downloads/detail?name=selenium-server-standalone-2.21.0.jar&can=1&q=)
+and save it as `/usr/local/share/selenium/selenium-server-standalone-2.21.0.jar`.
+(Yes, it must be that exact version at that exact path. The longer term
+fix to make this step cleaner is to provide an appropriate RPM in the Beaker
+repos)
+
+While working on your patch, you would run the unit test for your new
+feature/fix:
 
     cd IntegrationTests/
     ./run-tests.sh -sv bkr.inttest.path_to_my_new_test
 
-after which you should run the whole suite:
+Once the new or updated test is passing, you should also run the whole
+suite to check for unintended side effects:
 
     ./run-tests.sh
 
