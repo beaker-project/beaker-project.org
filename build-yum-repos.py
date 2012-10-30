@@ -33,13 +33,14 @@ class TargetRepo(object):
     then call build() to do it.
     """
 
-    def __init__(self, name, distro, tag, arches, hub_url, packages_url):
+    def __init__(self, name, distro, tag, arches, downgradeable, hub_url, topurl):
         self.name = name
         self.distro = distro
         self.tag = tag
         self.arches = arches
+        self.downgradeable = downgradeable
         self.hub_url = hub_url
-        self.packages_url = packages_url
+        self.topurl = topurl
         self.package_names = set()
         self.package_tags = {}
         self.rpm_names = set()
@@ -90,17 +91,22 @@ class TargetRepo(object):
         package_names = list(self.package_names)
         koji_session.multicall = True
         for package_name in package_names:
-            koji_session.getLatestRPMS(
-                    self.package_tags.get(package_name, self.tag),
-                    package_name)
+            if self.downgradeable:
+                koji_session.listTaggedRPMS(
+                        self.package_tags.get(package_name, self.tag),
+                        inherit=True, package=package_name)
+            else:
+                koji_session.getLatestRPMS(
+                        self.package_tags.get(package_name, self.tag),
+                        package_name)
         for i, result in enumerate(koji_session.multiCall()):
             if 'faultCode' in result:
                 raise xmlrpclib.Fault(result['faultCode'], result['faultString'])
             if not result or not result[0] or not result[0][1]:
                 raise ValueError('Package %s not in tag %s' % (package_names[i],
                         self.package_tags.get(package_name, self.tag)))
-            (rpms, (buildinfo,)), = result
-            self._mirror_rpms_for_build(buildinfo, rpms)
+            (rpms, builds), = result
+            self._mirror_rpms_for_build(builds, rpms)
         # scratch builds by task id
         task_ids = list(self.buildarch_task_ids)
         koji_session.multicall = True
@@ -132,21 +138,22 @@ class TargetRepo(object):
                 shutil.copyfileobj(open(rpm, 'r'), open(filename, 'w'))
             self.rpm_filenames.add(os.path.basename(filename))
 
-    def _mirror_rpms_for_build(self, buildinfo, rpms):
+    def _mirror_rpms_for_build(self, builds, rpms):
+        pathinfo = koji.PathInfo(self.topurl)
+        builds = dict((build['build_id'], build) for build in builds)
         for rpm in rpms:
             if rpm['arch'] not in self.arches + ['noarch', 'src']:
                 continue
             if rpm['name'] not in self.rpm_names:
                 continue
             filename = os.path.join(self.basedir, 'rpms',
-                    os.path.basename(koji.pathinfo.rpm(rpm)))
+                    os.path.basename(pathinfo.rpm(rpm)))
             if os.path.exists(filename):
                 # XXX check md5
                 print 'Skipping %s' % filename
             else:
-                url = urlparse.urljoin(self.packages_url, '%s/%s/%s/%s' % (
-                        buildinfo['package_name'], buildinfo['version'], buildinfo['release'],
-                        koji.pathinfo.rpm(rpm)))
+                url = '%s/%s' % (pathinfo.build(builds[rpm['build_id']]),
+                        pathinfo.rpm(rpm))
                 print 'Fetching %s' % url
                 shutil.copyfileobj(urllib2.urlopen(url), open(filename, 'w'))
             self.rpm_filenames.add(os.path.basename(filename))
@@ -220,17 +227,21 @@ def target_repos_from_config(*config_filenames):
         descr, _, rest = section.partition('.')
         if not rest:
             hub_url = koji_config.get(config.get(section, 'source'), 'server')
-            packages_url = koji_config.get(config.get(section, 'source'), 'topurl') + '/packages/'
+            topurl = koji_config.get(config.get(section, 'source'), 'topurl')
+            downgradeable = config.has_option(section, 'downgradeable') \
+                    and config.getboolean(section, 'downgradeable')
             repos[descr] = TargetRepo(name=config.get(section, 'name'),
                     distro=config.get(section, 'distro'),
                     arches=config.get(section, 'arches').split(),
                     tag=config.get(section, 'tag'),
-                    hub_url=hub_url, packages_url=packages_url)
+                    downgradeable=downgradeable,
+                    hub_url=hub_url, topurl=topurl)
             testing_repos[descr] = TargetRepo(name=config.get(section, 'testing-name'),
                     distro=config.get(section, 'distro'),
                     arches=config.get(section, 'arches').split(),
                     tag=config.get(section, 'testing-tag'),
-                    hub_url=hub_url, packages_url=packages_url)
+                    downgradeable=downgradeable,
+                    hub_url=hub_url, topurl=topurl)
             if config.has_option(section, 'skip') and config.getboolean(section, 'skip'):
                 skipped.add(descr)
         elif rest == 'packages':
