@@ -28,7 +28,7 @@ which are also considered part of the wider "Beaker project":
   to help with writing and running Beaker test cases.
 
 
-## Running Beaker ##
+## Cloning the main Beaker repo ##
 
 Start by cloning [Beaker's git
 repository](http://git.beaker-project.org/cgit/beaker/):
@@ -42,6 +42,14 @@ For the purposes of development, Beaker should be run on the  `develop` branch:
 This branch will become the next Beaker release. If you want to test against
 the latest released version, you can use the `master` branch. For older
 releases, use the relevant git tag.
+
+Cloning the other repos is similar to the above, but they all develop
+directly on master (as they don't have a concept of "hot fix" releases
+that only include bug fixes - any release may include a combination of
+both new features and bug fixes)
+
+
+## Running Beaker ##
 
 Beaker currently only supports MySQL with InnoDB as the database backend (it
 does use SQL Alchemy internally though, so porting it to an alternate backend
@@ -634,5 +642,12 @@ You must ensure that the correct Change-Id footer appears in your amended
 commit message. Refer to the Gerrit
 [Change-Id](http://gerrit.googlecode.com/svn/documentation/2.2.1/user-changeid.html)
 documentation for more details.
+
+To avoid forgetting the Change-Id footer and accidentally creating a new review
+instead of updating an existing one, it's useful to install this hook which
+automatically adds an appropriate "Change-Id" entry to the commit message
+when a patch is first committed locally:
+
+    scp -p -P 29418 gerrit.beaker-project.org:hooks/commit-msg .git/hooks/
 
 <!-- vim: set filetype=markdown : -->
