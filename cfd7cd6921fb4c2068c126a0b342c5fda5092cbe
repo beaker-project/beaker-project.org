@@ -1,0 +1,7 @@
+Code-Review+2: Dan Callaghan <dcallagh@redhat.com>
+Verified+1: Nick Coghlan <ncoghlan@redhat.com>
+Submitted-by: Nick Coghlan <ncoghlan@redhat.com>
+Submitted-at: Thu, 08 Nov 2012 01:17:53 -0500
+Reviewed-on: http://gerrit.beaker-project.org/1464
+Project: beaker-project.org
+Branch: refs/heads/master
