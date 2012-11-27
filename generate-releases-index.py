@@ -105,7 +105,7 @@ html_template = MarkupTemplate('''
 
 <span py:def="release_descr(release)" py:strip="True">
     Beaker
-    <py:if test="release.release != '-1'">hotfix release</py:if>
+    <py:if test="release.release != '-1'">patch</py:if>
     ${release.version}<py:if test="release.release != '-1'">${release.release}</py:if>
 </span>
 
@@ -156,7 +156,7 @@ atom_template = MarkupTemplate('''
     </author>
     <title type="text">
         Beaker
-        <py:if test="release.release != '-1'">hotfix release</py:if>
+        <py:if test="release.release != '-1'">patch</py:if>
         ${release.version}<py:if test="release.release != '-1'">${release.release}</py:if>
     </title>
     <content type="xhtml">
