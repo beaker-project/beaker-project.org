@@ -30,14 +30,14 @@ D=$(mktemp -d)
 git archive HEAD | tar -x -C "$D"
 git rev-parse HEAD >"$D/git-rev"
 GIT_DIR="$BEAKER/.git" git rev-parse HEAD >"$D/git-rev-beaker"
-# We don't want to re-build tarballs or patches, because these are quite
-# expensive, and anyway they must never change once they've been
-# published.
-mkdir -p "$D/releases"
-cp -p --reflink=auto releases/*.tar.* releases/*.patch "$D/releases/"
-# Same with rpms for yum repos.
-mkdir -p "$D/yum/rpms"
-cp -p --reflink=auto yum/rpms/*.rpm "$D/yum/rpms/"
+
+# Carry existing release artifacts and RPMs over to the build directory,
+# because they are quite expensive to build/fetch and they never change.
+# This is purely an optimisation so ignore failures.
+mkdir -p "$D/releases" || :
+cp -p --reflink=auto releases/*.tar.* releases/*.patch "$D/releases/" || :
+mkdir -p "$D/yum/rpms" || :
+cp -p --reflink=auto yum/rpms/*.rpm "$D/yum/rpms/" || :
 
 make -j4 -C "$D" all
 
