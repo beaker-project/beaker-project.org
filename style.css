@@ -66,6 +66,10 @@ h2 {
 nav#TOC {
     border-bottom: 2px dotted #ddd;
 }
+.headerlink {
+    font-size: 0.75em;
+    font-weight: normal;
+}
 
 .header {
     background:url("images/rubber_grip.png");
