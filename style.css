@@ -8,7 +8,7 @@ body {
     margin: 0;
 }
 /* div.line-block is a Sphinx thing */
-p, ul, ol, dt, dd, th, td, div.line-block {
+p, ul, ol, dt, dd, th, td, div.line-block, figcaption {
     line-height: 1.5em;
     color: #777;
 }
@@ -63,6 +63,14 @@ h1 {
 h2 {
     font-size: 1.5em;
 }
+figcaption {
+    margin-top: 1em;
+    font-style: italic;
+}
+figure {
+  margin: 0
+}
+
 nav#TOC {
     border-bottom: 2px dotted #ddd;
 }
@@ -126,4 +134,11 @@ nav#TOC {
  * blocks) that uglifies our code blocks: */
 .highlight {
     background: none !important;
+}
+
+div.admonition {
+  background-color: #C2D6EB;
+  border-radius: 1em 1em 1em 1em;
+  padding: 0.01em 1em;
+  margin: 1em 2.5em;
 }

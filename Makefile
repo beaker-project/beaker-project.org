@@ -4,7 +4,8 @@ BEAKER ?= ../beaker
 SPHINXBUILD = $(shell command -v sphinx-1.0-build sphinx-build)
 SPHINXBUILDOPTS = -W
 
-ARTICLES = COPYING.html dev-guide.html cobbler-migration.html
+ARTICLES = COPYING.html dev-guide.html cobbler-migration.html \
+	installation-guide.html admin-guide.html user-guide.html
 
 include releases.mk
 OLD_TARBALLS = \
@@ -17,7 +18,7 @@ OLD_TARBALLS = \
     releases/beaker-0.4.tar.bz2
 
 .PHONY: all
-all: guide server-api man yum \
+all: server-api man yum \
      schema/beaker-job.rng \
      releases/SHA1SUM \
      releases/index.html \
@@ -27,15 +28,8 @@ all: guide server-api man yum \
      in-a-box/beaker-setup.html \
      in-a-box/beaker-distros.html \
      in-a-box/beaker-virt.html \
-     $(ARTICLES)
-
-guide::
-	# publican doesn't let us specify source or dest dirs, grumble
-	( cd $(BEAKER)/pub_doc/Beaker_Guide && \
-	  publican clean --common_content=../publican-brand && \
-	  publican build --publish --common_content=../publican-brand --formats=html --langs=en-US ) && \
-	rm -rf $@ && \
-	cp -r $(BEAKER)/pub_doc/Beaker_Guide/publish/en-US/Beaker/$(MAJOR_VERSION)/html/Beaker_Guide $@
+     $(ARTICLES) \
+     images/guide
 
 # This __requires__ insanity is needed in Fedora if multiple versions of CherryPy are installed.
 server-api::
@@ -117,6 +111,20 @@ PANDOC_OUTPUT_OPTS=$(if $(shell pandoc --help | grep 'Output formats:.*html5'),-
 	    --include-before-body=pandoc-before-body.html \
 	    --include-after-body=pandoc-after-body.html \
 	    <$< | ./pandoc-fixes.py >$@
+
+%.html: $(BEAKER)/documentation/%.txt pandoc-before-body.html pandoc-after-body.html
+	pandoc -f markdown $(PANDOC_OUTPUT_OPTS) --standalone --section-divs \
+	    --smart --variable=lang=en --css=style.css \
+	    --include-in-header=pandoc-header.html \
+	    --toc \
+	    --include-before-body=pandoc-before-body.html \
+	    --include-after-body=pandoc-after-body.html \
+	    <$< | ./pandoc-fixes.py >$@
+
+images/guide: $(BEAKER)/documentation/images/guide/*
+	mkdir -p $@
+	cp -p $? $@
+	touch images/guide
 
 .PHONY: check
 check:
