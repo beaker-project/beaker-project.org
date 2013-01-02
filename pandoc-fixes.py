@@ -13,7 +13,10 @@ for a in tree.findall('//a[@href="#TOC"]'):
 
 for section in tree.findall('//section'):
     h = section.xpath('.//*[self::h1 or self::h2 or self::h3 or self::h4 or self::h5 or self::h6]')[0]
-    h.text += ' '
+    if len(h):
+        h[-1].tail = (h[-1].tail or '') + ' '
+    else:
+        h.text = (h.text or '') + ' '
     h.append(A(u'\u00b6', {'class': 'headerlink'}, href='#%s' % section.get('id')))
 
 for screenshot in tree.findall('//figure/img'):
