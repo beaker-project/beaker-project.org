@@ -7,6 +7,8 @@ SPHINXBUILDOPTS = -W
 ARTICLES = COPYING.html dev-guide.html cobbler-migration.html \
 	installation-guide.html admin-guide.html user-guide.html
 
+vpath %.txt $(BEAKER)/documentation
+
 include releases.mk
 OLD_TARBALLS = \
     releases/beaker-0.6.16.tar.bz2 \
@@ -101,18 +103,9 @@ in-a-box/%.html: in-a-box/%
 
 # This is annoying... at some point pandoc started ignoring the -5 option,
 # instead you have to specify -t html5 to select HTML5 output.
-PANDOC_OUTPUT_OPTS=$(if $(shell pandoc --help | grep 'Output formats:.*html5'),-t html5,-t html -5)
+PANDOC_OUTPUT_OPTS := $(if $(shell pandoc --help | grep 'Output formats:.*html5'),-t html5,-t html -5)
 
-%.html: %.txt pandoc-before-body.html pandoc-after-body.html
-	pandoc -f markdown $(PANDOC_OUTPUT_OPTS) --standalone --section-divs \
-	    --smart --variable=lang=en --css=style.css \
-	    --include-in-header=pandoc-header.html \
-	    --toc \
-	    --include-before-body=pandoc-before-body.html \
-	    --include-after-body=pandoc-after-body.html \
-	    <$< | ./pandoc-fixes.py >$@
-
-%.html: $(BEAKER)/documentation/%.txt pandoc-before-body.html pandoc-after-body.html
+%.html: %.txt pandoc-header.html pandoc-before-body.html pandoc-after-body.html pandoc-fixes.py
 	pandoc -f markdown $(PANDOC_OUTPUT_OPTS) --standalone --section-divs \
 	    --smart --variable=lang=en --css=style.css \
 	    --include-in-header=pandoc-header.html \
