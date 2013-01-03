@@ -23,6 +23,22 @@
 {% block relbar1 %}{% endblock %}
 {% block relbar2 %}{% endblock %}
 {% block content %}
+{%- macro relbar() %}{# copied from themes/basic/layout.html with some hacks #}
+  <ul class="breadcrumbs">
+    <li><a href="{{ pathto(master_doc) }}">{{ shorttitle|e }}</a></li>
+    {%- for parent in parents %}
+      <li><a href="{{ parent.link|e }}" {% if loop.last %}{{ accesskey("U") }}{% endif %}>{{ parent.title }}</a></li>
+    {%- endfor %}
+  </ul>
+  <ul class="rellinks">
+    {%- for rellink in rellinks|reverse %}
+    <li>
+      <a href="{{ pathto(rellink[0]) }}" title="{{ rellink[1]|striptags|e }}"
+         {{ accesskey(rellink[2]) }}>{{ rellink[3] }}</a>
+    </li>
+    {%- endfor %}
+  </ul>
+{%- endmacro %}
 <div class="main_content" lang="en">
   <nav class="body_element">{{ relbar() }}</nav>
   <article class="body_element">
