@@ -1,0 +1,8 @@
+Change-Id: Ibd7489b2445610bbd6cf16787151581359f45ba6
+Verified+1: Dan Callaghan <dcallagh@redhat.com>
+Code-Review+2: Nick Coghlan <ncoghlan@redhat.com>
+Submitted-by: Dan Callaghan <dcallagh@redhat.com>
+Submitted-at: Mon, 07 Jan 2013 18:49:28 -0500
+Reviewed-on: http://gerrit.beaker-project.org/1598
+Project: beaker-project.org
+Branch: refs/heads/master
