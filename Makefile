@@ -1,6 +1,6 @@
 SHELL = /bin/bash
 MAJOR_VERSION = 0
-BEAKER ?= ../beaker
+BEAKER = beaker
 SPHINXBUILD = $(shell command -v sphinx-1.0-build sphinx-build)
 SPHINXBUILDOPTS = -W
 
@@ -35,11 +35,13 @@ all: server-api man yum \
 
 # This __requires__ insanity is needed in Fedora if multiple versions of CherryPy are installed.
 server-api::
+	$(MAKE) -C $(BEAKER)/Common bkr/__init__.py
 	env BEAKER=$(abspath $(BEAKER)) PYTHONPATH=$(BEAKER)/Common:$(BEAKER)/Server \
 	python -c '__requires__ = ["TurboGears"]; import pkg_resources; execfile("$(SPHINXBUILD)")' \
 	$(SPHINXBUILDOPTS) -c $@ -b html $(BEAKER)/Server/apidoc/ $@/
 
 man::
+	$(MAKE) -C $(BEAKER)/Common bkr/__init__.py
 	env BEAKER=$(abspath $(BEAKER)) PYTHONPATH=$(BEAKER)/Common:$(BEAKER)/Client/src \
 	$(SPHINXBUILD) $(SPHINXBUILDOPTS) -c $@ -b html $(BEAKER)/Client/doc/ $@/
 
@@ -128,4 +130,5 @@ check:
 publish:
 	git fetch beaker-project.org:/srv/www/beaker-project.org/git master:published
 	git fetch beaker-project.org:/srv/www/stage.beaker-project.org/git master:published
+	git submodule update
 	env BEAKER="$(abspath $(BEAKER))" ./publish.sh published

@@ -1,0 +1,3 @@
+[submodule "beaker"]
+	path = beaker
+	url = git://git.beaker-project.org/beaker
