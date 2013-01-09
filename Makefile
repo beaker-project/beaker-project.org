@@ -5,7 +5,7 @@ SPHINXBUILD = $(shell command -v sphinx-1.0-build sphinx-build)
 SPHINXBUILDOPTS = -W
 
 ARTICLES = COPYING.html dev-guide.html cobbler-migration.html \
-	installation-guide.html admin-guide.html user-guide.html
+    installation-guide.html
 
 vpath %.txt $(BEAKER)/documentation
 
@@ -30,8 +30,7 @@ all: server-api man yum \
      in-a-box/beaker-setup.html \
      in-a-box/beaker-distros.html \
      in-a-box/beaker-virt.html \
-     $(ARTICLES) \
-     images/guide
+     $(ARTICLES)
 
 # This __requires__ insanity is needed in Fedora if multiple versions of CherryPy are installed.
 server-api::
@@ -44,6 +43,16 @@ man::
 	$(MAKE) -C $(BEAKER)/Common bkr/__init__.py
 	env BEAKER=$(abspath $(BEAKER)) PYTHONPATH=$(BEAKER)/Common:$(BEAKER)/Client/src \
 	$(SPHINXBUILD) $(SPHINXBUILDOPTS) -c $@ -b html $(BEAKER)/Client/doc/ $@/
+
+admin-guide::
+	$(MAKE) -C $(BEAKER)/Common bkr/__init__.py
+	env BEAKER=$(abspath $(BEAKER)) PYTHONPATH=$(BEAKER)/Common \
+	$(SPHINXBUILD) $(SPHINXBUILDOPTS) -c $@ -b html $(BEAKER)/documentation/admin-guide/ $@/
+
+user-guide::
+	$(MAKE) -C $(BEAKER)/Common bkr/__init__.py
+	env BEAKER=$(abspath $(BEAKER)) PYTHONPATH=$(BEAKER)/Common \
+	$(SPHINXBUILD) $(SPHINXBUILDOPTS) -c $@ -b html $(BEAKER)/documentation/user-guide/ $@/
 
 schema/beaker-job.rng: $(BEAKER)/Common/bkr/common/schema/beaker-job.rng
 	mkdir -p $(dir $@)
@@ -116,14 +125,9 @@ PANDOC_OUTPUT_OPTS := $(if $(shell pandoc --help | grep 'Output formats:.*html5'
 	    --include-after-body=pandoc-after-body.html \
 	    <$< | ./pandoc-fixes.py >$@
 
-images/guide: $(BEAKER)/documentation/images/guide/*
-	mkdir -p $@
-	cp -p $? $@
-	touch images/guide
-
 .PHONY: check
 check:
-# ideas: spell check everything, validate HTML, check for broken links
+# ideas: spell check everything, validate HTML, check for broken links, run sphinx linkcheck builder
 	./check-yum-repos.py
 
 .PHONY: publish

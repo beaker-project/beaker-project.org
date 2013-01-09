@@ -1,4 +1,12 @@
 /*.html
+/admin-guide/.buildinfo
+/admin-guide/.doctrees/
+/admin-guide/_images/
+/admin-guide/_sources/
+/admin-guide/_static/
+/admin-guide/*.html
+/admin-guide/objects.inv
+/admin-guide/searchindex.js
 /guide/
 /images/guide/
 /in-a-box/beaker.ks.html
@@ -23,6 +31,14 @@
 /server-api/*.html
 /server-api/objects.inv
 /server-api/searchindex.js
+/user-guide/.buildinfo
+/user-guide/.doctrees/
+/user-guide/_images/
+/user-guide/_sources/
+/user-guide/_static/
+/user-guide/*.html
+/user-guide/objects.inv
+/user-guide/searchindex.js
 /yum/rpms/
 /yum/client/RedHatEnterpriseLinux5/
 /yum/client/RedHatEnterpriseLinux6/
