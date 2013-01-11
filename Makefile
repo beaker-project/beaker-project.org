@@ -4,10 +4,7 @@ BEAKER = beaker
 SPHINXBUILD = $(shell command -v sphinx-1.0-build sphinx-build)
 SPHINXBUILDOPTS = -W
 
-ARTICLES = COPYING.html dev-guide.html cobbler-migration.html \
-    installation-guide.html
-
-vpath %.txt $(BEAKER)/documentation
+ARTICLES = COPYING.html dev-guide.html cobbler-migration.html
 
 include releases.mk
 OLD_TARBALLS = \
