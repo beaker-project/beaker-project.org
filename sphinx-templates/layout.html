@@ -1,21 +1,24 @@
 {% extends '!layout.html' %}
+{%- block htmltitle %}
+<title>{{ title|striptags|e }} &#183; {{ docstitle|e }}</title>
+{%- endblock %}
 {% block extrahead %}
   <meta name="viewport" content="width=device-width" />
   <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
-  <link href="../style.css" rel="stylesheet" type="text/css"/>
+  <link href="{{ pathto('../style.css', 1) }}" rel="stylesheet" type="text/css"/>
 {% endblock %}
 {% block header %}
 <div class="header" lang="en">
   <div class="body_element">
     <div class="title">
-      <a href=".."><img src="../images/logo.png" alt="Beaker" width="110" height="40" /></a>
+      <a href="{{ pathto('../', 1) }}"><img src="{{ pathto('../images/logo.png', 1) }}" alt="Beaker" width="110" height="40" /></a>
     </div>
     <nav class="menu">
-      <a href="..">about</a>
-      <a href="../help.html">help</a>
-      <a href="../download.html">download</a>
+      <a href="{{ pathto('../', 1) }}">about</a>
+      <a href="{{ pathto('../help.html', 1) }}">help</a>
+      <a href="{{ pathto('../download.html', 1) }}">download</a>
     </nav>
   </div>
 </div>

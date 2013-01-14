@@ -4,10 +4,7 @@ BEAKER = beaker
 SPHINXBUILD = $(shell command -v sphinx-1.0-build sphinx-build)
 SPHINXBUILDOPTS = -W
 
-ARTICLES = COPYING.html dev-guide.html cobbler-migration.html \
-    installation-guide.html
-
-vpath %.txt $(BEAKER)/documentation
+ARTICLES = COPYING.html dev-guide.html cobbler-migration.html
 
 include releases.mk
 OLD_TARBALLS = \
@@ -44,15 +41,10 @@ man::
 	env BEAKER=$(abspath $(BEAKER)) PYTHONPATH=$(BEAKER)/Common:$(BEAKER)/Client/src \
 	$(SPHINXBUILD) $(SPHINXBUILDOPTS) -c $@ -b html $(BEAKER)/Client/doc/ $@/
 
-admin-guide::
+docs::
 	$(MAKE) -C $(BEAKER)/Common bkr/__init__.py
 	env BEAKER=$(abspath $(BEAKER)) PYTHONPATH=$(BEAKER)/Common \
-	$(SPHINXBUILD) $(SPHINXBUILDOPTS) -c $@ -b html $(BEAKER)/documentation/admin-guide/ $@/
-
-user-guide::
-	$(MAKE) -C $(BEAKER)/Common bkr/__init__.py
-	env BEAKER=$(abspath $(BEAKER)) PYTHONPATH=$(BEAKER)/Common \
-	$(SPHINXBUILD) $(SPHINXBUILDOPTS) -c $@ -b html $(BEAKER)/documentation/user-guide/ $@/
+	$(SPHINXBUILD) $(SPHINXBUILDOPTS) -c $@ -b html $(BEAKER)/documentation/ $@/
 
 schema/beaker-job.rng: $(BEAKER)/Common/bkr/common/schema/beaker-job.rng
 	mkdir -p $(dir $@)
