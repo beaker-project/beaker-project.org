@@ -17,7 +17,7 @@ OLD_TARBALLS = \
     releases/beaker-0.4.tar.bz2
 
 .PHONY: all
-all: server-api man yum \
+all: server-api man docs yum \
      schema/beaker-job.rng \
      releases/SHA1SUM \
      releases/index.html \
