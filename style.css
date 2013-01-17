@@ -1,4 +1,4 @@
-@import url("http://fonts.googleapis.com/css?family=Cabin:400,700,400italic,700italic");
+@import url("http://fonts.googleapis.com/css?family=Cabin:400,700,400italic,700italic|Source+Code+Pro:400,700");
 
 body {
     line-height: 1;
@@ -36,18 +36,24 @@ table {
     border: 1
 }
 
-code, tt {
-    font-family: "Luxi Mono", monospace;
-    /* The ex-height ratio on monospace faces is generally much larger than 
-     * that of our body font, so let's scale them down to match better. */
-    font-size: 0.9em;
+pre, code, tt {
+    font-family: "Source Code Pro", "DejaVu Sans Mono", "Bitstream Vera Mono", monospace;
 }
 pre {
+    font-size: 94%;
     line-height: 1.4em;
     padding: 1.25em;
     border-radius: 1em;
     background: rgba(255,255,255,0.3);
     overflow: auto;
+}
+/* Source Code Pro is generous with horizontal space but our body font, 
+ * Cabin, is quite tight. So we tighten it up a bit, so that code literals 
+ * in running text don't stick out like a sore thumb.
+ * Note this is for inline literals only (hence the complicated CSS selector), 
+ * not for code blocks! */
+tt, p code, li code, dt code, dd code, th code, td code, figcaption code {
+    letter-spacing: -0.1ex;
 }
 
 article, section {
