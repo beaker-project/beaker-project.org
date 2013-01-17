@@ -27,8 +27,14 @@ if ! git rev-list HEAD | grep -q $(git show $parent:git-rev) ; then
 fi
 
 D=$(mktemp -d)
-git archive HEAD | tar -x -C "$D"
-git rev-parse HEAD >"$D/git-rev"
+# check out HEAD of beaker-project.org into $D
+GIT_DIR=$(pwd)/.git GIT_INDEX_FILE=$(pwd)/.git/index-publish GIT_WORK_TREE="$D" git read-tree HEAD
+GIT_DIR=$(pwd)/.git GIT_INDEX_FILE=$(pwd)/.git/index-publish GIT_WORK_TREE="$D" git checkout-index -a -f
+# check out the submodule revision of beaker into $D/beaker
+GIT_DIR=$BEAKER/.git GIT_INDEX_FILE=$(pwd)/.git/index-publish-beaker GIT_WORK_TREE="$D/beaker" git read-tree $(git rev-parse HEAD:beaker)
+GIT_DIR=$BEAKER/.git GIT_INDEX_FILE=$(pwd)/.git/index-publish-beaker GIT_WORK_TREE="$D/beaker" git checkout-index -a -f
+# record SHAs in the published version
+GIT_DIR=$(pwd)/.git git rev-parse HEAD >"$D/git-rev"
 GIT_DIR="$BEAKER/.git" git rev-parse HEAD >"$D/git-rev-beaker"
 
 # Carry existing release artifacts and RPMs over to the build directory,
@@ -44,8 +50,8 @@ make -j4 -C "$D" all
 # Clean out junk that we don't want to publish.
 rm -rf "$D/man/.doctrees" "$D/server-api/.doctrees"
 
-GIT_DIR=$(pwd)/.git GIT_INDEX_FILE=$(pwd)/.git/index-deploy GIT_WORK_TREE="$D" git add -f -A "$D"
-tree=$(GIT_DIR=$(pwd)/.git GIT_INDEX_FILE=$(pwd)/.git/index-deploy git write-tree)
+GIT_DIR=$(pwd)/.git GIT_INDEX_FILE=$(pwd)/.git/index-publish GIT_WORK_TREE="$D" git add -f -A "$D"
+tree=$(GIT_DIR=$(pwd)/.git GIT_INDEX_FILE=$(pwd)/.git/index-publish git write-tree)
 commit=$(git commit-tree $tree -p $parent -p $(git rev-parse HEAD) <<EOF
 Automatic commit of generated web site from $(git rev-parse HEAD)
 EOF

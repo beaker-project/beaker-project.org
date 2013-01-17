@@ -126,5 +126,4 @@ check:
 publish:
 	git fetch beaker-project.org:/srv/www/beaker-project.org/git master:published
 	git fetch beaker-project.org:/srv/www/stage.beaker-project.org/git master:published
-	git submodule update
 	env BEAKER="$(abspath $(BEAKER))" ./publish.sh published
