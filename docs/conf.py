@@ -6,4 +6,5 @@ execfile(os.path.join(os.environ['BEAKER'], 'documentation', 'conf.py'))
 
 html_theme = 'basic'
 html_theme_options = {'nosidebar': True}
+pygments_style = 'sphinx'
 templates_path = ['../sphinx-templates']
