@@ -247,15 +247,18 @@ these when it's appropriate (and advantageous) to do so.
 The `bkr.server.model` module primarily consists of Object Relational Mapped 
 (ORM) classes. Fundamentally, these are user defined python classes associated 
 to database tables, the objects of which are mapped to rows in the related table.
-These are not declaratively defined, but instead use 
+From version 0.11 ORM classes should be defined
+[declaratively](http://docs.sqlalchemy.org/en/rel_0_7/orm/extensions/declarative.html).
+Previous versions used 
 ['Classical Mapping'](http://docs.sqlalchemy.org/en/rel_0_7/orm/mapper_config.html#classical-mappings).
 
 Some basic guidelines to follow when modifying model:
 
- * Definitions of Tables, ORM classes, and calls to mapper() are segregated 
-   into three distinct sections. Tables are defined above ORM classes, and 
-   ORM classes above mapper functions. If possible define related Tables in 
-   the vicinity of each other, and likewise for ORM classes and mappers.
+ * For versions < 0.11, definitions of Tables, ORM classes, and calls to 
+   mapper() are segregated into three distinct sections. Tables are defined 
+   above ORM classes, and ORM classes above mapper functions. If possible 
+   define related Tables in the vicinity of each other, and likewise for ORM 
+   classes and mappers.
  * Commonly used queries should be contained within bound methods of the 
    respective classes.
  * Enumerated types should be defined as type DeclEnum and not be described 
