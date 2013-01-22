@@ -12,7 +12,7 @@ p, ul, ol, dt, dd, th, td, div.line-block, figcaption {
     line-height: 1.5em;
     color: #777;
 }
-p, li {
+p, li, dd, figcaption {
     text-align: justify;
 }
 a {
