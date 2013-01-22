@@ -1,6 +1,6 @@
-% Developer guide
+% Developer Guide
 
-## Beaker Repository Structure ##
+## Beaker repository structure ##
 
 Beaker consists of several different components. The largest and most
 critical are a set of web services that manage an inventory of hardware
@@ -112,7 +112,7 @@ Please see the [README](http://git.beaker-project.org/cgit/beaker/tree/README)
 file in the root directory of Beaker's source tree for a detailed description
 of its layout.
 
-### Lab Controller ###
+### Lab controller ###
 The lab controller is the intermediary point of communication between the
 lab machines, and the beaker server. It provides entry points for the following
 processes:
