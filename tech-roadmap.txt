@@ -1,0 +1,301 @@
+% Technology Roadmap
+
+## Roadmap Overview ##
+
+Beaker is a big project, with a lot of moving parts. It's been around for
+quite a while, and is used in several different ways by different groups
+of people.
+
+This technical roadmap is designed to highlight areas of currently active
+development, as well as more speculative changes that may happen at some
+point in the future.
+
+If any of these projects sound particularly interesting, folks are welcome
+to [get involved](http://beaker-project.org/dev-guide.html).
+
+<!---
+Some more direct BZ references probably wouldn't go astray here...
+-->
+
+## Active development ##
+
+The ideas in this section are currently under active development. Patches
+for at least some of these are likely to be found on the [Beaker Gerrit
+server](http://gerrit.beaker-project.org), and in the absence of
+unexpected complications, they should show up in a Beaker release within
+the next few months. Searching
+[Bugzilla](https://bugzilla.redhat.com/buglist.cgi?product=Beaker&bug_status=__open__)
+for Beaker bugs with target milestones set will often provide more detail on
+the specific proposals.
+
+### Self-service user groups ###
+
+Currently, all management of user groups must be handled by Beaker
+administrators. This doesn't scale to large numbers of users, so it makes
+more sense to let many aspects of groups be self-administered.
+
+### Group ownership of jobs ###
+
+Currently, all submitted jobs must be owned by a specific user, and many
+actions on the job are limited to that user. As with administrator
+management of user groups, this doesn't work well for larger teams, so
+the idea is to allow a job to be assigned to a user group, granting
+members of that group access to commands that would otherwise be
+restricted to the job owner.
+
+One aim of this change will be to make workarounds like shared
+(non-Kerberos) accounts for job submission, and the "proxy_user"
+setting unneeded.
+
+## Planned development ##
+
+The ideas in this section are firmly on the to-do list, but it is not yet
+clear when they will be ready for inclusion.
+
+### Explicit system pools ###
+
+Beaker currently includes informal notions of the "public pool" (systems
+with no access restrictions) and "private pools" (systems with access
+limited to particular user groups). The idea here is to make this notion
+of system pools explicit in the Beaker data model and UI, making it easier
+to administer large groups of machines, as well as better distributing
+administration responsibilities to the owning user groups.
+
+Adding system pools as an explicit part of the data model may also allow
+additional features like making a pool accessible to all users, but only
+when they explicitly request it when submitting their job, or limiting
+the number of systems in a pool which may be consumed by a single user.
+
+### Event based scheduler ###
+
+The current scheduler has some issues and limitations that are best resolved
+by switching to a more event-driven architecture. The new design will
+involve attempting to assign newly submitted recipes to an idle system
+without placing the recipe in the main queue, and newly available systems
+to queued recipes without placing the system in the idle pool. The
+existing scheduling model will still be needed at system start up to handle
+any jobs where processing was incomplete when the system was shut down.
+
+As part of this work, improved infrastructure for asynchronous command
+processing will be incorporated (with celery being a likely candidate).
+
+### Task oriented guides for users and administrators ###
+
+Beaker offers a lot of power and flexibility, but that can often come at
+the price of making the right way to do certain things non-obvious. Beaker's
+documentation is likely to benefit from additional sections that take a
+"task-based" approach to documentation and answer questions like "How do I
+limit my recipe to systems with a graphics adapter?" or "How do I require
+that my recipe run directly on bare metal and not in a VM?".
+
+### Systematic self-tests for provisioning and beah ###
+
+As a tool for better validating new Beaker releases, as well as making it
+easier to check for the correct operation of new Beaker installations, a
+set of self-test Beaker tasks will be made readily available. These tasks
+should come with helper scripts scripts for installing them into a
+Beaker installation and the appropriate job definitions to execute them
+across all configured architectures and distro trees.
+
+### Integrated live dashboard ###
+
+While Beaker 0.11 started sending aggregate metrics for the current system
+status directly to Graphite, it doesn't provide any native dashboard
+capability. It's desirable to provide an improved dashboard experience,
+using eitherGraphite's native dashboard tools, or a richer Javascript based
+Graphite front end (such as Graphene or graphitejs).
+
+## Exploration ##
+
+The ideas in this section are projects that one or more of the current
+developers are at least tinkering with, but they may be at wildly
+divergent stages of maturity.
+
+### Full Fedora compatibility ###
+
+The "Beaker-in-a-box" scripts currently rely on CentOS 6, as the server
+components aren't fully compatible with current versions of Fedora
+(provisioning Fedora on systems within Beaker works correctly).
+
+We'd like to migrate Beaker-in-a-box over to using Fedora 18 (there are only
+a few remaining problems with daemon mode operation, perhaps related to the
+systemd transition)
+
+### Virtual-only trial environment ###
+
+The "Beaker-in-a-box" scripts currently require a physical machine, which
+runs the main Beaker server, and then creates some KVM guests for lab
+controllers and test systems.
+
+It would be more convenient if the bare metal host wasn't needed, and the
+main server also ran inside a guest VM.
+
+### Improved inventory task ###
+
+The current inventory task is based on the `smolt` project. Replacing this
+with a new version based on `lshw` would improve many aspects of the
+system capability reporting, providing a richer set of attributes to query.
+
+### Asynchronous message queues for lab controllers ###
+
+The provisioning service on the lab controllers currently receives
+commands by polling a command queue stored on the main server. It may be
+worth adopting fedmsg, or something similar, to help get rid of these
+polling calls.
+
+### Stable harness API ###
+
+The current `beaker-proxy` XML-RPC interface is closely coupled to the
+implementations of `beah`, `rhts` and the kickstart files generated by the
+main server. This limits Beaker's flexibility in many ways, especially if
+cross-platform testing is ever to be supported cleanly. One possible step
+forward would be to extract a subset of the current interface as a new,
+public stable API for the lab controller, that could then be used by
+alternate harnesses with a strong assurance of backwards compatibility in
+future releases.
+
+Allowing tasks to publish URLs in addition to log files and task results
+may also help in better integrating Beaker with external test management
+tools.
+
+### Bypassing the task RPM repo ###
+
+For experimental new versions and one-off operations, it would be beneficial
+to run tasks directly from source control rather than requiring creation of
+a task RPM and uploading it to the central task repository.
+
+With appropriate use of source control tags, such an approach may also be
+useful for released versions.
+
+One challenge with this idea is how to present the task status in the UI,
+since the status reporting is currently closely linked to the task name,
+and this approach encourages running many subtasks inside one step.
+
+### Sharing the task library across Beaker instances ###
+
+It can currently be challenging to keep tasks in sync across different
+Beaker instances (for example, production and staging environments).
+
+Being able to bypass the task RPM repo and run tasks directly from source
+control would help with this, but other possibilities include better
+support for doing a bulk update of one instances task library from another.
+
+### Test suite speed improvements ###
+
+Executing the local test suite is currently rather slow, as Firefox needs
+to be started for each of the Selenium tests. Migrating completely over to
+the new WebDriver API, and cleaning up some tests that are currently
+dependent on the comparatively slow Firefox startup time, should make it
+possible to run the test suite with PhantomJS instead, making it much faster.
+
+### Job based recipe access limitations ###
+
+Running recipes can currently inadvertently interfere with systems running
+recipes for unrelated jobs. While it is intentional that recipes can control
+systems other than the one they are running on, there should really be a
+mechanism that limits this access to only those systems running other
+recipes within the same recipe set.
+
+### Guided editor for job definition XML ###
+
+Currently, many Beaker users rely on automated generators to create full
+Beaker job definition files from a handful of parameters. This idea is to
+use the Relax-NG schema for the job XML, as well as appropriate live queries
+of the Beaker database, to create a guided editor that will help users to
+create job definitions directly, rather than relying on automated
+generators that may expose only a fraction of Beaker's full flexibility.
+
+### More complex example tasks ###
+
+Kerberos and LDAP integration are notoriously hard features to test, and
+many automated test suites simply don't bother. Beaker, however, is fully
+capable of testing Kerberos and LDAP integration, along with AMQP. This
+idea is to make sure the implementations of these tests for Beaker's own
+testing are also used as examples of Beaker's capabilities.
+
+### Unifying `hostRequires` filtering and web UI search functionality ###
+
+Beaker's job processing and the web UI both allow a user to identify a
+subset of interest within the full set of available systems. The user
+interface for these is necessarily different, as once is based on the XML
+file defining a job, while the other is defined through an interactive web
+form.
+
+However, rather than being thin wrappers around a shared internal filter
+creation API, the dynamic filter creation implementations in these
+components are almost completely separate. This means that capabilities
+are sometimes added to the `hostRequires` processing and not to the web
+UI, or vice-versa.
+
+It seems like it should be possible to substantially reduce the level of
+duplication between these two components, and thus make it easier to add
+new filtering and sorting criteria in the future.
+
+## Speculative ideas ##
+
+The ideas in this section aren't really in development at all. Instead,
+they reflect capabilities we think we'd *like* Beaker to have, or other
+improvements we'd like to make, and may even have some initial design
+sketches behind them. While there are no current concrete plans to do
+anything about any of the ideas in this section, we're certainly open to
+discussing them and reviewing any proposed patches related to them.
+
+Most of these are at least non-trivial projects, and it's an open question
+if some of them are feasible at all. Some of them may prove to be bad ideas,
+regardless.
+
+### Alternate test harnesses ###
+
+Easy execution of at least autotest and STAF based tests in Beaker would
+be a nice feature to provide.
+
+### Alternate provisioning mechanisms ###
+
+Provisioning is currently based directly on the Anaconda installer. VM
+image based provisioning for guest recipes or the oVirt Engine integration
+would allow Beaker to cover a wider range of testing scenarios.
+
+A more flexible provisioning architecture might even be able to deploy
+other distributions and operating systems that don't use Anaconda at all.
+
+### OpenStack based provisioning ###
+
+OpenStack offers some interesting possibilities in terms of dynamically
+creating isolated subnets. Integrating with that could allow Beaker to
+support testing of scenarios that are currently difficult to set up due
+to interference with the network of the hosting lab. For example, a full
+Beaker provisioning cycle currently can't be tested easily within Beaker,
+as doing so requires taking control of DHCP responses, while still retaining
+access to the distro trees used for installation.
+
+### Provisioning other hypervisors ###
+
+Beaker provides rich "guest recipe" functionality for testing installation
+and other operations within a KVM based virtual machine. Testing against
+non-KVM hypervisors is possible, but more awkward, as the guest VMs must be
+precreated and registered with Beaker as full systems with appropriate
+custom power scripts that handle the process of starting and stopping the
+underlying virtual machines. This is an unfortunate limitation.
+
+### Improved "System Loan" mechanism ###
+
+While systems in Beaker can currently be loaned to other users, the workflows
+for doing so aren't particularly convenient. It might be helpful if
+Beaker included better tools for requesting System Loans, as well as a
+system for automatically returning them if unused for extended periods.
+
+### Raw SQL query API ###
+
+To further help integration with data mining tools, it may be useful to
+provide the ability to query a running Beaker server for the equivalent
+SQL needed to answer certain API queries.
+
+### Web UI modernisation ###
+
+The current main web UI is based on the TurboGears 1 stack (although it
+uses SQLAlchemy rather than SQLObject for the database access layer). This
+makes some aspects of development more awkward than they might be with a
+more recent web framework.
+
+That said, TG1 is still quite usable, even if it isn't quite as capable
+as the newer frameworks.
