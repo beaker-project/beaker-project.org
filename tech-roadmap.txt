@@ -118,8 +118,8 @@ components aren't fully compatible with current versions of Fedora
 (provisioning Fedora on systems within Beaker works correctly).
 
 We'd like to migrate Beaker-in-a-box over to using Fedora 18 (there are only
-a few remaining problems with daemon mode operation, perhaps related to the
-systemd transition)
+a few remaining problems with daemon mode operation, apparently due to the
+more recent version of gevent)
 
 ### Virtual-only trial environment ###
 
