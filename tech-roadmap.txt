@@ -231,6 +231,21 @@ It seems like it should be possible to substantially reduce the level of
 duplication between these two components, and thus make it easier to add
 new filtering and sorting criteria in the future.
 
+### Support testing IPv6 only systems ###
+
+The Beaker test harness currently relies on a version of Twisted which
+doesn't support IPv6. This means Beaker can't currently be used to test
+IPv6 only operation of a system, as an IPv4 connection is needed
+between the test harness and the lab controller.
+[BZ#810893](https://bugzilla.redhat.com/show_bug.cgi?id=810893) gives
+some additional background.
+
+At least on more recent operating systems, it should be possible to use
+the test harness with a newer version of Twisted. With appropriate
+configuration of the lab controller and network, this should make it
+possible to provision systems in Beaker with no IPv4 interfaces
+configured.
+
 ## Speculative ideas ##
 
 The ideas in this section aren't really in development at all. Instead,
