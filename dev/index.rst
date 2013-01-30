@@ -47,10 +47,13 @@ into a future version of Beaker.
    Proposals will be referred to by their title or URL rather than by a
    number (this is similar to Fedora feature names)
 
-* There are no current design proposals
-
 .. toctree::
    :maxdepth: 1
+
+   proposals/enhanced-user-groups
+   proposals/system-pools
+   proposals/event-driven-scheduler
+   proposals/effective-job-priorities
 
 
 Completed design proposals
