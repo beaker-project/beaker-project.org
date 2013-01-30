@@ -17,7 +17,7 @@ OLD_TARBALLS = \
     releases/beaker-0.4.tar.bz2
 
 .PHONY: all
-all: server-api man docs yum \
+all: server-api man docs dev yum \
      schema/beaker-job.rng \
      releases/SHA1SUM \
      releases/index.html \
@@ -45,6 +45,9 @@ docs::
 	$(MAKE) -C $(BEAKER)/Common bkr/__init__.py
 	env BEAKER=$(abspath $(BEAKER)) PYTHONPATH=$(BEAKER)/Common \
 	$(SPHINXBUILD) $(SPHINXBUILDOPTS) -c $@ -b html $(BEAKER)/documentation/ $@/
+
+dev::
+	$(SPHINXBUILD) $(SPHINXBUILDOPTS) -c $@ -b html ./dev/ $@/
 
 schema/beaker-job.rng: $(BEAKER)/Common/bkr/common/schema/beaker-job.rng
 	mkdir -p $(dir $@)
