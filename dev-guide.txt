@@ -15,7 +15,7 @@ using and installing Beaker:
 
 This document focuses on the mechanics of contributing to Beaker. For some
 ideas on possible changes that may be of interest, consult the [technical
-roadmap](http://beaker-project.org/tech-roadmap.html).
+roadmap](tech-roadmap.html).
 
 ## Beaker repository structure ##
 
@@ -118,7 +118,7 @@ although this configuration is not well tested.
 If you want to set up a complete Beaker testing environment (including a lab
 controller) with the ability to provision systems and run jobs, refer to the
 [Beaker in a box](in-a-box/) quick start guide, or the more detailed
-[Installation guide](guide/Installation.html).
+[installation instructions](docs/admin-guide/installation.html).
 
 Running Lab Controller processes in a development environment is currently not
 well tested.

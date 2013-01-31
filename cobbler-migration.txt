@@ -59,8 +59,7 @@ When executing power commands, Beaker uses shell scripts which are based on
 Cobbler's power templates which are installed in `/etc/cobbler/power`. If you
 have customised any of Cobbler's power templates you may need to add a custom
 Beaker power script with the same modifications. Refer to [Customizing Power
-Commands](guide/Administration-Customizing_Power_Commands.html) in the Beaker
-Guide.
+Commands](docs/admin-guide/power-commands.html) in the Administration Guide.
 
 Note that Beaker uses shell scripts rather than Cheetah templates for power
 commands, even though the shell scripts look very similar because the variable
@@ -93,7 +92,7 @@ under `/etc/beaker/snippets`.
 Beaker uses Jinja2 for templating, so templates will need to be rewritten.
 Refer to the [Jinja2 documentation](http://jinja.pocoo.org/docs/) for details
 of the template syntax, and to [Customizing
-Kickstarts](guide/Administration-Customizing_Kickstarts.html) in the Beaker
+Kickstarts](docs/admin-guide/kickstarts.html) in the Administration
 Guide for details about the Beaker specifics.
 
 For your convenience, some common Cobbler template constructs are shown below,
@@ -144,7 +143,7 @@ If a system has particular network configuration needs not covered by DHCP, you
 can add a per-system snippet for it as appropriate: `system_pre` for
 pre-installation scripts, `network` for Anaconda network commands, or
 `system_post` for post-installation scripts. Refer to [Customizing
-Kickstarts](guide/Administration-Customizing_Kickstarts.html) in the Beaker
-Guide for details.
+Kickstarts](docs/admin-guide/kickstarts.html) in the Administration Guide for 
+details.
 
 <!-- vim: set filetype=markdown : -->
