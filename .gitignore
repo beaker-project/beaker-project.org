@@ -1,4 +1,11 @@
 /*.html
+/dev/.buildinfo
+/dev/.doctrees/
+/dev/_static/
+/dev/_sources/
+/dev/*.html
+/dev/objects.inv
+/dev/searchindex.js
 /docs/
 /in-a-box/beaker.ks.html
 /in-a-box/beaker-setup.html
