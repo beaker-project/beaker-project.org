@@ -24,18 +24,6 @@ Rather than approving designs as a whole, specific elements of the design are ul
 Gerrit. It is expected that some of the details in design proposals may
 change as implementation reveals additional aspects that were not previously considered.
 
-.. note::
-
-   Not all changes require an associated design proposal. Some changes,
-   (such as those for the Beaker build process and website, or Fedora
-   compatibility fixes) are handled directly in Gerrit. Most other changes
-   are tracked as Bugzilla entries. A design proposal is appropriate if a
-   change touches several different parts of Beaker, or if it is a
-   user visible piece of functionality where the overall design should
-   be discussed with Beaker users *before* significant effort is expended
-   on the implementation.
-
-
 Current design proposals
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -54,6 +42,17 @@ into a future version of Beaker.
    proposals/system-pools
    proposals/event-driven-scheduler
    proposals/effective-job-priorities
+
+.. note::
+
+   Not all changes require an associated design proposal. Some changes,
+   (such as those for the Beaker build process and website, or Fedora
+   compatibility fixes) are handled directly in Gerrit. Most other changes
+   are tracked as Bugzilla entries. A design proposal is appropriate if a
+   change touches several different parts of Beaker, or if it is a
+   user visible piece of functionality where the overall design should
+   be discussed with Beaker users *before* significant effort is expended
+   on the implementation.
 
 
 Completed design proposals
