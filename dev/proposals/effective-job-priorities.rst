@@ -58,24 +58,20 @@ priority::
     Medium, Medium (any job)
     Low, Low (any job)
 
-The proposed mechanism for implementation is to add the following new
-permissions to system pools:
-
-* Submit Urgent priority jobs
-* Submit High priority jobs
-* Submit Normal priority jobs
-* Submit Medium priority jobs
-* Submit Low priority jobs
+The proposed mechanism for implementation is to change the "can submit
+automated jobs" permission on system pools to record a list of
+"Group, Maximum Effective Priority" pairs, rather than the simple
+list of groups supported by the initial system pools design.
 
 When the recipe queue is being sorted for a "Pending System" scheduling
 event, then the effective priority for any given recipe will be
 determined by looking at the associated group for the recipe's job
 (defaulting to the "Everybody" group if the recipe was not submitted on
 behalf of a group). The maximum effective priority for that recipe is the
-*highest* permission that group has on any of the system pools
-to which the system belongs.
+*highest* maximum effective priority that group has on any of the system
+pools to which the system belongs.
 
-The actual effective priority of the recipe is then the higher of its
+The actual effective priority of the recipe is then the lower of its
 maximum effective priority and the nominal priority set on the job
 itself.
 
@@ -117,3 +113,13 @@ nominal priority:
 |            +------------+
 |            | Low        |
 +------------+------------+
+
+
+Open Questions
+--------------
+
+* Should we also support setting a "Minimum Priority" for groups? It's
+  not clear this is necessary, and it *would* complicate the design and
+  implementation. Current proposal is to leave it out of the initial
+  implementation, and add it later if a compelling use case is presented
+  that the current design can't address.
