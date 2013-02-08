@@ -20,7 +20,11 @@ to ``queued``, and so on.
 This approach leads to a number of unfortunate race conditions, including
 the possibility of recipes "jumping the queue" to access a rare system
 if that system becomes available while the scheduler is midway through a
-pass over the currently queued recipes.
+pass over the currently queued recipes. More seriously, it causes problems
+when scheduling multi-host recipesets that can only run on a limited number
+of systems: if two recipesets need systems A and B, and one gets system A,
+while the other gets system B, then the two recipesets will effectively
+deadlock, both waiting for each other in a classic ABBA race condition.
 
 This proposal describes a new, more event driven, scheduler design
 which avoids these race conditions, as well as enabling other features
@@ -28,6 +32,8 @@ that cannot be supported with the current scheduler.
 
 This proposal also covers a plan to better separate out time spent
 provisioning systems from the time spent executing user submitted tasks.
+(that part can, and probably will, be separated out and implemented before
+the rest of the probosal)
 
 
 Dependencies
@@ -52,10 +58,10 @@ distinct ways:
 The existing scheduling loop will be retained for its secondary role in
 monitoring database consistency and correcting any discrepancies (for
 example, by aborting recipes where the requested distro tree has been
-removed from all registered lab controllers)
+removed from all registered lab controllers).
 
 This proposal does not depend on the introduction of any new asynchronous
-message infrastructure. Instead the current scheduling loop will be
+messaging infrastructure. Instead the current scheduling loop will be
 supplemented by two additional loops, one looking for new jobs and the
 other for pending systems.
 
@@ -63,7 +69,8 @@ This approach has the advantage of not requiring any special processing
 at system startup to deal with unprocessed events left over from the
 previous shutdown. However, the design also supports moving away from a
 polling model if an asynchronous messaging system is adopted for internal
-communication between Beaker components in the future.
+communication between Beaker components (specifically the web UI/service
+and the background scheduling daemon) in the future.
 
 
 Viable systems, idle systems and pending systems
