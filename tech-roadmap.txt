@@ -17,6 +17,13 @@ to [get involved](http://beaker-project.org/dev-guide.html).
 Some more direct BZ references probably wouldn't go astray here...
 -->
 
+
+The [Handling Large Installations](dev/proposals/handling-large-installations.html)
+proposal offers another perspective on active and currently planned
+development that is the primary focus of the Beaker 1.x series (there's
+some overlap with the technical raod map below).
+
+
 ## Active development ##
 
 The ideas in this section are currently under active development. Patches
@@ -49,7 +56,7 @@ restricted to the job owner.
 
 One aim of this change will be to make workarounds like shared
 accounts for job submission and the current "proxy_user"
-setting unnecessary.
+setting unnecessary (although they will continue to be supported).
 
 This idea is covered by the
 [Enhanced User Groups](dev/proposals/enhanced-user-groups.html)
@@ -59,6 +66,7 @@ design proposal.
 
 The ideas in this section are firmly on the to-do list, but it is not yet
 clear when they will be ready for inclusion.
+
 
 ### Explicit system pools ###
 
@@ -313,6 +321,10 @@ Provisioning is currently based directly on the Anaconda installer. VM
 image based provisioning for guest recipes or the oVirt Engine integration
 would allow Beaker to cover a wider range of testing scenarios.
 
+Supporting tools like [os-autoinst](http://www.os-autoinst.org/) or
+specific image URLs for guest installs are other possibilities
+potentially worth investigating.
+
 A more flexible provisioning architecture might even be able to deploy
 other distributions and operating systems that don't use Anaconda at all.
 
@@ -371,3 +383,16 @@ development in Beaker is to push it more towards the role of being
 a sophisticated inventory management and scheduling backend (in contrast
 to other IaaS systems, which attempt to abstract away hardware details),
 and deemphasise the importance of the native Web UI.
+
+### Alternate Database Backend ###
+
+The only currently supported database backend for the main server is MySQL
+(or an equivalent, like MariaDB). There are all sorts of reasons why this
+isn't good, but migrating to PostgreSQL isn't straightforward. The two main
+issues to be addressed are the handling of queries where MySQL and
+PostgreSQL have drastically difference performance characteristics
+(and there's no solution that performs well in both), and the
+challenge of actually doing a data migration for any existing
+Beaker installations.
+
+
