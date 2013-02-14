@@ -4,7 +4,7 @@ Enhanced User Groups
 ====================
 
 :author: Dan Callaghan
-:editor: Nick Coghlan
+:editors: Nick Coghlan, Raymond Mancy
 :release: Beaker 1.0
 
 
@@ -143,19 +143,21 @@ Group Job Management
 
 Through the job XML:
 
-  Add an attribute ``group="somegroup"`` to the ``<job/>`` element directly
-  to the job XML.
+  Add an optional attribute ``group="somegroup"`` to the ``<job/>`` element
+  directly to the job XML.
 
 Through the ``bkr`` cli::
 
   Pass the ``--job-group=somegroup`` option to a workflow command.
 
-The job will be owned by that group. All members of the group will be
-able to ack/nack, change priority, edit whiteboard, and change retention
-tag. The root password used in the job will be the group root password
-(if one is set), otherwise it will be the root password set in the
-preferences of the submitting user. The public SSH keys of all group
-members will be added to /root/.ssh/authorized_keys.
+The job will be owned by that group and the user that submitted the job.
+There can be only one "job-group" per job, thus multiple groups having ownership
+of a single job is not possible. All members of the group will be able to
+ack/nack, change priority, edit whiteboard, and change retention tag.  The root
+password used in the job will be the group root password (if one is set),
+otherwise it will be the root password set in the preferences of the submitting
+user. The public SSH keys of all group members will be added
+to /root/.ssh/authorized_keys.
 
 * I want to view a list of jobs for all groups of which I am a member.
   (BZ#908185)
