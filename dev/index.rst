@@ -38,6 +38,7 @@ into a future version of Beaker.
 .. toctree::
    :maxdepth: 1
 
+   proposals/handling-large-installations
    proposals/enhanced-user-groups
    proposals/system-pools
    proposals/event-driven-scheduler
