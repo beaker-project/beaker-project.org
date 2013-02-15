@@ -22,14 +22,6 @@
 /releases.mk
 /releases/
 /schema/
-/server-api/.buildinfo
-/server-api/.doctrees/
-/server-api/_modules/
-/server-api/_sources/
-/server-api/_static/
-/server-api/*.html
-/server-api/objects.inv
-/server-api/searchindex.js
 /yum/rpms/
 /yum/client/RedHatEnterpriseLinux5/
 /yum/client/RedHatEnterpriseLinux6/

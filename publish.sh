@@ -48,7 +48,7 @@ cp -p --reflink=auto yum/rpms/*.rpm "$D/yum/rpms/" || :
 make -j4 -C "$D" all
 
 # Clean out junk that we don't want to publish.
-rm -rf "$D/man/.doctrees" "$D/server-api/.doctrees" "$D/docs/.doctrees"
+rm -rf "$D/man/.doctrees" "$D/docs/.doctrees"
 
 GIT_DIR=$(pwd)/.git GIT_INDEX_FILE=$(pwd)/.git/index-publish GIT_WORK_TREE="$D" git add -f -A "$D"
 tree=$(GIT_DIR=$(pwd)/.git GIT_INDEX_FILE=$(pwd)/.git/index-publish git write-tree)

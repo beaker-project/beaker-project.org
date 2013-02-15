@@ -17,7 +17,7 @@ OLD_TARBALLS = \
     releases/beaker-0.4.tar.bz2
 
 .PHONY: all
-all: server-api man docs dev yum \
+all: man docs dev yum \
      schema/beaker-job.rng \
      releases/SHA1SUM \
      releases/index.html \
@@ -29,22 +29,17 @@ all: server-api man docs dev yum \
      in-a-box/beaker-virt.html \
      $(ARTICLES)
 
-# This __requires__ insanity is needed in Fedora if multiple versions of CherryPy are installed.
-server-api::
-	$(MAKE) -C $(BEAKER)/Common bkr/__init__.py
-	env BEAKER=$(abspath $(BEAKER)) PYTHONPATH=$(BEAKER)/Common:$(BEAKER)/Server \
-	python -c '__requires__ = ["TurboGears"]; import pkg_resources; execfile("$(SPHINXBUILD)")' \
-	$(SPHINXBUILDOPTS) -c $@ -b html $(BEAKER)/Server/apidoc/ $@/
-
 man::
 	$(MAKE) -C $(BEAKER)/Common bkr/__init__.py
 	env BEAKER=$(abspath $(BEAKER)) PYTHONPATH=$(BEAKER)/Common:$(BEAKER)/Client/src \
 	$(SPHINXBUILD) $(SPHINXBUILDOPTS) -c $@ -b html $(BEAKER)/Client/doc/ $@/
 
+# This __requires__ insanity is needed in Fedora if multiple versions of CherryPy are installed.
 docs::
 	$(MAKE) -C $(BEAKER)/Common bkr/__init__.py
-	env BEAKER=$(abspath $(BEAKER)) PYTHONPATH=$(BEAKER)/Common \
-	$(SPHINXBUILD) $(SPHINXBUILDOPTS) -c $@ -b html $(BEAKER)/documentation/ $@/
+	env BEAKER=$(abspath $(BEAKER)) PYTHONPATH=$(BEAKER)/Common:$(BEAKER)/Server \
+	python -c '__requires__ = ["TurboGears"]; import pkg_resources; execfile("$(SPHINXBUILD)")' \
+	$(SPHINXBUILDOPTS) -c $@ -b html $(BEAKER)/documentation/ $@/
 
 dev::
 	$(SPHINXBUILD) $(SPHINXBUILDOPTS) -c $@ -b html ./dev/ $@/
