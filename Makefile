@@ -29,8 +29,6 @@ docs: SPHINXBUILDOPTS += -W
 
 .PHONY: all-website
 all-website: \
-     server-api \
-     man \
      dev \
      schema/beaker-job.rng \
      releases/SHA1SUM \
@@ -43,19 +41,6 @@ all-website: \
      in-a-box/beaker-distros.html \
      in-a-box/beaker-virt.html \
      $(ARTICLES)
-
-# XXX delete and redirect server-api and man when 0.12 is released
-
-server-api::
-	$(MAKE) -C $(BEAKER)/Common bkr/__init__.py
-	env BEAKER=$(abspath $(BEAKER)) PYTHONPATH=$(BEAKER)/Common:$(BEAKER)/Server \
-	python -c '__requires__ = ["TurboGears"]; import pkg_resources; execfile("$(SPHINXBUILD)")' \
-	$(SPHINXBUILDOPTS) -c $@ -b html $(BEAKER)/Server/apidoc/ $@/
-
-man::
-	$(MAKE) -C $(BEAKER)/Common bkr/__init__.py
-	env BEAKER=$(abspath $(BEAKER)) PYTHONPATH=$(BEAKER)/Common:$(BEAKER)/Client/src \
-	$(SPHINXBUILD) $(SPHINXBUILDOPTS) -c $@ -b html $(BEAKER)/Client/doc/ $@/
 
 docs.mk: beaker-branches generate-docs-mk.sh
 	./generate-docs-mk.sh >$@
