@@ -23,6 +23,7 @@ all: man docs dev yum \
      releases/index.html \
      releases/index.atom \
      $(DOWNLOADS) \
+     $(OLD_TARBALLS) \
      in-a-box/beaker.ks.html \
      in-a-box/beaker-setup.html \
      in-a-box/beaker-distros.html \
@@ -92,7 +93,7 @@ releases/%.patch:
 	echo "Release artefact $@ not published, building it" ; \
 	( cd $(BEAKER) && flock /tmp/tito tito build --tgz --tag=$* ) && cp /tmp/tito/$*.patch $@
 
-releases/SHA1SUM: $(DOWNLOADS) releases.mk
+releases/SHA1SUM: $(DOWNLOADS) $(OLD_TARBALLS) releases.mk
 	mkdir -p $(dir $@)
 	( cd $(dir $@) && ls -rv $(notdir $(DOWNLOADS)) $(notdir $(OLD_TARBALLS)) | xargs sha1sum ) >$@
 
