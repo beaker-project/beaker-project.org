@@ -2,6 +2,10 @@
 
 set -ex
 
+if [[ $1 == "--skip-yum" ]] ; then
+    skip_yum=1
+fi
+
 # Make sure we have the latest published version.
 git fetch beaker-project.org:/srv/www/beaker-project.org/git master:published
 git fetch beaker-project.org:/srv/www/stage.beaker-project.org/git master:published
@@ -47,7 +51,15 @@ cp -p --reflink=auto releases/*.tar.* releases/*.patch "$D/releases/" || :
 mkdir -p "$D/yum/rpms" || :
 cp -p --reflink=auto yum/rpms/*.rpm "$D/yum/rpms/" || :
 
-make -j4 -C "$D" all
+if [[ -n "$skip_yum" ]] ; then
+    # check out published yum subdir into $D/yum, we are not going to rebuild it
+    rm -rf "$D/yum/rpms"
+    GIT_DIR=$(pwd)/.git GIT_INDEX_FILE=$(pwd)/.git/index-publish-yum GIT_WORK_TREE="$D/yum" git read-tree published:yum
+    GIT_DIR=$(pwd)/.git GIT_INDEX_FILE=$(pwd)/.git/index-publish-yum GIT_WORK_TREE="$D/yum" git checkout-index -a -f
+    make -j4 -C "$D" all-docs all-website
+else
+    make -j4 -C "$D" all
+fi
 
 # Clean out junk that we don't want to publish.
 find "$D" -name .doctrees -exec rm -r {} \+
