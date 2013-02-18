@@ -2,8 +2,6 @@
 
 set -ex
 
-BEAKER="$(readlink -f beaker)"
-
 # Make sure we have the latest published version.
 git fetch beaker-project.org:/srv/www/beaker-project.org/git master:published
 git fetch beaker-project.org:/srv/www/stage.beaker-project.org/git master:published
@@ -30,12 +28,16 @@ D=$(mktemp -d)
 # check out HEAD of beaker-project.org into $D
 GIT_DIR=$(pwd)/.git GIT_INDEX_FILE=$(pwd)/.git/index-publish GIT_WORK_TREE="$D" git read-tree HEAD
 GIT_DIR=$(pwd)/.git GIT_INDEX_FILE=$(pwd)/.git/index-publish GIT_WORK_TREE="$D" git checkout-index -a -f
-# check out the submodule revision of beaker into $D/beaker
-GIT_DIR=$BEAKER/.git GIT_INDEX_FILE=$(pwd)/.git/index-publish-beaker GIT_WORK_TREE="$D/beaker" git read-tree $(git rev-parse HEAD:beaker)
-GIT_DIR=$BEAKER/.git GIT_INDEX_FILE=$(pwd)/.git/index-publish-beaker GIT_WORK_TREE="$D/beaker" git checkout-index -a -f
-# record SHAs in the published version
 GIT_DIR=$(pwd)/.git git rev-parse HEAD >"$D/git-rev"
-GIT_DIR="$BEAKER/.git" git rev-parse HEAD >"$D/git-rev-beaker"
+# check out each branch submodule of beaker
+# (can't use git-submodule for this since it complains about needing a work tree)
+GIT_DIR=$(pwd)/.git git ls-tree -r HEAD | grep ^160000 |
+while read mode type sha path ; do
+    GIT_DIR=$(pwd)/$path/.git GIT_INDEX_FILE=$(pwd)/.git/index-publish-beaker GIT_WORK_TREE="$D" git read-tree --empty
+    GIT_DIR=$(pwd)/$path/.git GIT_INDEX_FILE=$(pwd)/.git/index-publish-beaker GIT_WORK_TREE="$D" git read-tree --prefix=$path/ $sha
+    GIT_DIR=$(pwd)/$path/.git GIT_INDEX_FILE=$(pwd)/.git/index-publish-beaker GIT_WORK_TREE="$D" git checkout-index -a -f
+    echo $sha >"$D/git-rev-beaker-$(basename $path)"
+done
 
 # Carry existing release artifacts and RPMs over to the build directory,
 # because they are quite expensive to build/fetch and they never change.
@@ -48,7 +50,7 @@ cp -p --reflink=auto yum/rpms/*.rpm "$D/yum/rpms/" || :
 make -j4 -C "$D" all
 
 # Clean out junk that we don't want to publish.
-rm -rf "$D/man/.doctrees" "$D/server-api/.doctrees" "$D/docs/.doctrees" "$D/dev/.doctrees"
+find "$D" -name .doctrees -exec rm -r {} \+
 
 GIT_DIR=$(pwd)/.git GIT_INDEX_FILE=$(pwd)/.git/index-publish GIT_WORK_TREE="$D" git add -f -A "$D"
 tree=$(GIT_DIR=$(pwd)/.git GIT_INDEX_FILE=$(pwd)/.git/index-publish git write-tree)

@@ -1,3 +1,9 @@
-[submodule "beaker"]
-	path = beaker
+[submodule "beaker-branches/develop"]
+	path = beaker-branches/develop
+	url = git://git.beaker-project.org/beaker
+[submodule "beaker-branches/master"]
+	path = beaker-branches/master
+	url = git://git.beaker-project.org/beaker
+[submodule "beaker-branches/release-0.11"]
+	path = beaker-branches/release-0.11
 	url = git://git.beaker-project.org/beaker

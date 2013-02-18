@@ -7,7 +7,9 @@
 /dev/proposals/*.html
 /dev/objects.inv
 /dev/searchindex.js
+/docs.mk
 /docs/
+/docs-*/
 /in-a-box/beaker.ks.html
 /in-a-box/beaker-setup.html
 /in-a-box/beaker-distros.html

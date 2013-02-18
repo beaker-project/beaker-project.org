@@ -1,8 +1,14 @@
 SHELL = /bin/bash
-MAJOR_VERSION = 0
-BEAKER = beaker
+BEAKER = beaker-branches/master
 SPHINXBUILD = $(shell command -v sphinx-1.0-build sphinx-build)
 SPHINXBUILDOPTS = -W
+
+# Symbolic targets defined in this Makefile:
+# 	all-docs: 	all branches of the Sphinx docs from Beaker git
+# 	all-website: 	all the web site bits, *except* yum repos
+# 	all:		all of the above, plus yum repos
+.PHONY: all
+all: all-docs all-website yum
 
 ARTICLES = COPYING.html dev-guide.html tech-roadmap.html cobbler-migration.html
 
@@ -16,8 +22,13 @@ OLD_TARBALLS = \
     releases/beaker-0.4.3.tar.bz2 \
     releases/beaker-0.4.tar.bz2
 
-.PHONY: all
-all: server-api man docs dev yum \
+include docs.mk # defines all-docs target
+
+.PHONY: all-website
+all-website: \
+     server-api \
+     man \
+     dev \
      schema/beaker-job.rng \
      releases/SHA1SUM \
      releases/index.html \
@@ -30,7 +41,8 @@ all: server-api man docs dev yum \
      in-a-box/beaker-virt.html \
      $(ARTICLES)
 
-# This __requires__ insanity is needed in Fedora if multiple versions of CherryPy are installed.
+# XXX delete and redirect server-api and man when 0.12 is released
+
 server-api::
 	$(MAKE) -C $(BEAKER)/Common bkr/__init__.py
 	env BEAKER=$(abspath $(BEAKER)) PYTHONPATH=$(BEAKER)/Common:$(BEAKER)/Server \
@@ -42,10 +54,8 @@ man::
 	env BEAKER=$(abspath $(BEAKER)) PYTHONPATH=$(BEAKER)/Common:$(BEAKER)/Client/src \
 	$(SPHINXBUILD) $(SPHINXBUILDOPTS) -c $@ -b html $(BEAKER)/Client/doc/ $@/
 
-docs::
-	$(MAKE) -C $(BEAKER)/Common bkr/__init__.py
-	env BEAKER=$(abspath $(BEAKER)) PYTHONPATH=$(BEAKER)/Common \
-	$(SPHINXBUILD) $(SPHINXBUILDOPTS) -c $@ -b html $(BEAKER)/documentation/ $@/
+docs.mk: beaker-branches generate-docs-mk.sh
+	./generate-docs-mk.sh >$@
 
 dev::
 	$(SPHINXBUILD) $(SPHINXBUILDOPTS) -c $@ -b html ./dev/ $@/
