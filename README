@@ -50,14 +50,19 @@ has been released), update the submodule reference:
 
 Build your changes:
 
-    make publish
+    ./publish.sh
 
-Now the 'published' branch has been updated. You may want to push it to
-http://stage.beaker-project.org/ first, to make sure everything looks
-okay:
+Now the 'published' branch has been updated. First, check that the 
+changes you've introduced look sane:
+
+    git diff published~..published
+
+Then you can push to http://stage.beaker-project.org/ and check 
+everything looks okay:
 
     git push beaker-project.org:/srv/www/stage.beaker-project.org/git/ published:master
 
-Once you're happy with it, push it live:
+If something is not right, fix it, commit your fix, and re-run 
+publish.sh. Once you're happy with it, push it live:
 
     git push beaker-project.org:/srv/www/beaker-project.org/git/ published:master

@@ -125,9 +125,3 @@ PANDOC_OUTPUT_OPTS := $(if $(shell pandoc --help | grep 'Output formats:.*html5'
 check:
 # ideas: spell check everything, validate HTML, check for broken links, run sphinx linkcheck builder
 	./check-yum-repos.py
-
-.PHONY: publish
-publish:
-	git fetch beaker-project.org:/srv/www/beaker-project.org/git master:published
-	git fetch beaker-project.org:/srv/www/stage.beaker-project.org/git master:published
-	env BEAKER="$(abspath $(BEAKER))" ./publish.sh published

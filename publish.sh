@@ -1,16 +1,16 @@
 #!/bin/bash
 
-set -e
+set -ex
 
-if [ -z "$1" ] ; then
-    echo "Must pass destination branch in arg 1" >&2
-    echo "(Don't invoke this script directly, use the Makefile)" >&2
-    exit 1
-fi
+BEAKER="$(readlink -f beaker)"
+
+# Make sure we have the latest published version.
+git fetch beaker-project.org:/srv/www/beaker-project.org/git master:published
+git fetch beaker-project.org:/srv/www/stage.beaker-project.org/git master:published
 
 # This is the SHA of the current tip of the destination branch,
 # on top of which we will commit our new version.
-parent=$(git rev-parse refs/heads/$1)
+parent=$(git rev-parse refs/heads/published)
 
 if [ "$(git rev-parse HEAD)" = "$parent" ] ; then
     echo "Don't checkout the published branch!" >&2
@@ -20,7 +20,7 @@ fi
 # Sanity check: the commit from which the current destination branch was built,
 # must be an ancestor of the commit we are building from now.
 if ! git rev-list HEAD | grep -q $(git show $parent:git-rev) ; then
-    echo "Error: tip of '$1' was built from" >&2
+    echo "Error: tip of 'published' was built from" >&2
     git show $parent:git-rev >&2
     echo "which is not an ancestor of HEAD" >&2
     exit 1
@@ -56,6 +56,6 @@ commit=$(git commit-tree $tree -p $parent -p $(git rev-parse HEAD) <<EOF
 Automatic commit of generated web site from $(git rev-parse HEAD)
 EOF
 )
-git update-ref refs/heads/$1 $commit $parent
+git update-ref refs/heads/published $commit $parent
 
 rm -rf "$D"
