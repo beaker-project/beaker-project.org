@@ -43,6 +43,7 @@ into a future version of Beaker.
    proposals/system-pools
    proposals/event-driven-scheduler
    proposals/effective-job-priorities
+   proposals/harness-api
 
 .. note::
 
