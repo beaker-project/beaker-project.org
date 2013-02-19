@@ -70,6 +70,26 @@ major features may also lead to the inclusion of other more significant
 changes that are not directly related to the release focus.
 
 
+Beaker 0.12
+-----------
+
+Planned release date: TBD
+
+Beaker 0.12 lays the foundation for the Beaker 1.0 series by making
+it easier for users to switch between production and development
+Beaker instances. It has three key elements:
+
+* A new script is added to the Beaker server tools, which allows a
+  system administrator to update the task library from the task
+  library of another Beaker instance
+* The Beaker client gains a new ``--hub`` parameter which makes it easy
+  to run a command against a Beaker instance other than the one in
+  the system or user configuration file.
+* The Beaker client configuration architecture is adjusted to make it
+  easy to provide a system wide site specific configuration file, rather
+  than requiring each user to define their own configuration
+
+
 Beaker 1.0
 ----------
 
