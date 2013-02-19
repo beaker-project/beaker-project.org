@@ -1,2 +1,4 @@
+*.py    diff=python whitespace=tab-in-indent
+*.rst   whitespace=-trailing-space
 *.txt   whitespace=-trailing-space
-*.html  whitespace=-trailing-space
+*.html  diff=html whitespace=-trailing-space
