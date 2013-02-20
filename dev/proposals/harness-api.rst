@@ -1,3 +1,6 @@
+
+.. _harness-api:
+
 Stable Harness API
 ==================
 
@@ -144,6 +147,8 @@ release.
 
 Once the API has been validated, it will be declared "stable" and no further 
 backwards-incompatible changes will be made to it.
+
+.. _user-defined-harness:
 
 User-defined harness per recipe
 -------------------------------

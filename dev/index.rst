@@ -44,6 +44,7 @@ into a future version of Beaker.
    proposals/event-driven-scheduler
    proposals/effective-job-priorities
    proposals/harness-api
+   proposals/reference-harness
 
 .. note::
 
