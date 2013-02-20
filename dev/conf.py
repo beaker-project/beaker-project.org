@@ -1,5 +1,9 @@
 
-extensions = ['sphinx.ext.intersphinx', 'sphinx.ext.todo']
+extensions = [
+    'sphinx.ext.intersphinx',
+    'sphinx.ext.todo',
+    'sphinxcontrib.httpdomain',
+]
 master_doc = 'index'
 project = u'Beaker'
 copyright = u'2013, Red Hat, Inc'
