@@ -33,12 +33,42 @@ The existing XML-RPC API provides the following functionality to the harness:
 The new API covers the same areas. It also covers how Beaker configures the 
 harness.
 
-API details
------------
+Environment variables
+---------------------
 
-The API will consist of the following HTTP resources. All URL paths are 
-relative to the base URL of the beaker-proxy service on the lab controller 
-(that is, ``http://$LAB_CONTROLLER:8000/``).
+Beaker will configure the following system-wide environment variables. When 
+installed, a harness implementation must arrange to start itself on reboot and 
+then configure itself according to these values.
+
+``BEAKER_LAB_CONTROLLER_URL``
+    Base URL of the Beaker lab controller. The harness communicates with Beaker 
+    by accessing HTTP resources (described below) underneath this URL.
+
+``BEAKER_LAB_CONTROLLER``
+    The fully-qualified domain name of the lab controller to which this system 
+    is attached. This will always match the hostname portion of 
+    ``BEAKER_LAB_CONTROLLER_URL`` but is provided for convenience.
+    
+``BEAKER_RECIPE_ID``
+    The ID of the Beaker recipe which this system is currently running. Use 
+    this to fetch the recipe details from the lab controller as described 
+    below.
+
+``BEAKER_HUB_URL``
+    Base URL of the Beaker server. Note that the harness should not communicate 
+    with the server directly, but it may need to pass this value on to tasks.
+
+HTTP resources
+--------------
+
+The lab controller exposes the following HTTP resources for use by the harness. 
+All URL paths given below are relative to the value of the 
+``BEAKER_LAB_CONTROLLER_URL`` environment variable.
+
+When using the :http:method:`POST` method with the resources described below, 
+the request body may be given as HTML form data 
+(:mimetype:`application/x-www-form-urlencoded`) or encoded as a JSON object 
+(:mimetype:`application/json`).
 
 .. http:get:: /recipes/(recipe_id)/
 
@@ -119,18 +149,6 @@ relative to the base URL of the beaker-proxy service on the lab controller
    :status 201: New remote log recorded.
    :status 400: Bad parameters given.
 
-In addition to the above HTTP resources, the interface also specifies that 
-Beaker will configure the post-install environment as follows. When installed, 
-a harness implementation must arrange to start itself on reboot and then 
-configure itself according to these values.
-
-* The file ``/root/RECIPE.TXT`` will contain the ID of the recipe which this 
-  system is currently running.
-* The environment variable ``LAB_CONTROLLER`` will be set to the FQDN of the 
-  lab controller which this system is attached to.
-* The environment variable ``BEAKER`` will be set to the absolute base URL of 
-  the Beaker server.
-
 Provisional period for the API
 ------------------------------
 
@@ -186,3 +204,52 @@ The value of the ``harness`` variable will be substituted directly into the
 ``yum install`` command line. Note that this means the ``harness`` variable may 
 contain any valid package specification accepted by yum, including one or more 
 package names or absolute package URLs.
+
+Rejected features
+-----------------
+
+The following ideas were brought up during discussions of this proposal, but 
+they will not be implemented for the reasons given.
+
+Adding tasks to a running recipe
+++++++++++++++++++++++++++++++++
+
+There is no mechanism for the harness to add tasks to an existing recipe. 
+A recipe is an immutable sequence of one or more tasks for the harness to 
+execute. A clone recipe should (notionally) produce the same execution as its 
+original recipe, but this would be violated if the harness has added extra 
+tasks.
+
+In addition, adding tasks to an existing recipe introduces the possibility that 
+the recipe's state could go backwards, from Completed to Running. This would 
+violate an invariant which is relied on by a lot of code in Beaker, and by its 
+users.
+
+The recommended way for the harness to deal with the situation where a single 
+task (from Beaker's point of view) actually contains many "sub-tasks" (from the 
+harness' point of view) is to report multiple results for the task, each under 
+a different path.
+
+Deferred features
+-----------------
+
+The following ideas were brought up during discussions of this proposal, but 
+they will not be addressed by this first provisional version of the API.
+
+Harness configure per recipe
+++++++++++++++++++++++++++++
+
+Currently the harness is configured in two ways: Beaker passes configuration 
+through system-wide environment variables, as described above; and tasks 
+provide metadata to the harness, such as their expected runtime and desired 
+environment (``testinfo.desc`` for RHTS-format tasks). However, there is no 
+mechanism to override this configuration from the job XML.
+
+It is desirable to allow users to pass arbitrary harness-specific configuration 
+from their job XML, either globally at the recipe level, or at the individual 
+task level.
+
+One possibility is to allow the job XML to override or extend the task metadata 
+for a given task, by using the same fields as in ``testinfo.desc``. However, 
+it's not clear how this could be represented in XML, nor how it would extend to 
+harnesses/tasks which don't use the RHTS-like ``testinfo.desc`` metadata.
