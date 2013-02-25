@@ -77,38 +77,48 @@ the request body may be given as HTML form data
 
 .. http:post:: /recipes/(recipe_id)/watchdog
 
-   Extend the watchdog for a recipe.
+   Extends the watchdog for a recipe.
 
    :form seconds: The watchdog kill time is updated to be this many seconds 
         from now.
    :status 204: The watchdog was updated.
 
+.. http:post:: /recipes/(recipe_id)/status
+
+   Updates the status of all tasks which are not already finished.
+
+   :form status: The new status. Must be *Completed* or *Aborted*.
+   :status 204: The task status was updated.
+   :status 400: Bad parameters given.
+
+   Typically the harness will update the status of each task individually as it 
+   runs (see below). This is provided as a convenience only, for example to 
+   abort all tasks in a recipe.
+
 .. http:post:: /recipes/(recipe_id)/tasks/(task_id)/status
 
-   Update the status of a task.
+   Updates the status of a task.
 
-   :form status: The new status. Must be *running*, *completed*, or *aborted*.
+   :form status: The new status. Must be *Running*, *Completed*, or *Aborted*.
    :status 204: The task status was updated.
    :status 400: Bad parameters given.
    :status 409: Requested state transition is invalid.
 
-   Tasks in Beaker always start out having the *new* status. Once a task is 
-   *running*, its status may only change to *completed*, meaning that the task 
-   has completed execution, or *aborted*, meaning that an unrecoverable error 
-   prevented the harness from executing the task. Once a task is *completed* or 
-   *aborted* its status may not be changed. Attempting to change the status in 
-   a way that violates these rules will result in a :http:statuscode:`409` 
-   response.
-
-   Note that if a task is *aborted* the entire recipe is aborted.
+   Tasks in Beaker always start out having the *New* status. Once a task is 
+   *Running*, its status may only change to *Completed*, meaning that the task 
+   has completed execution, or *Aborted*, meaning that the task's execution did 
+   not complete (or never began) because of some unexpected condition. Once 
+   a task is *Completed* or *Aborted* its status may not be changed. Attempting 
+   to change the status in a way that violates these rules will result in 
+   a :http:statuscode:`409` response.
 
 .. http:post:: /recipes/(recipe_id)/tasks/(task_id)/results/
 
-   Record a task result. Returns a :http:statuscode:`201` response with a 
+   Records a task result. Returns a :http:statuscode:`201` response with a 
    :mailheader:`Location` header in the form 
    ``/recipes/(recipe_id)/tasks/(task_id)/results/(result_id)``.
 
-   :form result: The result. Must be *pass*, *warn*, *fail*, or *none*.
+   :form result: The result. Must be *Pass*, *Warn*, *Fail*, or *None*.
    :form path: Path of the result. Conventionally the top-level result will be 
         recorded as ``$TEST``, with sub-results as ``$TEST/suffix``, but this 
         is not required. If not specified, the default is ``/``.
@@ -126,11 +136,32 @@ the request body may be given as HTML form data
    /recipes/(recipe_id)/tasks/(task_id)/logs/(path:path)
    /recipes/(recipe_id)/tasks/(task_id)/results/(result_id)/logs/(path:path)
 
-   Upload a log file.
+   Stores a log file.
 
    :status 204: The log file was updated.
 
    Use the :mailheader:`Content-Range` header to upload part of a file.
+
+.. http:get::
+   /recipes/(recipe_id)/logs/(path:path)
+   /recipes/(recipe_id)/tasks/(task_id)/logs/(path:path)
+   /recipes/(recipe_id)/tasks/(task_id)/results/(result_id)/logs/(path:path)
+
+   Returns an uploaded log file.
+
+   Use the :mailheader:`Range` header to request part of a file.
+
+.. http:get::
+   /recipes/(recipe_id)/logs/
+   /recipes/(recipe_id)/tasks/(task_id)/logs/
+   /recipes/(recipe_id)/tasks/(task_id)/results/(result_id)/logs/
+
+   Returns a listing of all uploaded logs.
+   
+   Possible response formats include an HTML index (:mimetype:`text/html`) or 
+   an Atom feed (:mimetype:`application/atom+xml`). Use the 
+   :mailheader:`Accept` header to request a particular representation. The 
+   default is HTML.
 
 .. http:post::
    /recipes/(recipe_id)/remote-logs/
@@ -138,7 +169,7 @@ the request body may be given as HTML form data
    /recipes/(recipe_id)/tasks/(task_id)/results/(result_id)/remote-logs/
 
    Similar to the above, this creates a new log record against the recipe, 
-   task, or result respectively. However the log is not uploaded to Beaker 
+   task, or result respectively. However the log is not stored in Beaker 
    directly, only a URL reference to a remote log is stored in Beaker.
 
    :form url: URL of the remote log. For example, this might be the URL of the 
@@ -148,6 +179,18 @@ the request body may be given as HTML form data
         displayed as an HTML link. If not given, the URL itself is used.
    :status 201: New remote log recorded.
    :status 400: Bad parameters given.
+
+.. http:get::
+   /recipes/(recipe_id)/remote-logs/
+   /recipes/(recipe_id)/tasks/(task_id)/remote-logs/
+   /recipes/(recipe_id)/tasks/(task_id)/results/(result_id)/remote-logs/
+
+   Returns a listing of all registered remote logs.
+   
+   Possible response formats include an HTML index (:mimetype:`text/html`) or 
+   an Atom feed (:mimetype:`application/atom+xml`). Use the 
+   :mailheader:`Accept` header to request a particular representation. The 
+   default is HTML.
 
 Provisional period for the API
 ------------------------------
@@ -216,7 +259,7 @@ Adding tasks to a running recipe
 
 There is no mechanism for the harness to add tasks to an existing recipe. 
 A recipe is an immutable sequence of one or more tasks for the harness to 
-execute. A clone recipe should (notionally) produce the same execution as its 
+execute. A cloned recipe should produce the same execution as its 
 original recipe, but this would be violated if the harness has added extra 
 tasks.
 
@@ -236,8 +279,8 @@ Deferred features
 The following ideas were brought up during discussions of this proposal, but 
 they will not be addressed by this first provisional version of the API.
 
-Harness configure per recipe
-++++++++++++++++++++++++++++
+Harness configuration per recipe
+++++++++++++++++++++++++++++++++
 
 Currently the harness is configured in two ways: Beaker passes configuration 
 through system-wide environment variables, as described above; and tasks 
@@ -253,3 +296,37 @@ One possibility is to allow the job XML to override or extend the task metadata
 for a given task, by using the same fields as in ``testinfo.desc``. However, 
 it's not clear how this could be represented in XML, nor how it would extend to 
 harnesses/tasks which don't use the RHTS-like ``testinfo.desc`` metadata.
+
+Complete representations for every resource
++++++++++++++++++++++++++++++++++++++++++++
+
+By convention, all of the HTTP resources described above should also allow GET 
+requests, returning some useful representation. However, designing future-proof 
+response formats for all those resources is not trivial, so they are not 
+included in this proposal. The monolithic results XML (as returned by 
+:http:get:`/recipes/(recipe_id)/`) may not be the most ideal format, but it 
+does include all information about a recipe (except for logs) and has the 
+advantage of being well-established in Beaker.
+
+Aborting an entire recipe set or job
+++++++++++++++++++++++++++++++++++++
+
+The XML-RPC API includes methods for the harness to abort an entire recipe set 
+(``recipeset_stop``) or job (``job_stop``), but there is no equivalent 
+functionality defined in this API. It is not clear that this capability is 
+useful or desirable. An alternative is to offer the job submitter control over 
+what kinds of failures result in aborting all or parts of the job (see for 
+example `Nick Coghlan's suggestions 
+<http://thread.gmane.org/gmane.comp.systems.beaker.devel/451/focus=479>`_).
+
+Harness check-in
+++++++++++++++++
+
+As harness implementations proliferate, it may be useful to encourage harnesses 
+to report their name, version, and configuration to Beaker as a "harness 
+check-in" step at the start of the recipe. Beaker can display this information 
+to users, to make it clear which harness implementation ran their recipe.
+
+In future a check-in step may be formalised as part of this API, but for now 
+harnesses are encouraged to report these details as a recipe log with 
+a consistent and obvious name (for example, ``harness-checkin.log``).
