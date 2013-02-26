@@ -163,35 +163,6 @@ the request body may be given as HTML form data
    :mailheader:`Accept` header to request a particular representation. The 
    default is HTML.
 
-.. http:post::
-   /recipes/(recipe_id)/remote-logs/
-   /recipes/(recipe_id)/tasks/(task_id)/remote-logs/
-   /recipes/(recipe_id)/tasks/(task_id)/results/(result_id)/remote-logs/
-
-   Similar to the above, this creates a new log record against the recipe, 
-   task, or result respectively. However the log is not stored in Beaker 
-   directly, only a URL reference to a remote log is stored in Beaker.
-
-   :form url: URL of the remote log. For example, this might be the URL of the 
-        test results which the harness has uploaded to an external test case 
-        management system.
-   :form label: Optional label, to be used as anchor text when this log is 
-        displayed as an HTML link. If not given, the URL itself is used.
-   :status 201: New remote log recorded.
-   :status 400: Bad parameters given.
-
-.. http:get::
-   /recipes/(recipe_id)/remote-logs/
-   /recipes/(recipe_id)/tasks/(task_id)/remote-logs/
-   /recipes/(recipe_id)/tasks/(task_id)/results/(result_id)/remote-logs/
-
-   Returns a listing of all registered remote logs.
-   
-   Possible response formats include an HTML index (:mimetype:`text/html`) or 
-   an Atom feed (:mimetype:`application/atom+xml`). Use the 
-   :mailheader:`Accept` header to request a particular representation. The 
-   default is HTML.
-
 Provisional period for the API
 ------------------------------
 
@@ -330,3 +301,19 @@ to users, to make it clear which harness implementation ran their recipe.
 In future a check-in step may be formalised as part of this API, but for now 
 harnesses are encouraged to report these details as a recipe log with 
 a consistent and obvious name (for example, ``harness-checkin.log``).
+
+Storing results and logs in external systems
+++++++++++++++++++++++++++++++++++++++++++++
+
+The are no plans to integrate Beaker itself with any specific tool for managing 
+test runs and results. But a harness implementation may choose to report its 
+results to an external tool in addition to (or instead of) reporting results to 
+Beaker. In this case it would be useful for the Beaker results to contain 
+a reference to the corresponding results in the external tool.
+
+One possibility is to allow "remote" logs -- that is, logs registered in Beaker 
+but stored elsewhere. Beaker would record only the remote URL associated with 
+the log.
+
+Another possibility is to allow an optional URL to be associated with each 
+result, which is presented as a hyperlink in Beaker's web UI.
