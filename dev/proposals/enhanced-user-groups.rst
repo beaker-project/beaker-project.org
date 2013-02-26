@@ -3,9 +3,9 @@
 Enhanced User Groups
 ====================
 
-:author: Dan Callaghan
-:editors: Nick Coghlan, Raymond Mancy
-:release: Beaker 1.0
+:Author: Dan Callaghan
+:Editors: Nick Coghlan, Raymond Mancy
+:Target Release: 1.0
 
 
 Abstract

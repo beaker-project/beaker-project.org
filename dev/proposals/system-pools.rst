@@ -3,9 +3,10 @@
 System Pools
 ============
 
-:author: Dan Callaghan
-:editor: Nick Coghlan
-:release: Beaker 1.1
+:Author: Dan Callaghan
+:Editor: Nick Coghlan
+:Status: Proposed
+:Target Release: Beaker 1.1
 
 
 Abstract

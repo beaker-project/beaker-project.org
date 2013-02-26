@@ -4,7 +4,8 @@ Improved Handling of Large Beaker Installations
 ===============================================
 
 :Author: Nick Coghlan
-:Target Release: Overall theme of the 1.x series
+:Status: In Progress
+:Release Series: 1.x
 
 
 Abstract
@@ -89,6 +90,10 @@ Beaker instances. It has three key elements:
   easy to provide a system wide site specific configuration file, rather
   than requiring each user to define their own configuration
 
+Preliminary release notes are `available`__ and will be updated throughout
+the development cycle.
+
+.. __: ../../docs-develop/whats-new/index.html#what-s-new-in-beaker-0-12
 
 Beaker 1.0
 ----------
