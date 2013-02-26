@@ -66,9 +66,8 @@ All URL paths given below are relative to the value of the
 ``BEAKER_LAB_CONTROLLER_URL`` environment variable.
 
 When using the :http:method:`POST` method with the resources described below, 
-the request body may be given as HTML form data 
-(:mimetype:`application/x-www-form-urlencoded`) or encoded as a JSON object 
-(:mimetype:`application/json`).
+the request body must be given as HTML form data 
+(:mimetype:`application/x-www-form-urlencoded`).
 
 .. http:get:: /recipes/(recipe_id)/
 
@@ -278,6 +277,9 @@ included in this proposal. The monolithic results XML (as returned by
 :http:get:`/recipes/(recipe_id)/`) may not be the most ideal format, but it 
 does include all information about a recipe (except for logs) and has the 
 advantage of being well-established in Beaker.
+
+Once these future response formats have been designed, they can also be used 
+for requests instead of the simple form encoding as defined in this proposal.
 
 Aborting an entire recipe set or job
 ++++++++++++++++++++++++++++++++++++
