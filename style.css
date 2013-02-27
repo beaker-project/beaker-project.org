@@ -149,7 +149,8 @@ nav .breadcrumbs, nav .rellinks {
 }
 nav .rellinks {
     position: absolute;
-    right: 0;
+    /* This 0.5em corresponds to 0.5em padding on body_element */
+    right: 0.5em;
 }
 nav .breadcrumbs li, nav .rellinks li {
     display: inline;
