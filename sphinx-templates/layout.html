@@ -43,6 +43,11 @@
   </ul>
 {%- endmacro %}
 <div class="main_content" lang="en">
+{% if branch_warning %}
+  <div class="body_element">
+    <p class="branch-warning">{{ branch_warning }}</p>
+  </div>
+{% endif %}
   <nav class="body_element">{{ relbar() }}</nav>
   <article class="body_element">
     {{ self.body() }}

@@ -1,7 +1,7 @@
 SHELL = /bin/bash
 BEAKER = beaker-branches/master
 SPHINXBUILD = $(shell command -v sphinx-1.0-build sphinx-build)
-SPHINXBUILDOPTS = -W
+SPHINXBUILDOPTS =
 
 # Symbolic targets defined in this Makefile:
 # 	all-docs: 	all branches of the Sphinx docs from Beaker git
@@ -23,6 +23,9 @@ OLD_TARBALLS = \
     releases/beaker-0.4.tar.bz2
 
 include docs.mk # defines all-docs target
+
+# treat warnings as errors only for the released docs
+docs: SPHINXBUILDOPTS += -W
 
 .PHONY: all-website
 all-website: \
@@ -57,7 +60,9 @@ man::
 docs.mk: beaker-branches generate-docs-mk.sh
 	./generate-docs-mk.sh >$@
 
-dev::
+.PHONY: dev
+dev: SPHINXBUILDOPTS += -W
+dev:
 	$(SPHINXBUILD) $(SPHINXBUILDOPTS) -c $@ -b html ./dev/ $@/
 
 schema/beaker-job.rng: $(BEAKER)/Common/bkr/common/schema/beaker-job.rng
