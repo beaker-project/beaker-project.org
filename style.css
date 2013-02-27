@@ -164,6 +164,13 @@ nav .rellinks li:after {
 nav .rellinks li:last-child:after {
     content: none;
 }
+.branch-warning {
+    background-color: #EBC2D6;
+    border-radius: 1em;
+    padding: 1em;
+    margin-bottom: 1em;
+    text-align: center;
+}
 div.admonition {
     background-color: #C2D6EB;
     border-radius: 1em 1em 1em 1em;
