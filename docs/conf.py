@@ -16,6 +16,8 @@ intersphinx_mapping['python'] = ('http://docs.python.org/',
 intersphinx_mapping['beakerdev'] = ('../dev/',
         os.path.join(os.path.dirname(__file__), '..', 'dev', 'objects.inv'))
 
+keep_warnings = True
+
 html_context = {}
 if os.path.basename(os.environ['BEAKER']) == 'master':
     html_context['branch_warning'] = ''
