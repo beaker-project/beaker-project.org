@@ -19,5 +19,6 @@ pygments_style = 'sphinx'
 templates_path = ['../sphinx-templates']
 
 
-intersphinx_mapping = {'python': ('http://docs.python.org/', '../python-intersphinx.inv'),
-                       'beaker': ('../docs/', None)}
+intersphinx_mapping = {'python': ('http://docs.python.org/',
+                                  '../python-intersphinx.inv'),
+                      }

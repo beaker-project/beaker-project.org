@@ -10,14 +10,14 @@ for branch_dir in beaker-branches/* ; do
     fi
     dests+=("$dest")
     echo ".PHONY: $dest"
-    echo "$dest: $branch_dir"
+    echo "$dest: $branch_dir dev"
     cat <<"EOF"
 	mkdir -p $@
 	$(MAKE) -C $</Common bkr/__init__.py
 	# This __requires__ insanity is needed in Fedora if multiple versions of CherryPy are installed.
 	BEAKER=$(abspath $<) \
 	PYTHONPATH=$</Common:$</Server:$</Client/src \
-	python -c '__requires__ = ["TurboGears"]; import pkg_resources; execfile("$(SPHINXBUILD)")' \
+	python -c '__requires__ = ["CherryPy < 3.0"]; import pkg_resources; execfile("$(SPHINXBUILD)")' \
 	$(SPHINXBUILDOPTS) -c docs/ -b html $</documentation/ $@/
 EOF
     echo
