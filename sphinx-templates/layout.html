@@ -49,6 +49,11 @@
   </div>
 {% endif %}
   <nav class="body_element">{{ relbar() }}</nav>
+{% if "proposals/" in pagename %}
+  <div class="body_element">
+    {{ toc }}
+  </div>
+{% endif %}
   <article class="body_element">
     {{ self.body() }}
   </article>

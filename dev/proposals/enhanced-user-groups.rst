@@ -104,6 +104,9 @@ Proposed User Interface
 Self-Service User Groups
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
+Creating Ad Hoc Groups
+^^^^^^^^^^^^^^^^^^^^^^
+
 * I want to create a new group. (BZ#908172)
 
 Through the web UI:
@@ -117,6 +120,10 @@ Through the ``bkr`` cli::
 
 A new group is created, with one member (you) who is also the group owner.
 The change is recorded in the "Group Activity" log.
+
+
+Creating LDAP-Derived Groups
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * I am a Beaker administrator and I want to create a new group whose
   membership is populated from LDAP. (BZ#908173)
@@ -141,7 +148,11 @@ choose to refresh the group membership more frequently.
 Note that LDAP groups cannot be updated through Beaker. They have no
 owners, and all members are treated as having job modification permissions.
 
-* I want to view the details of a group of which I am a member. (BZ#541282)
+
+Viewing Group Details
+^^^^^^^^^^^^^^^^^^^^^
+
+* I want to view the details of a group. (BZ#541282)
 
 Through the web UI:
 
@@ -151,6 +162,10 @@ Through the web UI:
 Through the ``bkr`` cli::
 
    bkr group-members <mygroup>
+
+
+Updating Group Details
+^^^^^^^^^^^^^^^^^^^^^^
 
 * I want to update the details of a group I own.
 
@@ -169,6 +184,10 @@ Through the ``bkr`` cli::
 The group details are updated and the change is recorded in the
 "Group Activity" log.
 
+
+Updating Group Membership
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
 * I want to add other users to a group I own. (BZ#908176)
 
 Through the web UI:
@@ -182,6 +201,23 @@ Through the ``bkr`` cli::
 
 The user is added to the group. The change is recorded in the
 "Group Activity" log.
+
+* I want to remove a member from a group I own. (BZ#908178)
+
+Through the web UI:
+
+   Go to the group page. Find the user in the membership list, and click "Remove".
+
+Through the ``bkr`` cli::
+
+   bkr group-modify --remove-member=<someusername> <mygroup>
+
+The user is removed from the group. The change is recorded in the
+"Group Activity" log.
+
+
+Updating Group Permissions
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * I want to grant another member owner rights to the group (or revoke
   those rights). (BZ#908174)
@@ -217,22 +253,12 @@ The user is granted job modification rights, allowing them to modify jobs
 submitted on behalf of the group as if they were the job submitter.
 The change is recorded in the "Group Activity" log.
 
-* I want to remove a member from a group I own. (BZ#908178)
-
-Through the web UI:
-
-   Go to the group page. Find the user in the membership list, and click "Remove".
-
-Through the ``bkr`` cli::
-
-   bkr group-modify --remove-member=<someusername> <mygroup>
-
-The user is removed from the group. The change is recorded in the
-"Group Activity" log.
-
 
 Group Job Management
 ~~~~~~~~~~~~~~~~~~~~
+
+Submitting Shared Jobs
+^^^^^^^^^^^^^^^^^^^^^^
 
 * I want to submit a job for a particular group (of which I am a member).
   (BZ#908183)
@@ -256,6 +282,10 @@ the preferences of the submitting user. The public SSH keys of all group
 members with job modification permissions will be added to
 ``/root/.ssh/authorized_keys``.
 
+
+Viewing Shared Jobs
+^^^^^^^^^^^^^^^^^^^
+
 * I want to view a list of jobs for all groups of which I am a member.
   (BZ#908185)
 
@@ -264,13 +294,17 @@ can manage, including those the user submitted themselves, as well as
 those submitted on behalf of a group where the user has job modification
 permissions.
 
-* I want to view a list jobs for a particular group (of which I am a member).
+* I want to view a list of jobs for a particular group.
 
 Both the "My Jobs" page and the main job list will allow filtering by
 the owning group. This will permit users to display jobs owned by
 particular groups (whether they are a member of those groups or not), as
 well as displaying only the jobs that were not submitted on behalf of a
 group at all.
+
+
+Root Password Configuration
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * I want to set the shared root password to be used in all jobs for a
   particular group. (BZ#908186)
@@ -294,9 +328,16 @@ on the Preferences page - when given in the clear, individual passwords are
 automatically hashed before storage).
 
 Changes to the group's root password are recorded in the "Group Activity"
-log. Th activity log only records when the change occurred, and the user
+log. The activity log only records when the change occurred, and the user
 that made the  change - the password itself is not recorded in the activity
 log, not even in hashed form).
+
+.. note::
+
+   It is *strongly* recommended that group members upload their public
+   SSH keys (which will be automatically added to systems provisioned
+   for group jobs) rather than setting a shared root password for the
+   group.
 
 
 Upgrading Existing Beaker Installations
@@ -346,11 +387,12 @@ design:
 
   .. _Closure Table: http://stackoverflow.com/questions/192220/what-is-the-most-efficient-elegant-way-to-parse-a-flat-table-into-a-tree/192462#192462
 
-* User-level self service to request group membership, or to remove yourself
-  from groups. This capability is likely to be added in a later iteration.
-  In the meantime, group owners may include information on requesting
-  membership in the group description, and the list of group owners will
-  be visible in the web UI.
+* User-level self service to request group membership (including the
+  associated queue interface for group owners to approve/deny requests),
+  or to remove yourself from groups. This capability is likely to be added
+  in a later iteration. In the meantime, group owners may include
+  information on requesting membership in the group description, and
+  the list of group owners will be visible in the web UI.
 
 * More fine-grained group permissions. The initial iteration has only three
   effective levels of access, job submission accounts, ordinary group members
@@ -361,6 +403,18 @@ design:
   * Grant/revoke co-ownership (currently allowed for all co-owners)
   * Modify group display name and description (currently allowed for all co-owners)
 
+  For ordinary members, it may also be desirable to separate out:
+
+  * Ability to log into provisioned systems based on their SSH key (currently
+    allowed for all group members with job modification privileges and a
+    public SSH key registered in Beaker)
+  * Ability to ack/nack job results (currently allowed for all group members
+    with job modification privileges)
+  * Ability to change the associated product (currently allowed for all
+    group members with job modification privileges)
+  * Ability to change the job retention policy (currently allowed for all
+    group members with job modification privileges)
+
 * Group deletion. The initial iteration does not allow groups to be deleted,
   or even hidden. If subgroup management is added, and the associated UI
   includes some form of list for group selection, then it is likely that
@@ -368,3 +422,16 @@ design:
   it doesn't show up in such lists. Creating a usable UI for the
   :ref:`proposal-system-pools` proposal may also lead to this feature
   being implemented.
+
+* Default groups for job submission. The initial iteration always defaults to
+  no group assocation for submitted jobs. It may be desirable to allow users
+  to designate a "default group" for their jobs, such that members of that
+  group will be granted access to their jobs if no other group is specified.
+
+* Changing the group of a job after submission. While this is potentially
+  useful in some respects, it will mean that the state of the provisioned
+  systems (at least the set of authorized SSH keys and potentially the
+  root password) will no longer match the nominated group. It may make more
+  sense to allow additional groups to be granted edit access on the job
+  
+
