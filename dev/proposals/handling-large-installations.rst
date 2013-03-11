@@ -127,10 +127,6 @@ This release will also allow users to express preferences and strict
 requirements regarding the pools which are used to run their submitted
 jobs.
 
-Note: the details of this specific proposal are currently `under review`__
-
-.. __: https://lists.fedorahosted.org/pipermail/beaker-devel/2013-February/000445.html
-
 
 Beaker 1.2 (tentative)
 ----------------------
@@ -149,6 +145,16 @@ incrementally over the course of the 1.0, 1.1 and 1.2 releases.
 
 
 Beaker 1.3 (tentative)
+----------------------
+
+The tentative focus of Beaker 1.3 is :ref:`proposal-implicit-system-pools`.
+
+The key element of this proposal is the creation of implicit system pools,
+associated with particular user groups. This is intended to streamline
+a number of anticipated use cases for the system pools infrastructure.
+
+
+Beaker 1.4 (tentative)
 ----------------------
 
 Currently, clean isolation of sensitive systems, tasks and job details

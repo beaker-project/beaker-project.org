@@ -41,6 +41,7 @@ into a future version of Beaker.
    proposals/handling-large-installations
    proposals/enhanced-user-groups
    proposals/system-pools
+   proposals/implicit-system-pools
    proposals/event-driven-scheduler
    proposals/effective-job-priorities
    proposals/harness-api
