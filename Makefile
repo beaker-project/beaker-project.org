@@ -120,7 +120,7 @@ releases/SHA1SUM: $(DOWNLOADS) $(OLD_TARBALLS) releases.mk
 yum::
 	./build-yum-repos.py --config yum-repos.conf --dest $@
 
-in-a-box/%.html: in-a-box/%
+in-a-box/%.html: in-a-box/% shocco.sh
 	./shocco.sh $< >$@
 
 # This is annoying... at some point pandoc started ignoring the -5 option,
