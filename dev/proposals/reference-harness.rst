@@ -16,10 +16,13 @@ harness features which have been proposed previously under the mantle of
 * No external dependencies
 * Portability to older distros and non-Linux platforms
 * Clean, complete execution environment for tasks
+* Installing task dependencies at the start of the task, instead of relying on 
+  Anaconda ``%packages``
 
 Explicit *non*-goals:
 
 * 100% compatibility with Beah (RHTS)
+* RHTS XML-RPC emulation
 * Support for multi-host synchronization
 
 As suggested by its name, the reference harness will also provide a starting 
