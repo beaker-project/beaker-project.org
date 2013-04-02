@@ -28,7 +28,9 @@ if ! git rev-list HEAD | grep -q $(git show $parent:git-rev) ; then
     exit 1
 fi
 
-D=$(mktemp -d)
+D=/tmp/beaker-project.org-publish-work-tree
+rm -rf "$D"
+mkdir -p "$D"
 # check out HEAD of beaker-project.org into $D
 GIT_DIR=$(pwd)/.git GIT_INDEX_FILE=$(pwd)/.git/index-publish GIT_WORK_TREE="$D" git read-tree HEAD
 GIT_DIR=$(pwd)/.git GIT_INDEX_FILE=$(pwd)/.git/index-publish GIT_WORK_TREE="$D" git checkout-index -a -f
