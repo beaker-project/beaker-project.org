@@ -1,4 +1,5 @@
 /*.html
+/changelogs.mk
 /dev/.buildinfo
 /dev/.doctrees/
 /dev/_static/
@@ -10,11 +11,13 @@
 /docs.mk
 /docs/
 /docs-*/
+/downloads.mk
+/git-rev*
 /in-a-box/beaker.ks.html
 /in-a-box/beaker-setup.html
 /in-a-box/beaker-distros.html
 /in-a-box/beaker-virt.html
-/releases.mk
+/old-downloads.mk
 /releases/
 /schema/
 /yum/rpms/

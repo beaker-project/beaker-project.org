@@ -1,10 +1,9 @@
 #!/usr/bin/python -B
 
 import sys
-
-import changelog
+import git_tags
 print 'DOWNLOADS = \\'
-for release in changelog.parse(sys.stdin.read().decode('utf8')):
+for release in git_tags.releases(sys.argv[1]):
     for download in release.downloads:
         print '    releases/%s \\' % download
 print

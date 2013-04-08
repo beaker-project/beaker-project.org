@@ -2,34 +2,33 @@
 # vim: set fileencoding=utf8 :
 
 """
-Takes Beaker's spec file and writes out the Releases page (or feed) to stdout, 
-based on the contents of the %changelog section.
+Writes out the Releases page (or feed) to stdout, based on tags in Beaker's git.
 """
 
 import sys
 import re
 import datetime
+from itertools import groupby, takewhile
+import lxml.html
 from genshi import Markup
 from genshi.template import MarkupTemplate
 
-import changelog
+import git_tags
 
-def linkify_bugzilla(change):
-    def result():
-        chunks = re.split(r'(\d{6,})', change)
-        while True:
-            if not chunks:
-                break
-            yield chunks.pop(0)
-            if not chunks:
-                break
-            bug_id = chunks.pop(0)
-            yield Markup('<a href="https://bugzilla.redhat.com/show_bug.cgi?id=%s">%s</a>'
-                    % (bug_id, bug_id))
-    return Markup('').join(list(result()))
-
-def strip_change_author(change):
-    return re.sub(r'\s*\(\S+@\S+\)\s*$', '', change)
+def minor_blurb(minor):
+    section_id = 'beaker-%s' % (minor.replace('.', '-'))
+    tree = lxml.html.parse('docs/whats-new/index.html')
+    blurb = tree.find('//div[@id="%s"]/p[1]' % section_id)
+    if blurb is None:
+        return None
+    if len(blurb):
+        blurb[-1].tail = (blurb[-1].tail or '') + ' '
+    else:
+        blurb.text = (blurb.text or '') + ' '
+    more_link = lxml.html.Element('a', style='font-style: italic;', href='../docs/whats-new/#%s' % section_id)
+    more_link.text = u'(more\u2026)'
+    blurb.append(more_link)
+    return Markup(lxml.html.tostring(blurb))
 
 _sha1sums = dict((line[42:].rstrip('\n'), line[:40]) for line in open('releases/SHA1SUM'))
 def sha1(filename):
@@ -47,18 +46,20 @@ html_template = MarkupTemplate('''
   <![endif]-->
   <link href="../style.css" rel="stylesheet" type="text/css"/>
   <style type="text/css">
-    h2 {
+    article {
+        margin-bottom: 1em;
+    }
+    .release h2 {
         display: inline-block;
-        margin: 0 0 0.25em 0;
         font-size: 1em;
     }
-    .date:before {
-        content: "&#183;";
+    .date:before, .changelog-link:before {
+        content: "·";
         margin-right: 0.3em;
     }
-    .date {
+    .date, .changelog-link {
         display: inline-block;
-        margin-left: 0.5em;
+        margin-left: 0.4em;
     }
     .download {
         margin: 0.5em 0;
@@ -77,9 +78,6 @@ html_template = MarkupTemplate('''
     .hash {
         white-space: nowrap;
         font-size: 0.9em;
-    }
-    .changelog {
-        margin: 0;
     }
   </style>
   <link rel="profile" href="http://microformats.org/profile/hatom" />
@@ -103,16 +101,17 @@ html_template = MarkupTemplate('''
 
 <h1>Releases</h1>
 
-<span py:def="release_descr(release)" py:strip="True">
-    Beaker
-    <py:if test="release.release != '-1'">patch</py:if>
-    ${release.version}<py:if test="release.release != '-1'">${release.release}</py:if>
-</span>
+<section py:for="minor, releases in groupby(releases, lambda r: r.minor)">
+<h2>Beaker ${minor}</h2>
+${minor_blurb(minor)}
 
-<article class="hentry" py:for="release in releases" id="beaker-${release.version}${release.release}">
-    <h2 class="entry-title">${release_descr(release)}</h2>
+<article class="release hentry" py:for="release in releases" id="beaker-${release.version}-1">
+    <h2 class="entry-title">Beaker ${release.version}</h2>
     <div class="date">
-        <time datetime="${release.date}" pubdate="pubdate">${release.date.strftime('%-1d %B %Y')}</time>
+        <time datetime="${release.timestamp}" pubdate="pubdate">${release.timestamp.strftime('%-1d %B %Y')}</time>
+    </div>
+    <div class="changelog-link">
+        <a href="${release.changelog_href}">Change log</a>
     </div>
     <div class="author vcard">
         <span class="fn" title="${release.name}" />
@@ -125,10 +124,9 @@ html_template = MarkupTemplate('''
             <span class="hash">SHA1: <tt>${sha1(download)}</tt></span>
         </p>
     </div>
-    <ul class="changelog entry-content">
-        <li py:for="change in release.changes">${linkify_bugzilla(strip_change_author(change))}</li>
-    </ul>
 </article>
+
+</section>
 
 <p>For older releases, please refer to
 <a href="http://git.beaker-project.org/cgit/beaker/">Beaker’s git repo</a>.</p>
@@ -148,26 +146,20 @@ atom_template = MarkupTemplate('''
 <link rel="alternate" href="http://beaker-project.org/releases/" />
 
 <entry py:for="release in releases">
-    <id>http://beaker-project.org/releases/#beaker-${release.version}${release.release}</id>
-    <published>${release.date}T00:00:00Z</published>
+    <id>http://beaker-project.org/releases/#beaker-${release.version}-1</id>
+    <published>${release.timestamp.isoformat('T')}</published>
     <author>
         <name>${release.name}</name>
         <email>${release.email}</email>
     </author>
-    <title type="text">
-        Beaker
-        <py:if test="release.release != '-1'">patch</py:if>
-        ${release.version}<py:if test="release.release != '-1'">${release.release}</py:if>
-    </title>
+    <title type="text">Beaker ${release.version}</title>
     <content type="xhtml">
     <div xmlns="http://www.w3.org/1999/xhtml">
+        <p><a href="${release.changelog_href}">Change log</a></p>
         <p py:for="download in release.downloads">
             <a href="${download}">${download}</a><br />
             <span class="hash">SHA1: <tt>${sha1(download)}</tt></span>
         </p>
-        <ul>
-            <li py:for="change in release.changes">${linkify_bugzilla(strip_change_author(change))}</li>
-        </ul>
     </div>
     </content>
 </entry>
@@ -177,19 +169,15 @@ atom_template = MarkupTemplate('''
 
 if __name__ == '__main__':
     from optparse import OptionParser
-    parser = OptionParser('usage: %prog [options] beaker.spec', description=__doc__)
+    parser = OptionParser('usage: %prog [options] GIT_DIR', description=__doc__)
     parser.add_option('-f', '--format', type='choice', choices=['html', 'atom'],
             help='Output format [default: %default]')
     parser.set_defaults(format='html')
     options, args = parser.parse_args()
     if len(args) != 1:
-        parser.error('Specify beaker.spec to parse')
+        parser.error('Specify Beaker git dir')
 
-    if args[0] == '-':
-        f = sys.stdin
-    else:
-        f = open(args[0], 'r')
-    releases = list(changelog.parse(f.read().decode('utf8')))
+    releases = git_tags.releases(args[0])
     if options.format == 'html':
         stream = html_template.generate(**globals())
         sys.stdout.write(stream.render('xhtml', doctype='html5'))

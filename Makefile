@@ -12,15 +12,9 @@ all: all-docs all-website yum
 
 ARTICLES = COPYING.html dev-guide.html tech-roadmap.html cobbler-migration.html
 
-include releases.mk
-OLD_TARBALLS = \
-    releases/beaker-0.6.16.tar.bz2 \
-    releases/beaker-0.6.1.tar.gz \
-    releases/beaker-0.6.1.tar.bz2 \
-    releases/beaker-0.5.7.tar.bz2 \
-    releases/beaker-0.4.75.tar.bz2 \
-    releases/beaker-0.4.3.tar.bz2 \
-    releases/beaker-0.4.tar.bz2
+include downloads.mk
+include old-downloads.mk
+include changelogs.mk
 
 include docs.mk # defines all-docs target
 
@@ -35,7 +29,8 @@ all-website: \
      releases/index.html \
      releases/index.atom \
      $(DOWNLOADS) \
-     $(OLD_TARBALLS) \
+     $(OLD_DOWNLOADS) \
+     $(CHANGELOGS) \
      in-a-box/beaker.ks.html \
      in-a-box/beaker-setup.html \
      in-a-box/beaker-distros.html \
@@ -54,18 +49,27 @@ schema/beaker-job.rng: $(BEAKER)/Common/bkr/common/schema/beaker-job.rng
 	mkdir -p $(dir $@)
 	cp -p $< $@
 
-releases.mk: $(BEAKER)/beaker.spec generate-releases-mk.py changelog.py
-	./generate-releases-mk.py <$< >$@
+.PHONY:
+git-rev-beaker-master:
+	read old_sha <$@ ; \
+	new_sha="$$(GIT_DIR=$(BEAKER)/.git git rev-parse HEAD)" ; \
+	[[ $$old_sha != $$new_sha ]] && echo $$new_sha >$@
 
-releases/index.html: $(BEAKER)/beaker.spec releases/SHA1SUM generate-releases-index.py changelog.py
+downloads.mk: git-rev-beaker-master generate-downloads-mk.py git_tags.py
+	./generate-downloads-mk.py $(BEAKER) >$@
+
+changelogs.mk: git-rev-beaker-master generate-changelogs-mk.py git_tags.py
+	./generate-changelogs-mk.py $(BEAKER) >$@
+
+releases/index.html: git-rev-beaker-master releases/SHA1SUM generate-releases-index.py git_tags.py docs/whats-new/index.html
 	mkdir -p $(dir $@)
-	./generate-releases-index.py --format=html $< >$@
+	./generate-releases-index.py --format=html $(BEAKER) >$@
 
-releases/index.atom: $(BEAKER)/beaker.spec releases/SHA1SUM generate-releases-index.py changelog.py
+releases/index.atom: git-rev-beaker-master releases/SHA1SUM generate-releases-index.py git_tags.py
 	mkdir -p $(dir $@)
-	./generate-releases-index.py --format=atom $< >$@
+	./generate-releases-index.py --format=atom $(BEAKER) >$@
 
-$(OLD_TARBALLS):
+$(OLD_DOWNLOADS):
 	mkdir -p $(dir $@)
 	cd $(dir $@) && curl -# -R -f -O http://beaker-project.org/$@
 
@@ -98,9 +102,9 @@ releases/%.patch:
 	echo "Release artefact $@ not published, building it" ; \
 	( cd $(BEAKER) && flock /tmp/tito tito build --tgz --tag=$* ) && cp /tmp/tito/$*.patch $@
 
-releases/SHA1SUM: $(DOWNLOADS) $(OLD_TARBALLS) releases.mk
+releases/SHA1SUM: $(DOWNLOADS) $(OLD_DOWNLOADS)
 	mkdir -p $(dir $@)
-	( cd $(dir $@) && ls -rv $(notdir $(DOWNLOADS)) $(notdir $(OLD_TARBALLS)) | xargs sha1sum ) >$@
+	( cd $(dir $@) && ls -rv $(notdir $(DOWNLOADS)) $(notdir $(OLD_DOWNLOADS)) | xargs sha1sum ) >$@
 
 yum::
 	./build-yum-repos.py --config yum-repos.conf --dest $@
