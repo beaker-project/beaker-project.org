@@ -163,3 +163,5 @@ OLD_DOWNLOADS = \
     releases/beaker-0.9.4-2.patch \
     releases/beaker-0.9.4.tar.gz \
     releases/beaker-0.9.4.tar.xz \
+    releases/beaker-0.10.1-2.patch \
+    releases/beaker-0.10.5-2.patch
