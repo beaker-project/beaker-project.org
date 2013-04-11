@@ -58,9 +58,9 @@ if [[ -n "$skip_yum" ]] ; then
     rm -rf "$D/yum/rpms"
     GIT_DIR=$(pwd)/.git GIT_INDEX_FILE=$(pwd)/.git/index-publish-yum GIT_WORK_TREE="$D/yum" git read-tree published:yum
     GIT_DIR=$(pwd)/.git GIT_INDEX_FILE=$(pwd)/.git/index-publish-yum GIT_WORK_TREE="$D/yum" git checkout-index -a -f
-    make -j4 -C "$D" all-docs all-website
+    make -j4 -C "$D" BEAKER_GIT="$(pwd)/.git/modules/beaker-branches/master" all-docs all-website
 else
-    make -j4 -C "$D" all
+    make -j4 -C "$D" BEAKER_GIT="$(pwd)/.git/modules/beaker-branches/master" all
 fi
 
 # Clean out junk that we don't want to publish.

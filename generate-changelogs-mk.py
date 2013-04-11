@@ -7,7 +7,7 @@ changelogs = []
 for i in xrange(len(versions) - 1):
     changelog = 'releases/beaker-%s-ChangeLog' % versions[i]
     print '%s: changelogs.mk git_tags.py' % changelog
-    print '\tGIT_DIR=$(BEAKER)/.git git log --no-notes --no-merges ' \
+    print '\tGIT_DIR=$(BEAKER_GIT) git log --no-notes --no-merges ' \
           'beaker-%s-1..beaker-%s-1 >$@' % (versions[i + 1], versions[i])
     changelogs.append(changelog)
 print 'CHANGELOGS = %s' % ' '.join(changelogs)

@@ -1,5 +1,6 @@
 SHELL = /bin/bash
 BEAKER = beaker-branches/master
+BEAKER_GIT = beaker-branches/master
 SPHINXBUILD = $(shell command -v sphinx-1.0-build sphinx-build)
 SPHINXBUILDOPTS =
 
@@ -52,22 +53,22 @@ schema/beaker-job.rng: $(BEAKER)/Common/bkr/common/schema/beaker-job.rng
 .PHONY:
 git-rev-beaker-master:
 	read old_sha <$@ ; \
-	new_sha="$$(GIT_DIR=$(BEAKER)/.git git rev-parse HEAD)" ; \
+	new_sha="$$(GIT_DIR=$(BEAKER_GIT) git rev-parse HEAD)" ; \
 	[[ $$old_sha != $$new_sha ]] && echo $$new_sha >$@
 
 downloads.mk: git-rev-beaker-master generate-downloads-mk.py git_tags.py
-	./generate-downloads-mk.py $(BEAKER) >$@
+	./generate-downloads-mk.py $(BEAKER_GIT) >$@
 
 changelogs.mk: git-rev-beaker-master generate-changelogs-mk.py git_tags.py
-	./generate-changelogs-mk.py $(BEAKER) >$@
+	./generate-changelogs-mk.py $(BEAKER_GIT) >$@
 
-releases/index.html: git-rev-beaker-master releases/SHA1SUM generate-releases-index.py git_tags.py docs/whats-new/index.html
+releases/index.html: git-rev-beaker-master releases/SHA1SUM generate-releases-index.py git_tags.py docs
 	mkdir -p $(dir $@)
-	./generate-releases-index.py --format=html $(BEAKER) >$@
+	./generate-releases-index.py --format=html $(BEAKER_GIT) >$@
 
 releases/index.atom: git-rev-beaker-master releases/SHA1SUM generate-releases-index.py git_tags.py
 	mkdir -p $(dir $@)
-	./generate-releases-index.py --format=atom $(BEAKER) >$@
+	./generate-releases-index.py --format=atom $(BEAKER_GIT) >$@
 
 $(OLD_DOWNLOADS):
 	mkdir -p $(dir $@)
