@@ -15,6 +15,7 @@ harness features which have been proposed previously under the mantle of
   Beaker task library)
 * No external dependencies
 * Portability to older distros and non-Linux platforms
+* IPv6 support (including dual-stack and IPv6-only)
 * Clean, complete execution environment for tasks
 * Installing task dependencies at the start of the task, instead of relying on 
   Anaconda ``%packages``
