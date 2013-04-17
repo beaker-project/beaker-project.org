@@ -5,8 +5,8 @@ Stable Harness API
 ==================
 
 :Author: Dan Callaghan
-:Status: Proposed
-:Target Release: 0.12
+:Status: Implemented (with minor modifications)
+:Release: `0.12 <http://beaker-project.org/docs/whats-new/release-0.12.html#provisional-support-for-alternative-harnesses>`__
 
 Beah, the Beaker harness, currently uses XML-RPC methods exposed by 
 beaker-proxy to communicate with Beaker. This API has evolved organically, in 
