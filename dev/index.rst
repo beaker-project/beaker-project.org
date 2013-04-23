@@ -44,7 +44,6 @@ into a future version of Beaker.
    proposals/implicit-system-pools
    proposals/event-driven-scheduler
    proposals/effective-job-priorities
-   proposals/harness-api
    proposals/reference-harness
 
 .. note::
@@ -65,10 +64,10 @@ Completed design proposals
 These are design proposals that have been incorporated into a previous
 version of Beaker.
 
-* There are currently no previously completed design proposals
-
 .. toctree::
    :maxdepth: 1
+
+   proposals/harness-api
 
 
 Rejected/withdrawn design proposals

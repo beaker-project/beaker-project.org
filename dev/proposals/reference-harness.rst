@@ -34,9 +34,9 @@ other harnesses, a complete replacement for Beah, or any of the above.
 
 The reference harness will be a separate source tree from Beaker, and its 
 release cycle will not (necessarily) be tied to Beaker releases. The 
-:ref:`user-defined harness support <user-defined-harness>` in the harness API 
-proposal will allow multiple versions of the reference harness to be used at 
-any time, without interfering with Beaker itself.
+user-defined harness support in Beaker will allow multiple versions of the 
+reference harness to be used at any time, without interfering with Beaker 
+itself.
 
 Implementation language
 -----------------------
