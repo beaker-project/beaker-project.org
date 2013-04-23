@@ -64,11 +64,10 @@ changes you've introduced look sane:
     git diff published~..published
 
 If the diff looks incorrect (for example, you accidentally ran `./publish.sh`
-before running `git pull` or commiting a change), look up the previous
-commit and discard the unwanted publication attempt:
+before running `git pull` or commiting a change), discard the unwanted 
+publication attempt:
 
-    git log -n2 published
-    git update-ref refs/heads/published <SHA-of-previous-commit>
+    git fetch beaker-project.org:/srv/www/beaker-project.org/git/ +master:published
 
 Then you can push to http://stage.beaker-project.org/ and check
 everything looks okay:
