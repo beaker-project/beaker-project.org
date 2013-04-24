@@ -107,7 +107,7 @@ Self-Service User Groups
 Creating Ad Hoc Groups
 ^^^^^^^^^^^^^^^^^^^^^^
 
-* I want to create a new group. (BZ#908172)
+* I want to create a new group. (:issue:`908172`)
 
 Through the web UI:
 
@@ -126,7 +126,7 @@ Creating LDAP-Derived Groups
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * I am a Beaker administrator and I want to create a new group whose
-  membership is populated from LDAP. (BZ#908173)
+  membership is populated from LDAP. (:issue:`908173`)
 
 Through the web UI:
 
@@ -152,7 +152,7 @@ owners, and all members are treated as having job modification permissions.
 Viewing Group Details
 ^^^^^^^^^^^^^^^^^^^^^
 
-* I want to view the details of a group. (BZ#541282)
+* I want to view the details of a group. (:issue:`541282`)
 
 Through the web UI:
 
@@ -167,7 +167,7 @@ Through the ``bkr`` cli::
 Updating Group Details
 ^^^^^^^^^^^^^^^^^^^^^^
 
-* I want to update the details of a group I own.
+* I want to update the details of a group I own (:issue:`952978`).
 
 Through the web UI:
 
@@ -188,7 +188,7 @@ The group details are updated and the change is recorded in the
 Updating Group Membership
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-* I want to add other users to a group I own. (BZ#908176)
+* I want to add other users to a group I own. (:issue:`908176`)
 
 Through the web UI:
 
@@ -202,7 +202,7 @@ Through the ``bkr`` cli::
 The user is added to the group. The change is recorded in the
 "Group Activity" log.
 
-* I want to remove a member from a group I own. (BZ#908178)
+* I want to remove a member from a group I own. (:issue:`908178`)
 
 Through the web UI:
 
@@ -220,7 +220,7 @@ Updating Group Permissions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * I want to grant another member owner rights to the group (or revoke
-  those rights). (BZ#908174)
+  those rights). (:issue:`908174`)
 
 Through the web UI:
 
@@ -236,7 +236,7 @@ The user is granted owner rights, making them a co-owner of the group.
 The change is recorded in the "Group Activity" log.
 
 * I want to grant another member job modification rights for the group (or
-  revoke those rights).
+  revoke those rights). (:issue:`952979`)
 
 Through the web UI:
 
@@ -261,7 +261,7 @@ Submitting Shared Jobs
 ^^^^^^^^^^^^^^^^^^^^^^
 
 * I want to submit a job for a particular group (of which I am a member).
-  (BZ#908183)
+  (:issue:`908183`)
 
 Through the job XML:
 
@@ -287,14 +287,14 @@ Viewing Shared Jobs
 ^^^^^^^^^^^^^^^^^^^
 
 * I want to view a list of jobs for all groups of which I am a member.
-  (BZ#908185)
+  (:issue:`908185`)
 
 The default filter for the "My Jobs" page will include all jobs the user
 can manage, including those the user submitted themselves, as well as
 those submitted on behalf of a group where the user has job modification
 permissions.
 
-* I want to view a list of jobs for a particular group.
+* I want to view a list of jobs for a particular group. (:issue:`952980`)
 
 Both the "My Jobs" page and the main job list will allow filtering by
 the owning group. This will permit users to display jobs owned by
@@ -307,7 +307,7 @@ Root Password Configuration
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * I want to set the shared root password to be used in all jobs for a
-  particular group. (BZ#908186)
+  particular group. (:issue:`908186`)
 
 Through the web UI:
 
@@ -361,12 +361,12 @@ These additional features are under consideration, but have been deliberately
 omitted in order to reduce the complexity of the initial iteration of the
 design:
 
-* Adding other groups as members of a group. The initial iteration
-  does not allow groups to be members of other groups, which introduces
-  potential concerns about scalability in large organisations. A subgroups
-  model, with an implementation based on the `Closure Table`_ design, would
-  address this concern. If there's time, we'll look into adding this to 1.0,
-  otherwise it will be considered for inclusion in 1.1.
+* Adding other groups as members of a group (:issue:`554802`). The initial
+  iteration does not allow groups to be members of other groups, which
+  introduces potential concerns about scalability in large organisations. A
+  subgroups model, with an implementation based on the `Closure Table`_
+  design, would address this concern. If there's time, we'll look into
+  adding this to 1.0, otherwise it will be considered for inclusion in 1.1.
 
   The draft web UI design is the same as that for managing group members, but
   using the "Sub-group" list instead of the "Members" list. For the CLI::
