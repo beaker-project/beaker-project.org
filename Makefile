@@ -1,6 +1,6 @@
 SHELL = /bin/bash
 BEAKER = beaker-branches/master
-BEAKER_GIT = beaker-branches/master
+BEAKER_GIT = .git/modules/beaker-branches/master
 SPHINXBUILD = $(shell command -v sphinx-1.0-build sphinx-build)
 SPHINXBUILDOPTS =
 
@@ -53,8 +53,8 @@ schema/beaker-job.rng: $(BEAKER)/Common/bkr/common/schema/beaker-job.rng
 .PHONY:
 git-rev-beaker-master:
 	read old_sha <$@ ; \
-	new_sha="$$(GIT_DIR=$(BEAKER_GIT) git rev-parse HEAD)" ; \
-	[[ $$old_sha != $$new_sha ]] && echo $$new_sha >$@
+	new_sha=$$(git ls-tree HEAD beaker-branches/master | awk '{ print $$3 }') && \
+	if [[ $$old_sha != $$new_sha ]] ; then echo $$new_sha >$@ ; fi
 
 downloads.mk: git-rev-beaker-master generate-downloads-mk.py git_tags.py
 	./generate-downloads-mk.py $(BEAKER_GIT) >$@

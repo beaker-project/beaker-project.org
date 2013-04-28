@@ -28,9 +28,6 @@ Dependencies
 * pandoc
 * python-dulwich (to generate release changelogs)
 
-You may also need to run "touch git-rev-beaker-master" to avoid an error
-from the make file
-
 Building docs from a local checkout
 -----------------------------------
 
