@@ -35,18 +35,23 @@ This proposal enhances the capabilities of the existing group model by:
   administrator involvement
 * allowing administrators to create groups that are automatically derived
   from groups already defined in an LDAP server
-* allowing jobs to be submitted on behalf of a group
+* allowing jobs to be submitted on behalf of a group by group members and
+  by nominated "submission delegates"
 
 A Beaker user can be in zero or more groups, and any Beaker user may
-create a new group at any time.
+create a new group at any time. Group members may be marked as owners of
+that group, which grants additional permissions. The initial creator of a
+group is automatically marked as an owner at the time of creation.
 
-All members of a group are able to submit jobs on behalf of that group.
+All members of a group are able to submit jobs on behalf of the group, and
+have full access to modify jobs submitted on behalf of the group.
 
-Group members may also be granted the following additional permissions
-on a group:
+Submission delegates are able to submit jobs on behalf of a group, but
+are only able to modify the jobs they submit (they cannot modify jobs
+submitted by other users on behalf of the group).
 
-* group ownership
-* group job modification
+Jobs submitted on behalf of a group are called "group jobs", while other
+jobs are called "single-user jobs".
 
 
 Group ownership
@@ -59,26 +64,35 @@ Group ownership permissions grant a user the ability to:
 * grant and revoke job modification permissions
 * update the group's display name
 * update the group's description
+* add delegate users that may submit jobs on the group's behalf without
+  being members of the group
 
 As a group may have multiple owners, "group ownership" may sometimes
 be referred to as "group co-ownership".
 
 
-Job modification
-~~~~~~~~~~~~~~~~
+Group jobs
+~~~~~~~~~~
 
 When a job is submitted on behalf of a group, any members of that group
-with job modification permissions will have the same level of access to
-and control over the job as the original submitter.
-
-By default, new members added to a group are granted job modification
-permissions. This will be configurable on a per-user basis, allowing the
-addition of automated service accounts which can submit jobs on behalf
-of the group, but have no additional access to jobs that are not
-submitted through the automated service.
+will have the same level of access to and control over the job as the
+original submitter.
 
 
-General Use Cases
+Submission delegates
+~~~~~~~~~~~~~~~~~~~~
+
+Delegations only affect job submission - the right to modify jobs after
+submission can only be shared by submitting group jobs.
+
+Group owners may nominate additional delegate users that are permitted to
+submit jobs on the groups behalf, but are not otherwise considered members
+of the group. These users will retain job modification privileges for the
+jobs they submit on the group's behalf, but do not gain the ability to
+modify other jobs submitted on behalf of that group.
+
+
+General use cases
 -----------------
 
 The primary use case for the additional features is to simply improve the
@@ -91,20 +105,18 @@ scalability of Beaker usage in large organisations, by:
   rather than limiting access to the specific user that carried out the
   actual submission.
 
-In addition, this update aims to make it easy for users to set up automated
-systems that submit jobs on their behalf by creating personal groups and
-granting the ability to submit jobs on their behalf to the account used
-for the automated service, *without* needing to give the automated service
-permission to modify their jobs after submission.
+In addition, these changes aim to make it easier for users to set up
+automated systems that submit jobs on their behalf (for example, as an
+event triggered by a successful build on a continuous integration server).
 
 
-Proposed User Interface
+Proposed user interface
 -----------------------
 
-Self-Service User Groups
+Self-service user groups
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Creating Ad Hoc Groups
+Creating ad hoc groups
 ^^^^^^^^^^^^^^^^^^^^^^
 
 * I want to create a new group. (:issue:`908172`)
@@ -118,11 +130,11 @@ Through the ``bkr`` cli::
 
    bkr group-create --display-name="My New Group" --description="This is my very own group. Email me@example.com if you want to be included." <mynewgroup>
 
-A new group is created, with one member (you) who is also the group owner.
+A new group is created, with one member (you) who is also a group owner.
 The change is recorded in the "Group Activity" log.
 
 
-Creating LDAP-Derived Groups
+Creating LDAP-derived groups
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * I am a Beaker administrator and I want to create a new group whose
@@ -146,10 +158,11 @@ once per day, but the administrators of a particular installation may
 choose to refresh the group membership more frequently.
 
 Note that LDAP groups cannot be updated through Beaker. They have no
-owners, and all members are treated as having job modification permissions.
+owners, but Beaker administrators will be able to add submission delegates
+(TBC).
 
 
-Viewing Group Details
+Viewing group details
 ^^^^^^^^^^^^^^^^^^^^^
 
 * I want to view the details of a group. (:issue:`541282`)
@@ -164,7 +177,7 @@ Through the ``bkr`` cli::
    bkr group-members <mygroup>
 
 
-Updating Group Details
+Updating group details
 ^^^^^^^^^^^^^^^^^^^^^^
 
 * I want to update the details of a group I own (:issue:`952978`).
@@ -185,7 +198,7 @@ The group details are updated and the change is recorded in the
 "Group Activity" log.
 
 
-Updating Group Membership
+Updating group membership
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * I want to add other users to a group I own. (:issue:`908176`)
@@ -202,7 +215,7 @@ Through the ``bkr`` cli::
 The user is added to the group. The change is recorded in the
 "Group Activity" log.
 
-* I want to remove a member from a group I own. (:issue:`908178`)
+* I want to remove a member from a group I own. (:issue:`908176`)
 
 Through the web UI:
 
@@ -216,48 +229,44 @@ The user is removed from the group. The change is recorded in the
 "Group Activity" log.
 
 
-Updating Group Permissions
+Updating group permissions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-* I want to grant another member owner rights to the group (or revoke
-  those rights). (:issue:`908174`)
+* I want to grant another member owner rights to a group I own.
+  (:issue:`908174`)
 
 Through the web UI:
 
    Go to the group page. Find the other user in the membership list,
-   check/uncheck the checkbox in the "Owner" column, then click "Save".
+   check the checkbox in the "Owner" column, then click "Save".
 
 Through the ``bkr`` cli::
 
    bkr group-modify --grant-owner=<someusername> <mygroup>
-   bkr group-modify --revoke-owner=<someusername> <mygroup>
 
-The user is granted owner rights, making them a co-owner of the group.
-The change is recorded in the "Group Activity" log.
+The user is granted owner rights and the change is recorded in the
+"Group Activity" log.
 
-* I want to grant another member job modification rights for the group (or
-  revoke those rights). (:issue:`952979`)
+* I want to revoke another member owner rights to a group I (co-)own.
+  (:issue:`908174`)
 
 Through the web UI:
 
    Go to the group page. Find the other user in the membership list,
-   check/uncheck the checkbox in the "Modify Jobs" column, then click
-   "Save".
+   uncheck the checkbox in the "Owner" column, then click "Save".
 
 Through the ``bkr`` cli::
 
-   bkr group-modify --grant-modify-jobs=<someusername> <mygroup>
-   bkr group-modify --revoke-modify-jobs=<someusername> <mygroup>
+   bkr group-modify --revoke-owner=<someusername> <mygroup>
 
-The user is granted job modification rights, allowing them to modify jobs
-submitted on behalf of the group as if they were the job submitter.
-The change is recorded in the "Group Activity" log.
+The user's ownership rights for the group are revoked and the change is
+recorded in the "Group Activity" log.
 
 
 Group Job Management
 ~~~~~~~~~~~~~~~~~~~~
 
-Submitting Shared Jobs
+Submitting group jobs
 ^^^^^^^^^^^^^^^^^^^^^^
 
 * I want to submit a job for a particular group (of which I am a member).
@@ -273,17 +282,19 @@ Through the ``bkr`` cli::
   Pass the ``--job-group=somegroup`` option to a workflow command.
 
 The job will be owned by that group and the user that submitted the job.
-There can be only one "job-group" per job, thus multiple groups having ownership
-of a single job is not possible. All members of the group with job modification
-permissions will be able to ack/nack, change priority, edit whiteboard, and
-change retention tag.  The root password used in the job will be the group
-root password (if one is set), otherwise it will be the root password set in
-the preferences of the submitting user. The public SSH keys of all group
-members with job modification permissions will be added to
+There can be only one associated group per job, thus multiple groups having
+ownership of a single job is not possible.
+
+All members of the group will be able to ack/nack, change priority,
+edit whiteboard, change retention tag, delete the job, etc, as if they were
+the submitter of the job.  The root password used in the job will be the
+group root password (if one is set), otherwise it will be the root
+password set in the preferences of the submitting user.
+The public SSH keys of all group members will be added to
 ``/root/.ssh/authorized_keys``.
 
 
-Viewing Shared Jobs
+Viewing shared jobs
 ^^^^^^^^^^^^^^^^^^^
 
 * I want to view a list of jobs for all groups of which I am a member.
@@ -303,7 +314,7 @@ well as displaying only the jobs that were not submitted on behalf of a
 group at all.
 
 
-Root Password Configuration
+Root password configuration
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * I want to set the shared root password to be used in all jobs for a
@@ -340,6 +351,80 @@ log, not even in hashed form).
    group.
 
 
+Submission delegation
+~~~~~~~~~~~~~~~~~~~~~
+
+Submitting delegated jobs
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+*  I want to submit a job for a particular group using an account that has
+   been nominated as a submission delegate. (BZ ref TBD).
+
+As a submission delegate, the user interface for submitting a job on behalf
+of a particular group is the same as that used by group members (see
+`Submitting group jobs`_).
+
+The additional functionality needed to handle the delegate case is that the
+systems available to the delegating group are considered for the job in
+addition to those available to the submitting user for single-user jobs.
+
+
+Viewing submission delegates
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* I want to view the list of submission delegates for a group (BZ ref TBD).
+
+The list of submission delegates should be included on the group details
+page.
+
+
+Updating submission delegations
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* I want to add a user that can submit jobs on behalf of a group I own
+  (BZ ref TBD).
+
+Through the web UI:
+
+   Go to the group page. Under the submission delegate list, enter the user's
+   username and click "Add Delegate".
+
+Through the ``bkr`` cli::
+
+   bkr group-modify --add-delegate=<someusername> <mygroup>
+
+The new delegate is added and the change is recorded in the
+"Group Activity" log.
+
+* I want to revoke a user's permission to submit jobs on behalf of a group I
+  own (BZ ref TBD)
+
+Through the web UI:
+
+   Go to the group page. Find the user in the submission delegate list,
+   and click "Remove".
+
+Through the ``bkr`` cli::
+
+   bkr group-modify --remove-delegate=<someusername> <mygroup>
+
+The delegate is removed and the change is recorded in the "Group Activity"
+log.
+
+
+Impact on other existing features
+---------------------------------
+
+The job matrix will be updated to allow limiting it to jobs submitted on
+behalf of a particular group (BZ ref TBD).
+
+Currently, group members have some limited control over single-user jobs
+submitted by members of the same group. This feature will be deemed
+deprecated and will be removed in a later release (probably Beaker 1.1).
+This should give users of any existing installations adequate opportunity
+to start explicitly marking jobs where group access is needed as group jobs.
+
+
 Upgrading Existing Beaker Installations
 ---------------------------------------
 
@@ -354,12 +439,31 @@ members of existing groups, as well as deciding which groups can be deleted
 and replaced with LDAP group references.
 
 
+Rejected Ideas
+--------------
+
+An earlier iteration of the design used a "job modification" flag to allow
+group members that could only submit jobs, but not modify them. This
+approach was judged to be confusing, so has been replaced with the current
+submission delegation design (also see :issue:`952979` and
+`this beaker-devel thread`__).
+
+.. __: https://lists.fedorahosted.org/pipermail/beaker-devel/2013-April/000552.html
+
+
+
 Deferred Features
 -----------------
 
 These additional features are under consideration, but have been deliberately
 omitted in order to reduce the complexity of the initial iteration of the
 design:
+
+* User level delegation of job submission. This would allow an individual
+  user to delegate job submission to an automated account directly, without
+  needing to create a custom group. It would also mean that the delegated
+  user would *not* retain job modification privileges after submitting the
+  job.
 
 * Adding other groups as members of a group (:issue:`554802`). The initial
   iteration does not allow groups to be members of other groups, which
@@ -395,9 +499,9 @@ design:
   the list of group owners will be visible in the web UI.
 
 * More fine-grained group permissions. The initial iteration has only three
-  effective levels of access, job submission accounts, ordinary group members
-  and group (co-)owners. It may be desirable to separate out the last level
-  further in a future release:
+  effective levels of access: job submission delegates, ordinary group
+  members and group (co-)owners. It may be desirable to separate out the
+  last level further in a future release:
 
   * Add/remove members (currently allowed for all co-owners)
   * Grant/revoke co-ownership (currently allowed for all co-owners)
@@ -406,14 +510,12 @@ design:
   For ordinary members, it may also be desirable to separate out:
 
   * Ability to log into provisioned systems based on their SSH key (currently
-    allowed for all group members with job modification privileges and a
-    public SSH key registered in Beaker)
-  * Ability to ack/nack job results (currently allowed for all group members
-    with job modification privileges)
+    allowed for all group members with a public SSH key registered in Beaker)
+  * Ability to ack/nack job results (currently allowed for all group members)
   * Ability to change the associated product (currently allowed for all
-    group members with job modification privileges)
+    group members)
   * Ability to change the job retention policy (currently allowed for all
-    group members with job modification privileges)
+    group members)
 
 * Group deletion. The initial iteration does not allow groups to be deleted,
   or even hidden. If subgroup management is added, and the associated UI
@@ -432,6 +534,6 @@ design:
   useful in some respects, it will mean that the state of the provisioned
   systems (at least the set of authorized SSH keys and potentially the
   root password) will no longer match the nominated group. It may make more
-  sense to allow additional groups to be granted edit access on the job
+  sense to allow additional groups to be granted edit access on the job.
   
 

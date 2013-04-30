@@ -98,7 +98,7 @@ the development cycle.
 Beaker 1.0
 ----------
 
-Planned release date: TBD
+Planned release date: late May/early June
 
 The focus of Beaker 1.0 is :ref:`proposal-enhanced-user-groups`
 
