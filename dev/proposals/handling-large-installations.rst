@@ -74,7 +74,7 @@ changes that are not directly related to the release focus.
 Beaker 0.12
 -----------
 
-Planned release date: TBD
+Release date: 5th April, 2013
 
 Beaker 0.12 lays the foundation for the Beaker 1.0 series by making
 it easier for users to switch between production and development
@@ -98,7 +98,7 @@ the development cycle.
 Beaker 1.0
 ----------
 
-Planned release date: late May/early June
+Planned release date: late May/early June 2013
 
 The focus of Beaker 1.0 is :ref:`proposal-enhanced-user-groups`
 
@@ -116,7 +116,7 @@ This proposal has three key elements:
 Beaker 1.1
 ----------
 
-Planned release date: TBD
+Planned release date: mid-to-late July 2013
 
 The focus of Beaker 1.1 will be :ref:`proposal-system-pools`
 
