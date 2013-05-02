@@ -670,4 +670,69 @@ when a patch is first committed locally:
 
     scp -p -P 29418 gerrit.beaker-project.org:hooks/commit-msg .git/hooks/
 
+
+### Reviewing a patch ###
+
+For a change to make it through review and be merged into the development
+branch for the next Beaker release, it needs to first be marked in Gerrit
+as "+1 Verified" and have a "+2 Looks good to me, approved" code review
+(only the core Beaker developers can grant the latter).
+
+The "+1 Verified" marker indicates one of the following:
+
+* If it's a bug fix that is reproduceable and testable, the new test case
+  has been verified to fail before the fix, and pass after the fix.
+* If it's a bug fix that is not amenable to an automated test, the patch
+  has been verified to fix the bug through some other means (such as
+  trying it out manually).
+* If it's a new feature, the feature has been verified to work as described.
+* If it's a code change, the test suite has been verified to pass in full.
+* If it's a docs change, the docs have been verified to build correctly
+  and look right.
+* On some rare occasions (for example, fixing a typo in a comment or README),
+  it may simply indicate that the patch has been determined not to run a risk
+  of breaking the application or documentation.
+
+The "+2 Approved" code review marker should only be granted when all the
+following criteria are met:
+
+* All significant review comments have been addressed, with the aim of
+  ensuring the Beaker code remains maintainable rather than degenerating
+  over time.
+* Whenever practical, automated tests have been added to ensure the bug fix
+  or new feature works as expected.
+* The code is commented appropriately (for example, explanations or issue
+  tracker references are included for any obscure workarounds).
+* The documentation (including docstrings) has been updated appropriately
+* A release note has been added as described in the [What's New
+  source](http://git.beaker-project.org/cgit/beaker/tree/documentation/whats-new/index.rst?h=develop)
+  for new features, bug fixes that may break existing workarounds, and any
+  changes that require manual steps from system administrators when upgrading
+  an existing installation.
+* The commit message is correctly formatted with a short summary line and
+  any additional continuation lines separated from the summary by a blank
+  line.
+* For changes driven by a Bugzilla entry, the correct "Bug: NNNNNN" reference
+  is present in the commit message (as described above in "Submitting your
+  patch").
+
+Reviewers should also be looking for "missing updates": changes which
+*should* have been made, but are not part of the current patch. For
+example, if a new attribute is added for Jobs, then the Job detail
+page should probably be updated to display that attribute as well.
+Another example would be that if a patch changes the repo layout,
+then the description of that layout in the README file should also
+be updated.
+
+There's no simple guideline to help identify "what's missing" in cases that
+aren't automatically detected through failing tests: it's something
+that can only come from experience with Beaker and its code. To minimise
+such cases, it is often desirable to add a test case that ensures the two
+components are kept in sync, rather than relying on developers to remember
+to update both places (assuming the duplication can't be eliminated entirely
+by changing the implementation). That way, the missing updates should be
+picked up automatically as a failure in the test suite, rather than requiring
+the patch creator or reviewer to notice that additional changes are needed.
+
+
 <!-- vim: set filetype=markdown : -->
