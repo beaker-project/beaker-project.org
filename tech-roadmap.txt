@@ -133,20 +133,44 @@ should come with helper scripts scripts for installing them into a
 Beaker installation and the appropriate job definitions to execute them
 across all configured architectures and distro trees.
 
-### Integrated live dashboard ###
+### OpenStack based provisioning ###
 
-While Beaker 0.11 started sending aggregate metrics for the current system
-status directly to Graphite, it doesn't provide any native dashboard
-capability. It's desirable to provide an improved dashboard experience,
-using eitherGraphite's native dashboard tools, or a richer Javascript based
-Graphite front end (such as Graphene or graphitejs).
+The current oVirt Engine integration attempts to support dynamic virtual
+guests, but has some unfortunate limitations. It appears that oVirt is
+simply a poor fit for the task of creating "throwaway" virtual machines for
+a single recipe, as it is aimed more at providing long lived high
+availability systems that never go down (even when the underlying hardware
+fails or is replaced).
 
+By contrast, OpenStack has a reputation as being excellent at quickly
+providing new virtual machines, without being able to provide the stability
+and long term high availability of oVirt. This suggests that OpenStack will
+be a substantially better fit for Beaker's dynamic provisioning use case
+than oVirt.
+
+OpenStack also offers some interesting possibilities in terms of dynamically
+creating isolated subnets. Integrating with that could allow Beaker to
+support testing of scenarios that are currently difficult to set up due
+to interference with the network of the hosting lab. For example, a full
+Beaker provisioning cycle currently can't be tested easily within Beaker,
+as doing so requires taking control of DHCP responses, while still retaining
+access to the distro trees used for installation.
 
 ## Exploration ##
 
 The ideas in this section are projects that one or more of the current
 developers are at least tinkering with, but they may be at wildly
 divergent stages of maturity.
+
+### Jenkins plugin to spawn systematic integration tests in Beaker
+
+While Beaker is an excellent integration testing system, it doesn't really
+have the right features to serve as a continuous integration system on its
+own. However the combination of Beaker with Jenkins could be substantially
+more powerful than either system on its own, as a Jenkins build bot could
+be used to perform an initial "smoke test" on a small number of common
+platforms, and then trigger a more comprehensive set of integration
+tests across multiple platforms in Beaker if the smoke test is successful.
 
 ### Autotest support
 
@@ -163,6 +187,14 @@ implement in Beah.
 
 This idea is covered by the [Reference 
 Harness](dev/proposals/reference-harness.html) design proposal.
+
+### Integrated live dashboard ###
+
+While Beaker 0.11 started sending aggregate metrics for the current system
+status directly to Graphite, it doesn't provide any native dashboard
+capability. It's desirable to provide an improved dashboard experience,
+using eitherGraphite's native dashboard tools, or a richer Javascript based
+Graphite front end (such as Graphene or graphitejs).
 
 ### Full Fedora compatibility ###
 
@@ -280,16 +312,6 @@ potentially worth investigating.
 
 A more flexible provisioning architecture might even be able to deploy
 other distributions and operating systems that don't use Anaconda at all.
-
-### OpenStack based provisioning ###
-
-OpenStack offers some interesting possibilities in terms of dynamically
-creating isolated subnets. Integrating with that could allow Beaker to
-support testing of scenarios that are currently difficult to set up due
-to interference with the network of the hosting lab. For example, a full
-Beaker provisioning cycle currently can't be tested easily within Beaker,
-as doing so requires taking control of DHCP responses, while still retaining
-access to the distro trees used for installation.
 
 ### Provisioning other hypervisors ###
 
