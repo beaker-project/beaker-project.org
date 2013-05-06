@@ -187,3 +187,8 @@ div.admonition {
 .highlight {
     background: none !important;
 }
+/* Sphinx makes descname larger but it looks weird, since it is very often 
+ * larger than the section heading it is a part of. Overridden here: */
+.descname {
+    font-size: 1em !important;
+}
