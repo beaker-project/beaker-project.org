@@ -11,7 +11,7 @@ SPHINXBUILDOPTS =
 .PHONY: all
 all: all-docs all-website yum
 
-ARTICLES = COPYING.html dev-guide.html tech-roadmap.html cobbler-migration.html
+ARTICLES = COPYING.html cobbler-migration.html
 
 include downloads.mk
 include old-downloads.mk
