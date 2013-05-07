@@ -358,7 +358,7 @@ Submitting delegated jobs
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 *  I want to submit a job for a particular group using an account that has
-   been nominated as a submission delegate. (BZ ref TBD).
+   been nominated as a submission delegate. (:issue:`960302`).
 
 As a submission delegate, the user interface for submitting a job on behalf
 of a particular group is the same as that used by group members (see
@@ -372,7 +372,8 @@ addition to those available to the submitting user for single-user jobs.
 Viewing submission delegates
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-* I want to view the list of submission delegates for a group (BZ ref TBD).
+* I want to view the list of submission delegates for a group
+  (:issue:`960302`).
 
 The list of submission delegates should be included on the group details
 page.
@@ -382,7 +383,7 @@ Updating submission delegations
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * I want to add a user that can submit jobs on behalf of a group I own
-  (BZ ref TBD).
+  (:issue:`960302`).
 
 Through the web UI:
 
@@ -397,7 +398,7 @@ The new delegate is added and the change is recorded in the
 "Group Activity" log.
 
 * I want to revoke a user's permission to submit jobs on behalf of a group I
-  own (BZ ref TBD)
+  own (:issue:`960302`)
 
 Through the web UI:
 
@@ -414,9 +415,6 @@ log.
 
 Impact on other existing features
 ---------------------------------
-
-The job matrix will be updated to allow limiting it to jobs submitted on
-behalf of a particular group (BZ ref TBD).
 
 Currently, group members have some limited control over single-user jobs
 submitted by members of the same group. This feature will be deemed
@@ -535,5 +533,12 @@ design:
   systems (at least the set of authorized SSH keys and potentially the
   root password) will no longer match the nominated group. It may make more
   sense to allow additional groups to be granted edit access on the job.
-  
+
+* Updating the job matrix to allow limiting it to jobs submitted on behalf
+  of a particular group. This would only be useful if irrelevant jobs were
+  being submitted with relevant whiteboard settings, and there's a
+  straightforward usage policy based workaround (making the
+  whiteboard entries used with the job matrix more specific).
+
+
 
