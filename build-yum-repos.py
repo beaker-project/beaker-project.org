@@ -104,7 +104,7 @@ class TargetRepo(object):
                 raise xmlrpclib.Fault(result['faultCode'], result['faultString'])
             if not result or not result[0] or not result[0][1]:
                 raise ValueError('Package %s not in tag %s' % (package_names[i],
-                        self.package_tags.get(package_name, self.tag)))
+                        self.package_tags.get(package_names[i], self.tag)))
             (rpms, builds), = result
             self._mirror_rpms_for_build(builds, rpms)
         # scratch builds by task id
