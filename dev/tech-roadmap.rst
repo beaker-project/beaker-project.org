@@ -15,12 +15,78 @@ If any of these projects sound particularly interesting, folks are welcome to
 .. todo::
    Some more direct BZ references probably wouldn't go astray here...
 
+Overview
+--------
+
 The :doc:`Handling Large Installations 
-<proposals/handling-large-installations>` proposal offers another perspective 
-on active and currently planned development that is the primary focus of the 
-Beaker 1.x series (there's some overlap with the technical road map below).
+<proposals/handling-large-installations>` proposal offers a general overview
+of currently planned features that will be the primary focus of the 
+Beaker 1.x series and the remainder of the 0.x series (there's some overlap
+with the technical road map below).
 
 See :doc:`proposals/index` for the full list of Beaker design proposals.
+
+
+Objectives for Beaker 1.0
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Our aim is for the Beaker 1.0 milestone to mark a point where we no longer
+feel any need to apologise for the state of Beaker's documentation, or the
+capabilities of its regression test suite. It should also be possible for
+anyone considering the use of Beaker to have a clear idea of its significance
+for Red Hat, without having their own workflows overly constrained by the
+specific ways Red Hat chooses to use it.
+
+The following elements have been identified as the objectives of Beaker 1.0,
+and we will continue with as many regular 0.x releases as are needed to
+achieve them:
+
+* The Effective Job Priorities design proposal (and its dependencies)
+* Red Hat workflow independence
+
+  * Moving any remaining hardcoded Red Hat specific settings into
+    configuration files
+  * Full Fedora deployment compatibility (including the test suite)
+  * A stable alternate harness API (ideally with the corresponding
+    autotest patches merged on their side)
+  * A harness independent reservesys mechanism
+  * Self tests that exercise beah, the legacy harness API and the new 
+    harness API
+
+* Documentation improvements, including
+   * an architectural guide that at least explains all of Beaker's
+     external interfaces
+   * an explanation of the local watchdog hooks
+   * more general advice on job design (including effectively using
+     features like the job matrix)
+   * a public page giving at least basic info on how Beaker is used
+     at Red Hat
+
+
+
+The status of ``beah``
+~~~~~~~~~~~~~~~~~~~~~~
+
+In many respects, ``beah``, the native Beaker test harness, duplicates aspects
+of other test frameworks like `autotest <http://autotest.github.io/>`__ and
+`STAF <http://staf.sourceforge.net/>`__.
+
+Being so heavily dependent on kickstart files and the RPM based task library,
+``beah`` is also quite inflexible in terms of platform support.
+
+Accordingly, we consider it a poor use of resources to further duplicate
+the effort going into development of other automated test harnesses
+(especially ``autotest``), and hence any major feature proposals for
+``beah`` will be rejected - we would prefer for any such efforts to be
+directed towards the system changes needed to better support alternative
+harnesss.
+
+However, to support existing Beaker users, the ``beah`` test harness will be
+maintained indefinitely, and its documentation will continue to be improved.
+The only way ``beah`` would ever be phased out is if a robust autotest based
+alternative became available and was capable of correctly executing all of
+the existing Beaker tests that the Beaker developers have access to.
+
 
 Active development
 ------------------
@@ -184,6 +250,12 @@ Using Beaker's new `support for alternative harnesses
 <../docs/alternative-harnesses/>`_ it should be possible to write some glue 
 code to run autotest-based tests in Beaker recipes.
 
+This is being tracked primarily as a
+`pull request <https://github.com/autotest/autotest/pull/629>`__ on the
+autotest side. On the Beaker side, we're now mostly tracking this as
+individual Bugzilla entries against specific problems or limitations in the
+stable harness API.
+
 Reference harness implementation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -200,8 +272,8 @@ Integrated live dashboard
 While Beaker 0.11 started sending aggregate metrics for the current system
 status directly to Graphite, it doesn't provide any native dashboard
 capability. It's desirable to provide an improved dashboard experience,
-using eitherGraphite's native dashboard tools, or a richer Javascript based
-Graphite front end (such as Graphene or graphitejs).
+using either Graphite's native dashboard tools, or a richer Javascript based
+charting front end (such as Rickshaw).
 
 Full Fedora compatibility
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -301,6 +373,7 @@ configuration of the lab controller and network, this should make it
 possible to provision systems in Beaker with no IPv4 interfaces
 configured.
 
+
 Speculative ideas
 -----------------
 
@@ -319,7 +392,7 @@ Alternate provisioning mechanisms
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Provisioning is currently based directly on the Anaconda installer. VM
-image based provisioning for guest recipes or the oVirt Engine integration
+image based provisioning for guest recipes or the dynamic host creation
 would allow Beaker to cover a wider range of testing scenarios.
 
 Supporting tools like `os-autoinst <http://www.os-autoinst.org/>`_ or
@@ -328,6 +401,14 @@ potentially worth investigating.
 
 A more flexible provisioning architecture might even be able to deploy
 other distributions and operating systems that don't use Anaconda at all.
+
+In particular, `Ansible <http://ansible.cc/discover.html>`__ may provide
+a viable installer independent approach to post-boot configuration.
+
+For image based provisioning, OpenStack's
+`cloud-init tool <http://docs.openstack.org/trunk/openstack-compute/admin/content/user-data.html>`__
+is also worth exploring.
+
 
 Provisioning other hypervisors
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -362,8 +443,8 @@ commands by polling a command queue stored on the main server. Similarly,
 the main task scheduler polls the database to determine when new
 and queued recipes can be assigned to systems.
 
-It may be worth adopting fedmsg, or something similar, to help get rid of
-these polling calls.
+It may be worth adopting `fedmsg <http://www.fedmsg.com>`__, or something
+similar, to help get rid of these polling calls.
 
 Web UI modernisation
 ~~~~~~~~~~~~~~~~~~~~
@@ -376,9 +457,10 @@ more recent web framework.
 That said, TG1 is still quite usable, even if it isn't quite as capable
 as the newer frameworks. Furthermore, the current direction of
 development in Beaker is to push it more towards the role of being
-a sophisticated inventory management and scheduling backend (in contrast
-to other IaaS systems, which attempt to abstract away hardware details),
-and deemphasise the importance of the native Web UI.
+a sophisticated inventory management and task scheduling backend (in
+contrast to both other IaaS systems, which attempt to abstract away hardware
+details completely, and normal identity-based orchestration systems), and
+deemphasise the importance of the native Web UI.
 
 Alternate database backend
 ~~~~~~~~~~~~~~~~~~~~~~~~~~

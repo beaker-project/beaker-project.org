@@ -5,7 +5,7 @@ Improved Handling of Large Beaker Installations
 
 :Author: Nick Coghlan
 :Status: In Progress
-:Release Series: 1.x
+:Release Series: 0.x, 1.x
 
 
 Abstract
@@ -17,9 +17,10 @@ members of specified groups are able to access the system for any
 purpose). Furthermore, making changes to group membership requires
 action by the administrators of the Beaker installation.
 
-The general theme of the Beaker 1.x series will be to make a series of
-progressive changes, each useful in its own right, that combine in later
-releases to offer a rich policy administration capability that allows
+The general theme of the Beaker 1.x series, and the remainder of the 0.x
+series, will be to make a progressive set of smaller changes, each useful in
+its own right, that combine in later releases to offer a rich policy
+administration capability that allows
 system owners to prioritise access to their own hardware.
 
 The intent is that, by the time of the final 1.x series release, owners
@@ -36,17 +37,18 @@ This is a living document that will be updated over the course of the
 Design Proposals and Deferred Features
 --------------------------------------
 
-Each release in the 1.x series will nominate a single design
-proposal as the release focus. That design proposal will then
-describe the primary user facing change to be included in that release.
+Each release in the 1.x series (along with any further releases in the
+0.x series) will nominate a single design proposal as the release focus.
+That design proposal will then describe the primary user facing change
+to be included in that release.
 
 Each such design proposal will include a "Deferred Features" section,
 for components which are deliberately *not* being implemented until after
 we have received feedback from users on the initial approach.
 
-The planned cadence is for a new release to happen every 6 weeks. At any
+The planned cadence is for a new release to happen every 4-6 weeks. At any
 given point in time, a definite focus will only be chosen for the next
-two releases.
+release.
 
 While a tentative focus will also be identified for subsequent releases,
 it is strictly provisional, as user feedback may lead to deferred features
@@ -90,17 +92,15 @@ Beaker instances. It has three key elements:
   easy to provide a system wide site specific configuration file, rather
   than requiring each user to define their own configuration
 
-Preliminary release notes are `available`__ and will be updated throughout
-the development cycle.
+See the `Beaker 0.12 Release Notes <../../docs/whats-new/#beaker-0-12>`__ for
+details.
 
-.. __: ../../docs-develop/whats-new/index.html#what-s-new-in-beaker-0-12
-
-Beaker 1.0
-----------
+Beaker 0.13
+-----------
 
 Planned release date: late May/early June 2013
 
-The focus of Beaker 1.0 is :ref:`proposal-enhanced-user-groups`
+The focus of Beaker 0.13 is :ref:`proposal-enhanced-user-groups`
 
 This proposal has three key elements:
 
@@ -112,26 +112,30 @@ This proposal has three key elements:
   group full access to the job (to avoid the creation of shared accounts
   for collective management of jobs)
 
+Preliminary release notes for Beaker 0.13 are
+`available <../../docs-develop/whats-new/#unreleased-changes>`__ and will
+be updated throughout the development cycle.
 
-Beaker 1.1
-----------
+
+Beaker 0.14 (tentative)
+-----------------------
 
 Planned release date: mid-to-late July 2013
 
-The focus of Beaker 1.1 will be :ref:`proposal-system-pools`
+The focus of Beaker 0.14 will be :ref:`proposal-system-pools`
 
-Just as Beaker 1.0 allows groups to assume shared ownership of jobs,
-Beaker 1.1 will allow groups to assume shared ownership of systems.
+Just as Beaker 0.13 allows groups to assume shared ownership of jobs,
+Beaker 0.14 will allow groups to assume shared ownership of systems.
 
-This release will also allow users to express preferences and strict
+This release may also allow users to express preferences and strict
 requirements regarding the pools which are used to run their submitted
 jobs.
 
 
-Beaker 1.2 (tentative)
+Beaker 1.0 (tentative)
 ----------------------
 
-The tentative focus of Beaker 1.2 is :ref:`proposal-effective-job-priorities`
+The tentative focus of Beaker 1.0 is :ref:`proposal-effective-job-priorities`
 
 The key element of this proposal is the ability for system owners to control
 the effective precedence of recipes handled by their systems (including
@@ -141,20 +145,20 @@ by other users).
 In addition to the :ref:`proposal-enhanced-user-groups` and
 :ref:`proposal-system-pools` proposals, this feature depends on
 :ref:`proposal-event-driven-scheduling`, which will be implemented
-incrementally over the course of the 1.0, 1.1 and 1.2 releases.
+incrementally over the course of the remaining 0.x releases.
 
 
-Beaker 1.3 (tentative)
+Beaker 1.1 (tentative)
 ----------------------
 
-The tentative focus of Beaker 1.3 is :ref:`proposal-implicit-system-pools`.
+The tentative focus of Beaker 1.1 is :ref:`proposal-implicit-system-pools`.
 
 The key element of this proposal is the creation of implicit system pools,
 associated with particular user groups. This is intended to streamline
 a number of anticipated use cases for the system pools infrastructure.
 
 
-Beaker 1.4 (tentative)
+Beaker 1.2 (tentative)
 ----------------------
 
 Currently, clean isolation of sensitive systems, tasks and job details
@@ -162,7 +166,7 @@ requires running multiple Beaker instances, which imposes a lot of
 management and maintenance overhead, as well as contributing to
 inefficient use of test hardware.
 
-The tentative focus of Beaker 1.3 is to build on the existing NDA
+The tentative focus of Beaker 1.2 is to build on the existing NDA
 functionality, the enhanced user groups and the new system pool model to
 provide clean isolation of sensitive systems, tasks and job details. This
 feature may also require the ability to bypass the public task library for
