@@ -57,7 +57,7 @@ access to a working Beaker instance) using the
 ``/distribution/beaker/dogfood`` task. If your Beaker instance doesn't
 already have a copy of this task, you can build it from Beaker's source
 under the ``Tasks`` subdirectory. You can base your job on this `sample
-dogfood job XML <sample-dogfood-job.xml>`_.
+dogfood job XML <../../sample-dogfood-job.xml>`_.
 
 You can use `tito <https://github.com/dgoodwin/tito>`_ to build Beaker
 RPMs for testing::
