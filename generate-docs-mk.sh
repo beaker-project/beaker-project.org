@@ -13,7 +13,9 @@ for branch_dir in beaker-branches/* ; do
     echo "$dest: $branch_dir dev"
     cat <<"EOF"
 	mkdir -p $@
-	$(MAKE) -C $</Common bkr/__init__.py
+        # The templated version moved in Beaker 0.13. We ensure
+        # both are generated for the sake of older branches.
+	$(MAKE) -C $</Common bkr/__init__.py bkr/common/__init__.py
 	# This __requires__ insanity is needed in Fedora if multiple versions of CherryPy are installed.
 	BEAKER=$(abspath $<) \
 	PYTHONPATH=$</Common:$</Server:$</Client/src \
