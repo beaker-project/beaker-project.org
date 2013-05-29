@@ -5,6 +5,7 @@ Enhanced User Groups
 
 :Authors: Dan Callaghan, Nick Coghlan
 :Editors: Raymond Mancy
+:Initial Release: 0.13
 :Target Release: 1.0
 
 
@@ -20,6 +21,19 @@ Dependencies
 ------------
 
 None.
+
+
+Initial Release
+---------------
+
+The initial implementation of this proposal is part of Beaker 0.13. Some
+elements of the full proposal have been deferred from this release, but
+are still planned for implementation prior to the release of Beaker 1.0.
+
+This deferral covers:
+
+* User group descriptions
+* The "submission delegates" system
 
 
 Proposal
@@ -133,6 +147,9 @@ Through the ``bkr`` cli::
 A new group is created, with one member (you) who is also a group owner.
 The change is recorded in the "Group Activity" log.
 
+.. note::
+   Group descriptions are not part of the initial release in Beaker 0.13.
+
 
 Creating LDAP-derived groups
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -196,6 +213,9 @@ Through the ``bkr`` cli::
 
 The group details are updated and the change is recorded in the
 "Group Activity" log.
+
+.. note::
+   Group descriptions are not part of the initial release in Beaker 0.13.
 
 
 Updating group membership
@@ -353,6 +373,10 @@ log, not even in hashed form).
 
 Submission delegation
 ~~~~~~~~~~~~~~~~~~~~~
+
+.. note::
+   Submission delegation is not part of the initial release in Beaker 0.13.
+
 
 Submitting delegated jobs
 ^^^^^^^^^^^^^^^^^^^^^^^^^
