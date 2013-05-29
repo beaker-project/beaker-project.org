@@ -5,7 +5,7 @@ System Pools
 
 :Author: Dan Callaghan, Nick Coghlan
 :Status: Proposed
-:Target Release: Beaker 1.1
+:Target Release: 1.0
 
 
 Abstract

@@ -5,7 +5,7 @@ Implicit System Pools for User Groups
 
 :Author: Nick Coghlan
 :Status: Proposed
-:Target Release: Beaker 1.3 (tentative)
+:Target Release: Beaker 1.1 (tentative)
 
 
 Abstract

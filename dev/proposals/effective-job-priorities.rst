@@ -4,7 +4,7 @@ Effective Job Priorities
 ========================
 
 :Author: Nick Coghlan
-:Target Release: 1.2 (tentative)
+:Target Release: 1.0
 
 
 Abstract
