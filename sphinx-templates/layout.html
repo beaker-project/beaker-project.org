@@ -1,6 +1,6 @@
 {% extends '!layout.html' %}
 {%- block htmltitle %}
-<title>{{ title|striptags|e }} &#183; {{ docstitle|e }}</title>
+<title>{{ title|striptags|e }}{% if pagename != 'index' %} &#183; {{ docstitle|e }}{% endif %}</title>
 {%- endblock %}
 {% block extrahead %}
   <meta name="viewport" content="width=device-width" />
@@ -17,7 +17,8 @@
     </div>
     <nav class="menu">
       <a href="{{ pathto('../', 1) }}">about</a>
-      <a href="{{ pathto('../help.html', 1) }}">help</a>
+      <a href="{{ pathto('../docs/', 1) }}"{% if shorttitle == 'Beaker' and pagename == 'index' %} class="active"{% endif %}>help</a>
+      <a href="{{ pathto('../dev/', 1) }}"{% if shorttitle == 'Beaker development' and pagename == 'index' %} class="active"{% endif %}>develop</a>
       <a href="{{ pathto('../download.html', 1) }}">download</a>
     </nav>
   </div>
@@ -27,6 +28,7 @@
 {% block relbar2 %}{% endblock %}
 {% block content %}
 {%- macro relbar() %}{# copied from themes/basic/layout.html with some hacks #}
+  {% if pagename != 'index' %}
   <ul class="breadcrumbs">
     <li><a href="{{ pathto(master_doc) }}">{{ shorttitle|e }}</a></li>
     {%- for parent in parents %}
@@ -41,6 +43,7 @@
     </li>
     {%- endfor %}
   </ul>
+  {% endif %}
 {%- endmacro %}
 <div class="main_content" lang="en">
 {% if branch_warning %}

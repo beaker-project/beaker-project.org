@@ -1,5 +1,5 @@
-Developer documentation
-=======================
+Beaker development
+==================
 
 This documentation covers various aspects of Beaker's
 development process, including details of previous and current major design
@@ -11,3 +11,6 @@ proposals.
    guide/index
    proposals/index
    tech-roadmap
+
+You can also view the `draft documentation <../docs-develop/>`_ for the next 
+Beaker release, built from the develop branch of Beaker's git.

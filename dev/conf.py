@@ -10,7 +10,7 @@ copyright = u'2013, Red Hat, Inc'
 
 release = version = "Project"
 
-html_title = 'Beaker'
+html_title = 'Beaker development'
 html_use_index = False
 html_domain_indices = False
 html_theme = 'basic'

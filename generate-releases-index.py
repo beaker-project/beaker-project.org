@@ -91,7 +91,8 @@ html_template = MarkupTemplate('''
     </div>
     <nav class="menu">
       <a href="../">about</a>
-      <a href="../help.html">help</a>
+      <a href="../docs/">help</a>
+      <a href="../dev/">develop</a>
       <a href="../download.html">download</a>
     </nav>
   </div>
