@@ -25,9 +25,9 @@ test database in your local MySQL instance::
 
 In addition, the necessary Selenium support is not yet available as an
 RPM, so it is necessary to download `this jar
-file <http://code.google.com/p/selenium/downloads/detail?name=selenium-server-standalone-2.21.0.jar&can=1&q=>`_
+file <http://code.google.com/p/selenium/downloads/detail?name=selenium-server-standalone-2.33.0.jar&can=1&q=>`_
 and save it as
-``/usr/local/share/selenium/selenium-server-standalone-2.21.0.jar``.
+``/usr/local/share/selenium/selenium-server-standalone-2.33.0.jar``.
 (Yes, it must be that exact version at that exact path. The longer term
 fix to make this step cleaner is to provide an appropriate RPM in the
 Beaker repos)
