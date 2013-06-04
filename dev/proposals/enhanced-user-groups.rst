@@ -169,9 +169,9 @@ Through the ``bkr`` cli::
 
 A new group is created, whose membership is populated from the LDAP
 directory configured in your Beaker installation. An admin can refresh all
-currently defined LDAP groups from LDAP by running ``beaker-ldap-refresh``
+currently defined LDAP groups from LDAP by running ``beaker-refresh-ldap``
 on the main Beaker server. Beaker will ship with a cron job that runs
-``beaker-ldap-refresh`` once per day, but the administrators of a
+``beaker-refresh-ldap`` once per day, but the administrators of a
 particular installation may choose to refresh the group membership more
 frequently.
 
