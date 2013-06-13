@@ -10,3 +10,6 @@
 [submodule "beaker-branches/release-0.12"]
 	path = beaker-branches/release-0.12
 	url = git://git.beaker-project.org/beaker
+[submodule "beaker-branches/release-0.13"]
+	path = beaker-branches/release-0.13
+	url = git://git.beaker-project.org/beaker
