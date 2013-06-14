@@ -27,15 +27,18 @@ class Release(object):
 def releases(git_dir):
     repo = dulwich.repo.Repo(git_dir)
     releases = []
-    # XXX limit to tags reachable from refs/heads/master!
-    for tag_name in repo.refs.keys('refs/tags/'):
-        m = re.match(r'beaker-([\d.]*)-1', tag_name)
+    tags = [repo.get_object(repo.refs['refs/tags/%s' % tag])
+            for tag in repo.refs.keys(base='refs/tags/')]
+    tag_commits = dict((tag.object[1], tag) for tag in tags
+            if tag.type_name == 'tag')
+    for commit in repo.revision_history(repo.refs['refs/heads/master']):
+        if commit.id not in tag_commits:
+            continue
+        tag = tag_commits[commit.id]
+        m = re.match(r'beaker-([\d.]*)-1', tag.name)
         if not m:
             continue
         version = m.group(1)
-        tag = repo.get_object(repo.refs['refs/tags/%s' % tag_name])
-        if tag.type_name != 'tag':
-            continue # lightweight
         name, email = re.match(r'(.*) <(.*)>', tag.tagger).groups()
         timestamp = datetime.datetime.fromtimestamp(tag.tag_time,
                 tzoffset(None, tag.tag_timezone))
