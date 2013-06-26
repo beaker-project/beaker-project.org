@@ -85,7 +85,7 @@ releases/%.tar.gz:
 	curl -# -R -f -o$@ http://beaker-project.org/$@ ; result=$$? ; \
 	if [ $$result -ne 22 ] ; then exit $$result ; fi ; \
 	echo "Release artefact $@ not published, building it" ; \
-	( cd $(BEAKER) && flock /tmp/tito tito build --tgz --tag=$*-1 ) && cp /tmp/tito/$*.tar.gz $@
+	( cd $(BEAKER) && mkdir -p /tmp/tito && flock /tmp/tito tito build --tgz --tag=$*-1 ) && cp /tmp/tito/$*.tar.gz $@
 
 releases/%.tar.xz: releases/%.tar.gz
 	mkdir -p $(dir $@)
@@ -101,7 +101,7 @@ releases/%.patch:
 	curl -# -R -f -o$@ http://beaker-project.org/$@ ; result=$$? ; \
 	if [ $$result -ne 22 ] ; then exit $$result ; fi ; \
 	echo "Release artefact $@ not published, building it" ; \
-	( cd $(BEAKER) && flock /tmp/tito tito build --tgz --tag=$* ) && cp /tmp/tito/$*.patch $@
+	( cd $(BEAKER) && mkdir -p /tmp/tito && flock /tmp/tito tito build --tgz --tag=$* ) && cp /tmp/tito/$*.patch $@
 
 releases/SHA1SUM: $(DOWNLOADS) $(OLD_DOWNLOADS)
 	mkdir -p $(dir $@)
