@@ -126,7 +126,11 @@ PANDOC_OUTPUT_OPTS := $(if $(shell pandoc --help | grep 'Output formats:.*html5'
 	    --include-after-body=pandoc-after-body.html \
 	    <$< | ./pandoc-fixes.py >$@
 
-.PHONY: check
+.PHONY: check clean
 check:
 # ideas: spell check everything, validate HTML, check for broken links, run sphinx linkcheck builder
 	./check-yum-repos.py
+
+clean:
+	rm changelogs.mk docs.mk downloads.mk
+	rm releases/SHA1SUM releases/index.*
