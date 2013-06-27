@@ -139,6 +139,7 @@ class TargetRepo(object):
             self.rpm_filenames.add(os.path.basename(filename))
 
     def _mirror_rpms_for_build(self, builds, rpms):
+        print 'Mirroring RPMs from %s' % self.topurl
         pathinfo = koji.PathInfo(self.topurl)
         builds = dict((build['build_id'], build) for build in builds)
         for rpm in rpms:
@@ -148,14 +149,18 @@ class TargetRepo(object):
                 continue
             filename = os.path.join(self.basedir, 'rpms',
                     os.path.basename(pathinfo.rpm(rpm)))
-            if os.path.exists(filename):
+            if os.path.exists(filename) and os.path.getsize(filename):
                 # XXX check md5
                 print 'Skipping %s' % filename
             else:
-                url = '%s/%s' % (pathinfo.build(builds[rpm['build_id']]),
+                url = os.path.join(pathinfo.build(builds[rpm['build_id']]),
                         pathinfo.rpm(rpm))
                 print 'Fetching %s' % url
-                shutil.copyfileobj(urllib2.urlopen(url), open(filename, 'w'))
+                with open(filename, 'w') as dest:
+                    src = urllib2.urlopen(url)
+                    shutil.copyfileobj(src, dest)
+            if not os.path.getsize(filename):
+                raise RuntimeError("Failed to download %s" % filename)
             self.rpm_filenames.add(os.path.basename(filename))
 
     def _mirror_rpms_for_task(self, koji_session, task_id, filenames):
