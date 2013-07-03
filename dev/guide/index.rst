@@ -20,6 +20,7 @@ some ideas on possible changes that may be of interest, consult the
 .. toctree::
 
    getting-started
+   virtual-fedora/index
    source-walkthrough
    writing-a-patch
    example-patch

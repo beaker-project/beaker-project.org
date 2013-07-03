@@ -106,8 +106,7 @@ higher, although this configuration is not well tested.
 
 If you want to set up a complete Beaker testing environment (including a
 lab controller) with the ability to provision systems and run jobs,
-refer to the `Beaker in a box <../../in-a-box/>`_ quick start guide, or the
-more detailed `installation
+refer to :ref:`virtual-fedora`, or the more detailed `installation
 instructions <../../docs/admin-guide/installation.html>`_.
 
 Running Lab Controller processes in a development environment is
