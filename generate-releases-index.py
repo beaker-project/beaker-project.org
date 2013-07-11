@@ -140,7 +140,8 @@ ${minor_blurb(minor)}
 
 atom_template = MarkupTemplate('''
 <feed xmlns="http://www.w3.org/2005/Atom"
-      xmlns:py="http://genshi.edgewall.org/">
+      xmlns:py="http://genshi.edgewall.org/"
+      xml:base="http://beaker-project.org/releases/index.atom">
 <id>http://beaker-project.org/releases/index.atom</id>
 <title type="text">Beaker releases</title>
 <link rel="self" type="application/atom+xml" href="http://beaker-project.org/releases/index.atom" />
@@ -148,6 +149,7 @@ atom_template = MarkupTemplate('''
 
 <entry py:for="release in releases">
     <id>http://beaker-project.org/releases/#beaker-${release.version}-1</id>
+    <link rel="alternate" href="http://beaker-project.org/releases/#beaker-${release.version}-1" />
     <published>${release.timestamp.isoformat('T')}</published>
     <author>
         <name>${release.name}</name>
