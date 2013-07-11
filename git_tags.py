@@ -31,7 +31,7 @@ def releases(git_dir):
             for tag in repo.refs.keys(base='refs/tags/')]
     tag_commits = dict((tag.object[1], tag) for tag in tags
             if tag.type_name == 'tag')
-    for commit in repo.revision_history(repo.refs['refs/heads/master']):
+    for commit in repo.revision_history(repo.refs['HEAD']):
         if commit.id not in tag_commits:
             continue
         tag = tag_commits[commit.id]
