@@ -3,8 +3,8 @@
 Enhanced User Groups
 ====================
 
-:Authors: Dan Callaghan, Nick Coghlan
-:Editors: Raymond Mancy
+:Authors: Dan Callaghan, Nick Coghlan, Raymond Mancy
+:Editors:
 :Initial Release: 0.13
 :Target Release: 1.0
 
@@ -13,8 +13,8 @@ Abstract
 --------
 
 This proposal adds additional self-management capabilities for Beaker's
-user groups, as well as adding the ability for a job to be owned by a group
-in addition to the submitting user.
+user groups, adding the ability for a job to be owned by a group,
+and submitting a job via a :term:`submission delegate`.
 
 
 Dependencies
@@ -49,8 +49,8 @@ This proposal enhances the capabilities of the existing group model by:
   administrator involvement
 * allowing administrators to create groups that are automatically derived
   from groups already defined in an LDAP server
-* allowing jobs to be submitted on behalf of a group by group members and
-  by nominated "submission delegates"
+* allowing jobs to be submitted on behalf of a group by group members.
+* allowing jobs to be submitted by a :term:`submission delegate`.
 
 A Beaker user can be in zero or more groups, and any Beaker user may
 create a new group at any time. Group members may be marked as owners of
@@ -60,12 +60,12 @@ group is automatically marked as an owner at the time of creation.
 All members of a group are able to submit jobs on behalf of the group, and
 have full access to modify jobs submitted on behalf of the group.
 
-Submission delegates are able to submit jobs on behalf of a group, but
-are only able to modify the jobs they submit (they cannot modify jobs
-submitted by other users on behalf of the group).
-
 Jobs submitted on behalf of a group are called "group jobs", while other
 jobs are called "single-user jobs".
+
+Submission delegates are able to submit jobs on behalf of a user, but
+are only able to modify the jobs they submit. A :term:`submission delegate`
+does not gain access to modify other jobs that the user can modify.
 
 
 Group ownership
@@ -78,8 +78,6 @@ Group ownership permissions grant a user the ability to:
 * grant and revoke job modification permissions
 * update the group's display name
 * update the group's description
-* add delegate users that may submit jobs on the group's behalf without
-  being members of the group
 
 As a group may have multiple owners, "group ownership" may sometimes
 be referred to as "group co-ownership".
@@ -92,18 +90,13 @@ When a job is submitted on behalf of a group, any members of that group
 will have the same level of access to and control over the job as the
 original submitter.
 
-
 Submission delegates
 ~~~~~~~~~~~~~~~~~~~~
 
-Delegations only affect job submission - the right to modify jobs after
-submission can only be shared by submitting group jobs.
-
-Group owners may nominate additional delegate users that are permitted to
-submit jobs on the groups behalf, but are not otherwise considered members
-of the group. These users will retain job modification privileges for the
-jobs they submit on the group's behalf, but do not gain the ability to
-modify other jobs submitted on behalf of that group.
+Users may nominate additional :term:`submission delegates` that are
+permitted to submit and modify jobs on the user's behalf.
+These users will retain job modification privileges only for the
+jobs they submit.
 
 
 General use cases
@@ -176,8 +169,7 @@ particular installation may choose to refresh the group membership more
 frequently.
 
 Note that LDAP groups cannot be updated through Beaker. They have no
-owners, but Beaker administrators will be able to add submission delegates
-(TBC).
+owners.
 
 
 Viewing group details
@@ -284,7 +276,7 @@ The user's ownership rights for the group are revoked and the change is
 recorded in the "Group Activity" log.
 
 
-Group Job Management
+Group job management
 ~~~~~~~~~~~~~~~~~~~~
 
 Submitting group jobs
@@ -310,7 +302,7 @@ All members of the group will be able to ack/nack, change priority,
 edit whiteboard, change retention tag, delete the job, etc, as if they were
 the submitter of the job.  The root password used in the job will be the
 group root password (if one is set), otherwise it will be the root
-password set in the preferences of the submitting user.
+password set in the preferences of the :term:`submitting user`.
 The public SSH keys of all group members will be added to
 ``/root/.ssh/authorized_keys``.
 
@@ -382,59 +374,58 @@ Submission delegation
 Submitting delegated jobs
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-*  I want to submit a job for a particular group using an account that has
-   been nominated as a submission delegate. (:issue:`960302`).
+*  I want to submit a job for a particular user, using an account that has
+   been nominated as a :term:`submission delegate`. (:issue:`960302`).
 
-As a submission delegate, the user interface for submitting a job on behalf
-of a particular group is the same as that used by group members (see
-`Submitting group jobs`_).
+The user interface for submitting a job via a :term:`submission delegate`
+is to assign the :term:`job owner` via the ``user`` attribute on the job element.
 
-The additional functionality needed to handle the delegate case is that the
-systems available to the delegating group are considered for the job in
-addition to those available to the submitting user for single-user jobs.
+The additional functionality needed to handle the :term:`submission delegate`
+case is in assigning resources based on the :term:`job owner`, not the
+:term:`submission delegate`.
 
 
 Viewing submission delegates
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-* I want to view the list of submission delegates for a group
+* I want to view the list of :term:`submission delegates` for a user.
   (:issue:`960302`).
 
-The list of submission delegates should be included on the group details
-page.
+The list of :term:`submission delegates` should be included on the user's
+preferences page.
 
 
 Updating submission delegations
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-* I want to add a user that can submit jobs on behalf of a group I own
+* I want to add a user that can submit jobs on my behalf.
   (:issue:`960302`).
 
 Through the web UI:
 
-   Go to the group page. Under the submission delegate list, enter the user's
-   username and click "Add Delegate".
+   Go to the user preferences page. Under the :term:`submission delegate` list, enter the user's
+   username and click "Add".
 
 Through the ``bkr`` cli::
 
-   bkr group-modify --add-delegate=<someusername> <mygroup>
+   bkr user-modify --add-submission-delegate=<someusername> [<username>]
 
-The new delegate is added and the change is recorded in the
-"Group Activity" log.
+The new :term:`submission delegate` is added and the change is recorded in the
+"User Activity" log.
 
-* I want to revoke a user's permission to submit jobs on behalf of a group I
-  own (:issue:`960302`)
+* I want to revoke a submission delegate's permission to submit jobs on my behalf.
+  (:issue:`960302`)
 
 Through the web UI:
 
-   Go to the group page. Find the user in the submission delegate list,
-   and click "Remove".
+   Go to the user preferences page. Find the user in the
+   :term:`submission delegates` list, and click "Remove".
 
 Through the ``bkr`` cli::
 
-   bkr group-modify --remove-delegate=<someusername> <mygroup>
+   bkr user-modify --remove-submission-delegate=<someusername> [<username>]
 
-The delegate is removed and the change is recorded in the "Group Activity"
+The :term:`submission delegate` is removed and the change is recorded in the "User Activity"
 log.
 
 
@@ -482,12 +473,7 @@ These additional features are under consideration, but have been deliberately
 omitted in order to reduce the complexity of the initial iteration of the
 design:
 
-* User level delegation of job submission. This would allow an individual
-  user to delegate job submission to an automated account directly, without
-  needing to create a custom group. It would also mean that the delegated
-  user would *not* retain job modification privileges after submitting the
-  job.
-
+* Restricting user delegates from using group based assets.
 * Adding other groups as members of a group (:issue:`554802`). The initial
   iteration does not allow groups to be members of other groups, which
   introduces potential concerns about scalability in large organisations. A
@@ -566,4 +552,19 @@ design:
   whiteboard entries used with the job matrix more specific).
 
 
+.. glossary::
 
+   submission delegates
+   submission delegate
+       A user that can submit and modify jobs on behalf of another user,
+       and may or may not be a real user themselves (i.e they may be a
+       service, script, etc).
+
+   submitting user
+       This is the user that is directly responsible for submitting a job, which
+       may or may not be a submission delegate.
+
+   job owner
+       The actual owner of a job. In the absence of a submission
+       :term:`submission delegate`, this is the same as the
+       :term:`submitting user`.
