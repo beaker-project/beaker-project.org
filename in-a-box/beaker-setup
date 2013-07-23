@@ -5,7 +5,7 @@
 rpms="
     http://beaker-project.org/tasks/beaker-distribution-install-1.10-15.noarch.rpm
     http://beaker-project.org/tasks/beaker-distribution-inventory-1.1-57.noarch.rpm
-    http://beaker-project.org/tasks/beaker-distribution-reservesys-2.0-48.noarch.rpm
+    http://beaker-project.org/tasks/beaker-distribution-reservesys-2.0-52.noarch.rpm
     http://beaker-project.org/tasks/beaker-distribution-updateDistro-1.2-1.noarch.rpm
     http://beaker-project.org/tasks/rh-tests-kernel-distribution-ltp-nfs-1.0-0.noarch.rpm
 "
