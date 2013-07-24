@@ -1,3 +1,5 @@
+.. _technical-roadmap:
+
 Technical roadmap
 =================
 
