@@ -13,7 +13,8 @@ import urlparse
 import imp
 repoclosure = imp.load_source('repoclosure', '/usr/bin/repoclosure') # from yum-utils
 
-def check_deps(base, local_repo, repo_urls, arches, build_deps=False):
+def check_deps(base, local_repo, repo_urls, arches, build_deps=False,
+        ignored_breakages=frozenset()):
     closure_arches = ['noarch'] + arches
     if build_deps:
         closure_arches.append('src')
@@ -43,10 +44,9 @@ def check_deps(base, local_repo, repo_urls, arches, build_deps=False):
             rc.repos.getRepo(local_repo_id).getPackageSack().returnNewestByNameArch()))
     broken_deps = rc.getBrokenDeps()
 
-    # XXX annoying hack: this is due to UsrMove in Fedora 17 but I'm not sure how to fix it
     for pkg in broken_deps:
         broken_deps[pkg] = [breakage for breakage in broken_deps[pkg]
-                if breakage[0] != '/bin/python']
+                if breakage[0] not in ignored_breakages]
     broken_deps = dict((pkg, broken) for pkg, broken in broken_deps.iteritems() if broken)
 
     if broken_deps:
@@ -63,10 +63,15 @@ def checks_from_config(base, config):
     for section in config.sections():
         local_repo, _, descr = section.partition('.')
         print 'Checking dependencies for %s' % section
-        check_deps(base, local_repo,
-                config.get(section, 'repos').split(),
-                config.get(section, 'arches').split(),
-                config.has_option(section, 'build-deps') and config.getboolean(section, 'build-deps'))
+        repos = config.get(section, 'repos').split()
+        arches = config.get(section, 'arches').split()
+        build_deps = False
+        if config.has_option(section, 'build-deps'):
+            build_deps = config.getboolean(section, 'build-deps')
+        ignored_breakages = frozenset()
+        if config.has_option(section, 'ignored-breakages'):
+            ignored_breakages = frozenset(config.get(section, 'ignored-breakages').split())
+        check_deps(base, local_repo, repos, arches, build_deps, ignored_breakages)
 
 if __name__ == '__main__':
     from optparse import OptionParser
