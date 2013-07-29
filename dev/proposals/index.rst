@@ -28,7 +28,6 @@ into a future version of Beaker.
    :maxdepth: 1
 
    handling-large-installations
-   enhanced-user-groups
    system-pools
    implicit-system-pools
    event-driven-scheduler
@@ -57,6 +56,7 @@ version of Beaker.
    :maxdepth: 1
 
    harness-api
+   enhanced-user-groups
 
 
 Rejected/withdrawn design proposals

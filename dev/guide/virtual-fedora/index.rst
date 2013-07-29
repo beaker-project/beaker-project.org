@@ -11,6 +11,14 @@ an installation of Fedora 19 (although the instructions should also
 work with any other Linux distribution with a suitably recent version
 of libvirt).
 
+.. note::
+
+   There are currently some known compatibility issues with Beaker and
+   SQLAlchemy 0.8 (see :issue:`989902`). As a result,  while a test bed
+   set up in accordance with these instructions should be fully capable of
+   running Beaker jobs, running the Beaker server components on Fedora is
+   still considered an *experimental* configuration.
+
 
 Basics of a Beaker test bed
 ===========================

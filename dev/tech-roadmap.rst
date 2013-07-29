@@ -44,17 +44,8 @@ and we will continue with as many regular 0.x releases as are needed to
 achieve them:
 
 * The Effective Job Priorities design proposal (and its dependencies)
-* Red Hat workflow independence
-
-  * Moving any remaining hardcoded Red Hat specific settings into
-    configuration files
-  * Full Fedora deployment compatibility (including the test suite)
-  * A stable alternate harness API (ideally with the corresponding
-    autotest patches merged on their side)
-  * A harness independent reservesys mechanism
-  * Self tests that exercise beah, the legacy harness API and the new 
-    harness API
-
+* Stable alternative harness API (with autotest support) (Done!)
+* Improved integration with other testing systems (xUnit/subunit support)
 * Documentation improvements, including
    * an architectural guide that at least explains all of Beaker's
      external interfaces
@@ -64,6 +55,15 @@ achieve them:
    * a public page giving at least basic info on how Beaker is used
      at Red Hat
 
+* Red Hat workflow independence
+
+  * Moving any remaining hardcoded Red Hat specific settings into
+    configuration files
+  * Full Fedora deployment compatibility (including the test suite)
+  * A harness independent reservesys mechanism
+  * Self tests that exercise beah, the legacy harness API and the new 
+    harness API
+  * Theming support in the main web UI
 
 
 The status of ``beah``
@@ -76,18 +76,27 @@ of other test frameworks like `autotest <http://autotest.github.io/>`__ and
 Being so heavily dependent on kickstart files and the RPM based task library,
 ``beah`` is also quite inflexible in terms of platform support.
 
-Accordingly, we consider it a poor use of resources to further duplicate
-the effort going into development of other automated test harnesses
-(especially ``autotest``), and hence any major feature proposals for
-``beah`` will be rejected - we would prefer for any such efforts to be
-directed towards the system changes needed to better support alternative
+The following kinds of changes will be considered for ``beah``:
+
+* documentation improvements
+* compatibility updates for supported test systems
+* any changes needed for image based provisioning with OpenStack
+* reliability fixes
+* equivalent capabilities for additions made to the stable harness API
+
+Outside these areas, we consider it a poor use of resources to further
+duplicate the effort going into development of other automated test
+harnesses (especially ``autotest``), and hence any major feature proposals for
+``beah`` will likely be rejected - we would prefer for any such efforts to
+be directed towards the system changes needed to better support alternative
 harnesss.
 
-However, to support existing Beaker users, the ``beah`` test harness will be
-maintained indefinitely, and its documentation will continue to be improved.
-The only way ``beah`` would ever be phased out is if a robust autotest based
-alternative became available and was capable of correctly executing all of
-the existing Beaker tests that the Beaker developers have access to.
+To support existing Beaker users, the ``beah`` test harness will be
+maintained indefinitely, and the smaller changes noted above will continue
+to be permitted. The only way ``beah`` itself would ever be phased out is if
+a robust autotest based alternative became available and was capable of
+correctly executing all of the existing Beaker tests that the Beaker
+developers have access to.
 
 
 Active development
@@ -102,32 +111,80 @@ months. Searching `Bugzilla
 for Beaker bugs with target milestones set will often provide more detail on 
 the specific proposals.
 
-Self-service user groups
-~~~~~~~~~~~~~~~~~~~~~~~~
 
-Currently, all management of user groups must be handled by Beaker
-administrators. This doesn't scale to large numbers of users, so it makes
-more sense to let many aspects of groups be self-administered.
+Delegating job submission
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This idea is covered by the :doc:`proposals/enhanced-user-groups` design 
-proposal.
+For system automation with clear audit trails, it's helpful if an automated
+system can submit and manage jobs, but have the owner responsible for the
+job be a specific human user.
 
-Group ownership of jobs
+(`Included in Beaker 0.14
+<../docs-release-0.14/whats-new/release-0.14.html#submission-delegates>`__)
+
+
+Separate system architecture guide
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Aimed more at developers than at users or administrators, a dedicated
+system architecture guide would allow new developers to more quickly
+become familiar with Beaker's many moving parts, and better understand
+how the all interoperate.
+
+(`Included in Beaker 0.14
+<../docs-release-0.14/whats-new/release-0.14.html#architecture-guide>`__)
+
+
+Full Fedora compatibility
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We would like to support Fedora as a host operating system for the Beaker
+server components. This work was mostly completed in Beaker 0.14 (supporting
+Fedora 19+), but there are some backwards compatibility issues with SQL
+Alchemy 0.8 remaining (see :issue:`989902`).
+
+
+Virtual-only trial environment
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The "Beaker-in-a-box" scripts currently require a physical machine, which
+runs the main Beaker server, and then creates some KVM guests for lab
+controllers and test systems.
+
+It would be more convenient if the bare metal host wasn't needed, and the
+main server also ran inside a guest VM.
+
+Experimental instructions have been posted for ` Beaker 0.14
+<../docs-release-0.14/whats-new/release-0.14.html#fedora-based-fully-virtualised-beaker-quick-start>`__,
+but these are potentially affected by the SQLAlchemy 0.8 incompatibility
+issues (since Fedora 19 is used as the host OS for the quick start).
+
+
+Improved inventory task
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-Currently, all submitted jobs must be owned by a specific user, and many
-actions on the job are limited to that user. As with administrator
-management of user groups, this doesn't work well for larger teams, so
-the idea is to allow a job to be assigned to a user group, granting
-members of that group access to commands that would otherwise be
-restricted to the job owner.
+The current inventory task is based on the ``smolt`` project. Replacing this
+with a new version based on ``lshw`` will improve many aspects of the
+system capability reporting, providing a richer set of attributes to query.
 
-One aim of this change will be to make workarounds like shared
-accounts for job submission and the current "proxy_user"
-setting unnecessary (although they will continue to be supported).
+The core functionality is also being broken out as an application
+(``beaker-system-scan``) that can be installed and run directly, rather
+than only being usable inside a Beaker job.
 
-This idea is covered by the :doc:`proposals/enhanced-user-groups` design 
-proposal.
+
+Web UI modernisation
+~~~~~~~~~~~~~~~~~~~~
+
+The current main web UI is based on the TurboGears 1 stack (although it
+uses SQLAlchemy rather than SQLObject for the database access layer). This
+makes some aspects of development more awkward than they might be with a
+more recent web framework.
+
+The main web server is in the process of being migrated to Flask, by
+allowing endpoints to be implemented as either TG1 controllers or Flask
+handlers. We are also aiming to replace the front end components with
+cleaner alternatives based on Twitter Bootstrap.
+
 
 Planned development
 -------------------
@@ -135,22 +192,44 @@ Planned development
 The ideas in this section are firmly on the to-do list, but it is not yet
 clear when they will be ready for inclusion.
 
+Shared access policies
+~~~~~~~~~~~~~~~~~~~~~~
+
+Currently, the permission settings for individual systems are quite limited,
+and making them more fine-grained would be unmanageable, as there is no way
+to share a single policy across multiple systems.
+
+Separating out access policies as a distinct entity in Beaker's conceptual
+model helps deal with both notions: several system-specific settings can
+be moved out to access policies (leaving only a single per-system setting
+to say which access policy to use), while the access policies themselves
+can be made more flexible, building on the group management features added
+in recent releases.
+
+This is in the process of being written up as a distinct design proposal,
+but an early iteration of the idea is covered in the
+:doc:`proposals/system-pools` design proposal.
+
+
 Explicit system pools
 ~~~~~~~~~~~~~~~~~~~~~
 
-Beaker currently includes informal notions of the "public pool" (systems
-with no access restrictions) and "private pools" (systems with access
-limited to particular user groups). The idea here is to make this notion
-of system pools explicit in the Beaker data model and UI, making it easier
-to administer large groups of machines, as well as better distributing
-administration responsibilities to the owning user groups.
+Beaker currently schedules jobs on any system the user has access to,
+preferring the users own systems over group systems, over the generally
+accessible system pool.
 
-Adding system pools as an explicit part of the data model may also allow
-additional features like making a pool accessible to all users, but only
-when they explicitly request it when submitting their job, or limiting
-the number of systems in a pool which may be consumed by a single user.
+This approach isn't always desirable, since some systems have special
+features that should only be used when explicitly requested, or a user may
+wish to target a specific job at a particular set of machines.
 
-This idea is covered by the :doc:`proposals/system-pools` design proposal.
+Allowing systems to be grouped into pools (independent of the access policies
+used to grant or deny access to the systems) will allow users to express
+more abstract preferences about machines that aren't directly related to
+the system itself.
+
+An early iteration of this idea is covered in the
+:doc:`proposals/system-pools` design proposal.
+
 
 Event based scheduler
 ~~~~~~~~~~~~~~~~~~~~~
@@ -164,6 +243,7 @@ to queued recipes without placing the system in the idle pool.
 This idea is covered by the :doc:`proposals/event-driven-scheduler` design
 proposal.
 
+
 More flexible job prioritisation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -175,6 +255,7 @@ systems.
 This idea is covered by the :doc:`proposals/effective-job-priorities` design
 proposal.
 
+
 Task oriented guides for users and administrators
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -185,13 +266,11 @@ documentation is likely to benefit from additional sections that take a
 limit my recipe to systems with a graphics adapter?" or "How do I require
 that my recipe run directly on bare metal and not in a VM?".
 
-Separate system architecture guide
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This will include a general "troubleshooting guide" to help users and
+administrators collaborate effectively in tracking down the more obscure
+failures that can occur with the kind of integration testing Beaker
+supports.
 
-Aimed more at developers than at users or administrators, a dedicated
-system architecture guide would allow new developers to more quickly
-become familiar with Beaker's many moving parts, and better understand
-how the all interoperate.
 
 Systematic self-tests for provisioning and beah
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -202,6 +281,7 @@ set of self-test Beaker tasks will be made readily available. These tasks
 should come with helper scripts scripts for installing them into a
 Beaker installation and the appropriate job definitions to execute them
 across all configured architectures and distro trees.
+
 
 OpenStack based provisioning
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -219,13 +299,18 @@ and long term high availability of oVirt. This suggests that OpenStack will
 be a substantially better fit for Beaker's dynamic provisioning use case
 than oVirt.
 
+As part of this, Beaker will need to be updated to support OpenStack's host
+initialisation capabilities rather than relying solely on kickstart post
+operations.
+
 OpenStack also offers some interesting possibilities in terms of dynamically
 creating isolated subnets. Integrating with that could allow Beaker to
 support testing of scenarios that are currently difficult to set up due
 to interference with the network of the hosting lab. For example, a full
-Beaker provisioning cycle currently can't be tested easily within Beaker,
-as doing so requires taking control of DHCP responses, while still retaining
-access to the distro trees used for installation.
+bare metal Beaker provisioning cycle currently can't be tested easily
+within Beaker, as doing so requires taking control of DHCP responses,
+while still retaining access to the distro trees used for installation.
+
 
 Exploration
 -----------
@@ -234,29 +319,22 @@ The ideas in this section are projects that one or more of the current
 developers are at least tinkering with, but they may be at wildly
 divergent stages of maturity.
 
-Jenkins plugin to spawn systematic integration tests in Beaker
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+xUnit and subunit output support
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-While Beaker is an excellent integration testing system, it doesn't really
-have the right features to serve as a continuous integration system on its
-own. However the combination of Beaker with Jenkins could be substantially
-more powerful than either system on its own, as a Jenkins build bot could
-be used to perform an initial "smoke test" on a small number of common
-platforms, and then trigger a more comprehensive set of integration
-tests across multiple platforms in Beaker if the smoke test is successful.
+While a Jenkins plugin to trigger Beaker jobs is available, the reporting is
+currently limited as Beaker doesn't provide job results in a format that
+Jenkins understands.
 
-Autotest support
-~~~~~~~~~~~~~~~~
+It would be helpful if Beaker supported exporting the results of jobs in
+xUnit format. The nose `xunit plugin
+<http://nose.readthedocs.org/en/latest/plugins/xunit.html>`__ may be a
+useful guide to this.
 
-Using Beaker's new `support for alternative harnesses 
-<../docs/alternative-harnesses/>`_ it should be possible to write some glue 
-code to run autotest-based tests in Beaker recipes.
+A potentially related change would be to support retrieval of
+`subunit results <https://pypi.python.org/pypi/python-subunit>` for
+in-progress jobs.
 
-This is being tracked primarily as a
-`pull request <https://github.com/autotest/autotest/pull/629>`__ on the
-autotest side. On the Beaker side, we're now mostly tracking this as
-individual Bugzilla entries against specific problems or limitations in the
-stable harness API.
 
 Reference harness implementation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -276,34 +354,6 @@ status directly to Graphite, it doesn't provide any native dashboard
 capability. It's desirable to provide an improved dashboard experience,
 using either Graphite's native dashboard tools, or a richer Javascript based
 charting front end (such as Rickshaw).
-
-Full Fedora compatibility
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The "Beaker-in-a-box" scripts currently rely on CentOS 6, as the server
-components aren't fully compatible with current versions of Fedora
-(provisioning Fedora on systems within Beaker works correctly).
-
-We'd like to migrate Beaker-in-a-box over to using Fedora 18 (there are only
-a few remaining problems with daemon mode operation, apparently due to the
-more recent version of gevent)
-
-Virtual-only trial environment
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The "Beaker-in-a-box" scripts currently require a physical machine, which
-runs the main Beaker server, and then creates some KVM guests for lab
-controllers and test systems.
-
-It would be more convenient if the bare metal host wasn't needed, and the
-main server also ran inside a guest VM.
-
-Improved inventory task
-~~~~~~~~~~~~~~~~~~~~~~~
-
-The current inventory task is based on the ``smolt`` project. Replacing this
-with a new version based on ``lshw`` would improve many aspects of the
-system capability reporting, providing a richer set of attributes to query.
 
 Test suite speed improvements
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -390,27 +440,6 @@ Most of these are at least non-trivial projects, and it's an open question
 if some of them are feasible at all. Some of them may prove to be bad ideas,
 regardless of feasibility.
 
-Alternate provisioning mechanisms
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Provisioning is currently based directly on the Anaconda installer. VM
-image based provisioning for guest recipes or the dynamic host creation
-would allow Beaker to cover a wider range of testing scenarios.
-
-Supporting tools like `os-autoinst <http://www.os-autoinst.org/>`_ or
-specific image URLs for guest installs are other possibilities
-potentially worth investigating.
-
-A more flexible provisioning architecture might even be able to deploy
-other distributions and operating systems that don't use Anaconda at all.
-
-In particular, `Ansible <http://ansible.cc/discover.html>`__ may provide
-a viable installer independent approach to post-boot configuration.
-
-For image based provisioning, OpenStack's
-`cloud-init tool <http://docs.openstack.org/trunk/openstack-compute/admin/content/user-data.html>`__
-is also worth exploring.
-
 
 Provisioning other hypervisors
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -448,22 +477,6 @@ and queued recipes can be assigned to systems.
 It may be worth adopting `fedmsg <http://www.fedmsg.com>`__, or something
 similar, to help get rid of these polling calls.
 
-Web UI modernisation
-~~~~~~~~~~~~~~~~~~~~
-
-The current main web UI is based on the TurboGears 1 stack (although it
-uses SQLAlchemy rather than SQLObject for the database access layer). This
-makes some aspects of development more awkward than they might be with a
-more recent web framework.
-
-That said, TG1 is still quite usable, even if it isn't quite as capable
-as the newer frameworks. Furthermore, the current direction of
-development in Beaker is to push it more towards the role of being
-a sophisticated inventory management and task scheduling backend (in
-contrast to both other IaaS systems, which attempt to abstract away hardware
-details completely, and normal identity-based orchestration systems), and
-deemphasise the importance of the native Web UI.
-
 Alternate database backend
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -482,5 +495,10 @@ Recently implemented ideas
 The following ideas were previously included on this roadmap, but are
 now implemented in Beaker:
 
+
+- `Jenkins plugin to launch Beaker jobs <https://lists.fedorahosted.org/pipermail/beaker-devel/2013-July/000657.html>`__
+- `Self-service user groups <../docs/whats-new/release-0.13.html#more-flexible-user-groups>`__
+- `Group ownership of jobs <../docs/whats-new/release-0.13.html#group-jobs>`__
+- `autotest support for stable harness API <https://github.com/autotest/autotest/pull/629>`__
 - `Stable harness API <../docs/whats-new/release-0.12.html#provisional-support-for-alternative-harnesses>`_
 - `Working with multiple Beaker instances <../docs/whats-new/release-0.12.html#other-enhancements>`_
