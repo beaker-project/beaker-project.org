@@ -95,14 +95,16 @@ Beaker instances. It has three key elements:
 See the `Beaker 0.12 Release Notes <../../docs/whats-new/#beaker-0-12>`__ for
 details.
 
+
 Beaker 0.13
 -----------
 
-Planned release date: late May/early June 2013
+Release date: 7th June, 2013
 
-The focus of Beaker 0.13 is :ref:`proposal-enhanced-user-groups`
+The focus of Beaker 0.13 was :ref:`proposal-enhanced-user-groups`
 
-This proposal has three key elements:
+The elements of the proposal implemented in this release included three key
+elements:
 
 * Administrators may delegate membership of specific groups to an
   LDAP server (to avoid maintaining membership data in two locations)
@@ -112,24 +114,48 @@ This proposal has three key elements:
   group full access to the job (to avoid the creation of shared accounts
   for collective management of jobs)
 
-Preliminary release notes for Beaker 0.13 are
-`available <../../docs-develop/whats-new/#unreleased-changes>`__ and will
-be updated throughout the development cycle.
+See the `Beaker 0.13 Release Notes <../../docs/whats-new/#beaker-0-13>`__ for
+details.
 
 
-Beaker 0.14 (tentative)
+Beaker 0.14
+-----------
+
+Release for testing: 30th July, 2013
+Planned release date: early August 2013
+
+The focus of Beaker 0.14 development was the completion of
+:ref:`proposal-enhanced-user-groups`, by allowing users to nominate
+"submission delegates" that can submit jobs on their behalf.
+
+See the `Beaker 0.14 Release Notes
+<../../docs-release-0.14/whats-new/#beaker-0-14>`__ for details.
+
+
+Beaker 0.15
+-----------
+
+Planned release date: mid September 2013
+
+The focus of Beaker 0.15 will be a revised access policy model that makes
+it easier to configure consistent access rules for large numbers of
+systems.
+
+Just as the enhanced user group model allowed groups to assume shared
+management of jobs, the new access policy model will allow groups to
+assume shared management of systems.
+
+
+Beaker 0.16 (tentative)
 -----------------------
 
-Planned release date: mid-to-late July 2013
+The tentative focus for Beaker 0.16 is the scheduling related aspects of
+:ref:`proposal-system-pools`.
 
-The focus of Beaker 0.14 will be :ref:`proposal-system-pools`
-
-Just as Beaker 0.13 allows groups to assume shared ownership of jobs,
-Beaker 0.14 will allow groups to assume shared ownership of systems.
-
-This release may also allow users to express preferences and strict
-requirements regarding the pools which are used to run their submitted
-jobs.
+This release should also cover the migration to
+:ref:`proposal-event-driven-scheduling` (as the proposed approach to
+expressing pool preferences doesn't really make sense with the
+current scheduling model).
 
 
 Beaker 1.0 (tentative)
@@ -142,23 +168,8 @@ the effective precedence of recipes handled by their systems (including
 prioritising their own jobs, or those of their team, over jobs submitted
 by other users).
 
-In addition to the :ref:`proposal-enhanced-user-groups` and
-:ref:`proposal-system-pools` proposals, this feature depends on
-:ref:`proposal-event-driven-scheduling`, which will be implemented
-incrementally over the course of the remaining 0.x releases.
-
 
 Beaker 1.1 (tentative)
-----------------------
-
-The tentative focus of Beaker 1.1 is :ref:`proposal-implicit-system-pools`.
-
-The key element of this proposal is the creation of implicit system pools,
-associated with particular user groups. This is intended to streamline
-a number of anticipated use cases for the system pools infrastructure.
-
-
-Beaker 1.2 (tentative)
 ----------------------
 
 Currently, clean isolation of sensitive systems, tasks and job details
@@ -166,7 +177,7 @@ requires running multiple Beaker instances, which imposes a lot of
 management and maintenance overhead, as well as contributing to
 inefficient use of test hardware.
 
-The tentative focus of Beaker 1.2 is to build on the existing NDA
+The tentative focus of Beaker 1.1 is to build on the existing NDA
 functionality, the enhanced user groups and the new system pool model to
 provide clean isolation of sensitive systems, tasks and job details. This
 feature may also require the ability to bypass the public task library for

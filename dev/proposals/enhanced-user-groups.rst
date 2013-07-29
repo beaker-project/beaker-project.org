@@ -4,10 +4,9 @@ Enhanced User Groups
 ====================
 
 :Authors: Dan Callaghan, Nick Coghlan, Raymond Mancy
-:Editors:
-:Initial Release: 0.13
-:Target Release: 1.0
-
+:Status: Implemented
+:Initial Release: `0.13 <http://beaker-project.org/docs/whats-new/release-0.13.html>`__
+:Final Release: `0.14 <http://beaker-project.org/docs/whats-new/release-0.14.html>`__
 
 Abstract
 --------
@@ -23,19 +22,6 @@ Dependencies
 None.
 
 
-Initial Release
----------------
-
-The initial implementation of this proposal is part of Beaker 0.13. Some
-elements of the full proposal have been deferred from this release, but
-are still planned for implementation prior to the release of Beaker 1.0.
-
-This deferral covers:
-
-* User group descriptions
-* The "submission delegates" system
-
-
 Proposal
 --------
 
@@ -44,7 +30,6 @@ by Beaker administrators, and groups can own systems, but not jobs.
 
 This proposal enhances the capabilities of the existing group model by:
 
-* adding a group Description field in addition to the existing Display Name
 * allowing users to manage their own groups, rather than requiring
   administrator involvement
 * allowing administrators to create groups that are automatically derived
@@ -77,7 +62,6 @@ Group ownership permissions grant a user the ability to:
 * grant and revoke group ownership permissions
 * grant and revoke job modification permissions
 * update the group's display name
-* update the group's description
 
 As a group may have multiple owners, "group ownership" may sometimes
 be referred to as "group co-ownership".
@@ -131,17 +115,14 @@ Creating ad hoc groups
 Through the web UI:
 
    Select "Hello -> My Groups" from the menu, then click "Create". Enter
-   a group name, display name and description and click "Create".
+   a group name and display name, and click "Create".
 
 Through the ``bkr`` cli::
 
-   bkr group-create --display-name="My New Group" --description="This is my very own group. Email me@example.com if you want to be included." <mynewgroup>
+   bkr group-create --display-name="My New Group" <mynewgroup>
 
 A new group is created, with one member (you) who is also a group owner.
 The change is recorded in the "Group Activity" log.
-
-.. note::
-   Group descriptions are not part of the initial release in Beaker 0.13.
 
 
 Creating LDAP-derived groups
@@ -197,18 +178,15 @@ Through the web UI:
    Select "Hello -> My Groups" from the menu, then click the name of the
    group you are interested in to go to its group page.
 
-   To update the display name and/or description for the group, click
+   To update the display name for the group, click
    "Edit Group", update the group details, then click "Save Changes".
 
 Through the ``bkr`` cli::
 
-   bkr group-modify --display-name="My Group" --description="This group is mine. Email me@example.com if you want to be included." <mynewgroup>
+   bkr group-modify --display-name="My Group" <mynewgroup>
 
 The group details are updated and the change is recorded in the
 "Group Activity" log.
-
-.. note::
-   Group descriptions are not part of the initial release in Beaker 0.13.
 
 
 Updating group membership
@@ -473,7 +451,7 @@ These additional features are under consideration, but have been deliberately
 omitted in order to reduce the complexity of the initial iteration of the
 design:
 
-* Restricting user delegates from using group based assets.
+
 * Adding other groups as members of a group (:issue:`554802`). The initial
   iteration does not allow groups to be members of other groups, which
   introduces potential concerns about scalability in large organisations. A
@@ -500,12 +478,16 @@ design:
 
   .. _Closure Table: http://stackoverflow.com/questions/192220/what-is-the-most-efficient-elegant-way-to-parse-a-flat-table-into-a-tree/192462#192462
 
+
+* Group descriptions. The display name only allows a short piece of text.
+  Group descriptions could, for example, include external links or
+  instructions on how to request group membership.
+
 * User-level self service to request group membership (including the
   associated queue interface for group owners to approve/deny requests),
   or to remove yourself from groups. This capability is likely to be added
-  in a later iteration. In the meantime, group owners may include
-  information on requesting membership in the group description, and
-  the list of group owners will be visible in the web UI.
+  in a later iteration. In the meantime, the list of group owners will be
+  visible in the web UI.
 
 * More fine-grained group permissions. The initial iteration has only three
   effective levels of access: job submission delegates, ordinary group
@@ -525,6 +507,8 @@ design:
     group members)
   * Ability to change the job retention policy (currently allowed for all
     group members)
+  * Ability to let submission delegates run jobs on group assets (currently
+    allowed for all group members)
 
 * Group deletion. The initial iteration does not allow groups to be deleted,
   or even hidden. If subgroup management is added, and the associated UI
