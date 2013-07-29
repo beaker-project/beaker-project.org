@@ -6,6 +6,7 @@
 /dev/_sources/
 /dev/*.html
 /dev/*/*.html
+/dev/*/*/*.html
 /dev/objects.inv
 /dev/searchindex.js
 /docs.mk
