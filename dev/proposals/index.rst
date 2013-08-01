@@ -33,6 +33,7 @@ into a future version of Beaker.
    event-driven-scheduler
    effective-job-priorities
    reference-harness
+   inventory-lshw-migration
 
 .. note::
 
