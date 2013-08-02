@@ -137,9 +137,7 @@ Beaker 0.15
 
 Planned release date: mid September 2013
 
-The focus of Beaker 0.15 will be a revised access policy model that makes
-it easier to configure consistent access rules for large numbers of
-systems.
+The focus of Beaker 0.15 will be :ref:`proposal-access-policies`.
 
 Just as the enhanced user group model allowed groups to assume shared
 management of jobs, the new access policy model will allow groups to
@@ -149,8 +147,7 @@ assume shared management of systems.
 Beaker 0.16 (tentative)
 -----------------------
 
-The tentative focus for Beaker 0.16 is the scheduling related aspects of
-:ref:`proposal-system-pools`.
+The tentative focus for Beaker 0.16 is :ref:`proposal-system-pools`.
 
 This release should also cover the migration to
 :ref:`proposal-event-driven-scheduling` (as the proposed approach to

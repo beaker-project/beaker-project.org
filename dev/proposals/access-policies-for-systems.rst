@@ -1,3 +1,5 @@
+.. _proposal-access-policies:
+
 Access Policies for Systems
 ===========================
 

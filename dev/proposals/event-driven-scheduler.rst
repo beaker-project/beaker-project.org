@@ -5,7 +5,7 @@ Event Driven Scheduling
 
 :Author: Nick Coghlan
 :Status: Proposed
-:Target Release: 1.0
+:Target Release: 0.16 (tentative)
 
 
 Abstract
