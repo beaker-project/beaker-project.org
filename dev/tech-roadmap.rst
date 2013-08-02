@@ -171,6 +171,8 @@ The core functionality is also being broken out as an application
 (``beaker-system-scan``) that can be installed and run directly, rather
 than only being usable inside a Beaker job.
 
+This idea is covered by the :ref:`proposal-lshw-migration` design proposal.
+
 
 Web UI modernisation
 ~~~~~~~~~~~~~~~~~~~~
@@ -206,9 +208,7 @@ to say which access policy to use), while the access policies themselves
 can be made more flexible, building on the group management features added
 in recent releases.
 
-This is in the process of being written up as a distinct design proposal,
-but an early iteration of the idea is covered in the
-:doc:`proposals/system-pools` design proposal.
+This idea is covered by the :ref:`proposal-access-policies` design proposal.
 
 
 Explicit system pools
@@ -227,8 +227,7 @@ used to grant or deny access to the systems) will allow users to express
 more abstract preferences about machines that aren't directly related to
 the system itself.
 
-An early iteration of this idea is covered in the
-:doc:`proposals/system-pools` design proposal.
+This idea is covered by the :ref:`proposal-system-pools` design proposal.
 
 
 Event based scheduler
@@ -247,7 +246,7 @@ proposal.
 More flexible job prioritisation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Armed with the new user group and system pool models, and the new event
+Armed with the new user group and access policy models, and the new event
 driven approach to scheduling, it becomes possible to offer system owners
 much greater control over which recipes are selected to run on their
 systems.

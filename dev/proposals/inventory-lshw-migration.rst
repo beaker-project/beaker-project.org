@@ -1,4 +1,4 @@
-.. _proposal-inventory-lshw-migration:
+.. _proposal-lshw-migration:
 
 Migrating to lshw for inventory task
 ====================================

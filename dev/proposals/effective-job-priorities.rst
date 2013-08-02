@@ -4,6 +4,7 @@ Effective Job Priorities
 ========================
 
 :Author: Nick Coghlan
+:Status: Proposed
 :Target Release: 1.0
 
 
@@ -21,7 +22,7 @@ Dependencies
 This proposal depends on:
 
 * :ref:`proposal-enhanced-user-groups`
-* :ref:`proposal-system-pools`
+* :ref:`proposal-access-policies`
 * :ref:`proposal-event-driven-scheduling`
 
 
@@ -36,7 +37,7 @@ your systems as your own jobs do. The existing "Urgent", "High", "Normal",
 currently queued whenever a system becomes available for automated use.
 
 This proposal takes advantage of features added by the
-:ref:`proposal-enhanced-user-groups`, :ref:`proposal-system-pools` and
+:ref:`proposal-enhanced-user-groups`, :ref:`proposal-access-policies` and
 :ref:`proposal-event-driven-scheduling` proposals to introduce the concept
 of "Maximum effective priority" for the execution of jobs on a system.
 
@@ -59,9 +60,9 @@ priority::
     Low, Low (any job)
 
 The proposed mechanism for implementation is to change the "can submit
-automated jobs" permission on system pools to record a list of
+automated jobs" permission on access policies to record a list of
 "Group, Maximum Effective Priority" pairs, rather than the simple
-list of groups supported by the initial system pools design.
+list of groups supported by the initial access policy design.
 
 When the recipe queue is being sorted for a "Pending System" scheduling
 event, then the effective priority for any given recipe will be
