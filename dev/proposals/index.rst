@@ -28,8 +28,8 @@ into a future version of Beaker.
    :maxdepth: 1
 
    handling-large-installations
+   access-policies-for-systems
    system-pools
-   implicit-system-pools
    event-driven-scheduler
    effective-job-priorities
    reference-harness
