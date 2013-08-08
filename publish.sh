@@ -8,7 +8,6 @@ fi
 
 # Make sure we have the latest published version.
 git fetch beaker-project.org:/srv/www/beaker-project.org/git master:published
-git fetch beaker-project.org:/srv/www/stage.beaker-project.org/git master:published
 
 # This is the SHA of the current tip of the destination branch,
 # on top of which we will commit our new version.
