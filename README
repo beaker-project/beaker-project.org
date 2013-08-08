@@ -76,12 +76,6 @@ publication attempt:
 
     git fetch beaker-project.org:/srv/www/beaker-project.org/git/ +master:published
 
-Then you can push to http://stage.beaker-project.org/ and check
-everything looks okay:
-
-    git push beaker-project.org:/srv/www/stage.beaker-project.org/git/ published:master
-
-If something is not right, fix it, commit your fix, and re-run 
-publish.sh. Once you're happy with it, push it live:
+Once you're happy with it, push it live:
 
     git push beaker-project.org:/srv/www/beaker-project.org/git/ published:master
