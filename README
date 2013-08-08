@@ -45,11 +45,8 @@ Then you can build it as docs-mine:
     make docs-mine
 
 
-Publishing the web site
------------------------
-
-These instructions are only relevant to Beaker developers who have
-access to publish to beaker-project.org.
+Making changes to the web site
+------------------------------
 
 If any branches of Beaker have moved on (because a new version of Beaker has 
 been released), update their submodule reference. XXX pester Dan to automate 
@@ -61,11 +58,37 @@ this. For example, to update master:
     git add -u beaker-branches/master
     git commit -m 'update beaker master submodule'
 
-Build your changes:
+Commit any changes you have to your local master branch. Any changes that you
+make should be verified locally. This includes document changes, repo
+changes etc. To do this, run `make` and then the following (unless
+you have alternative HTTP server configured for this process):
+
+    python -m SimpleHTTPServer 8000
+
+You can now check your changes against 'http://localhost:8000'.
+Once the changes have been verified you should push them to Beaker's gerrit
+instance  (See the 'Submitting your patch' section in the developer guide
+for instructions on how to setup a gerrit remote):
+
+    git push gerrit master:refs/for/master
+
+As an alternative, you can send your patch to
+beaker-devel@lists.fedorahosted.org.
+
+Once your patch has been merged, and if you have access to publish to
+beaker-project.org, you can now publish the change. If you don't have
+access, thank you for the patch and one of the Beaker developers will
+publish it for you.
+
+
+Publishing changes to the web site
+----------------------------------
+
+The first step in publishing is to build your changes:
 
     ./publish.sh
 
-Now the 'published' branch has been updated. First, check that the 
+Now the 'published' branch has been updated. First, check that the
 changes you've introduced look sane:
 
     git diff published~..published
@@ -76,6 +99,6 @@ publication attempt:
 
     git fetch beaker-project.org:/srv/www/beaker-project.org/git/ +master:published
 
-Once you're happy with it, push it live:
+If you're happy with it, push it live:
 
     git push beaker-project.org:/srv/www/beaker-project.org/git/ published:master
