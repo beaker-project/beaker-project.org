@@ -143,19 +143,7 @@ performed as follows:
 
 In addition, the ``control-system`` permission will be granted to everyone for 
 all existing systems. This matches Beaker's current behaviour, which permits 
-any user to power any system.
-
-
-Open questions
---------------
-
-Beaker's current lack of restrictions on powering systems (any authenticated 
-user can power any system) are surprising to some system owners. With this 
-proposal in place, system owners will have full control over who can power 
-their systems. However, the migration steps described above dictate that 
-``control-system`` permission will be granted to everyone for existing systems, 
-in order to match the current behaviour. It may be desirable to apply more 
-restrictive permissions as part of the migration.
+any user to power any system. This default will not be applied to new systems.
 
 
 Deferred features
