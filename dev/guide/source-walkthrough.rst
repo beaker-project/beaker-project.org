@@ -119,34 +119,45 @@ Versions previous to 0.7 were designed for RHEL5. Although it may be
 technically possible to run Beaker on other distributions, package
 dependencies and other issues may ensue.
 
-The Beaker server is a web application that is built upon TurboGears
-(TG) 1.x. Here is a quick breakdown of TG (and its relevant sub-frameworks) and 
-how Beaker utilizes them.
+The Beaker server is a web application that is currently a hybrid of
+TurboGears(TG) 1.x and Flask as we migrate to Flask entirely. Here is a
+quick breakdown of the major frameworks/libraries and how Beaker
+server utilizes them.
 
-TurboGears 1.x
+*TurboGears 1.x*
     TurboGears (TG) is a "front-to-back" web meta-framework. TurboGears 1.x is 
-    no longer under active development. Documentation is still available on the 
-    `TurboGears website <http://www.turbogears.org/1.0/docs/>`_.
-Core TG
-    These are modules which are implemented within TG itself.
-identity
-    does session based authentication, is used to control access to resources.
-widgets
-    provides pre built templates and display functionality. Templates are 
-    written in Kid. Beaker's own custom widgets are also built upon TG widgets.
-CherryPy 2
-    Provides resource routing, handling of request and response objects. 
-    CherryPy 2 is no longer under active development.
-Kid
+    no longer under active development, although the documentation is
+    still available on the `TurboGears website
+    <http://www.turbogears.org/1.0/docs/>`_. Besides the core modules,
+    TG's `widgets` are used for its pre built templates and display
+    functionality. Templates are written in `Kid`. A number of
+    Beaker's own custom widgets are also built upon TG widgets.
+
+*Kid*
     Provides the templating language for hand written templates, as well as TG 
-    widgets. Kid is not longer under active development.
-SQLAlchemy
+    widgets. Kid is no longer under active development.
+
+*SQLAlchemy*
     An ORM database interface. Used exclusively for all access to Beaker's 
     database. Note that Beaker uses some TG database modules, but these are 
     thin wrappers over SQLAlchemy.
-JQuery/MochiKit
-    MochiKit is bundled with TG, however JQuery is heavily used alongside it.
 
+*Flask/CherryPy 2*
+    Provides resource routing, handling of request and response objects. 
+    `CherryPy 2` is no longer under active development. Starting with
+    Beaker 0.15, `Flask` will be used to perform CherryPy's functions
+    and hence while Beaker still uses CherryPy, any new code should use
+    Flask instead. The existing CherryPy controllers are used as
+    fallback handlers upon recieving a 404 error from Flask.
+
+*Javascript libraries/frameworks*
+    `MochiKit` is bundled with TG, however JQuery is heavily used
+    alongside it. Starting with Beaker 0.15, `Backbone`
+    is used to write client side widgets.
+
+*CSS*
+    Starting with Beaker 0.15, `Bootstrap` is used for the Web UI front-end.
+   
 As a result of being built on TG, Beaker is an MVC inspired application.
 Whilst it mostly follows TG conventions, Beaker does sometimes go
 outside of these when it's appropriate (and advantageous) to do so.
@@ -157,46 +168,15 @@ Model
 The ``bkr.server.model`` module primarily consists of Object Relational
 Mapped (ORM) classes. Fundamentally, these are user defined python
 classes associated to database tables, the objects of which are mapped
-to rows in the related table. From version 0.11 ORM classes should be
-defined
-`declaratively <http://docs.sqlalchemy.org/en/rel_0_7/orm/extensions/declarative.html>`_.
-Previous versions used `'Classical
-Mapping' <http://docs.sqlalchemy.org/en/rel_0_7/orm/mapper_config.html#classical-mappings>`_.
-
-Some basic guidelines to follow when modifying model:
-
--  For versions < 0.11, definitions of Tables, ORM classes, and calls to
-   mapper() are segregated into three distinct sections. Tables are
-   defined above ORM classes, and ORM classes above mapper functions. If
-   possible define related Tables in the vicinity of each other, and
-   likewise for ORM classes and mappers.
--  Commonly used queries should be contained within bound methods of the
-   respective classes.
--  Enumerated types should be defined as type DeclEnum and not be
-   described in a database schema. This helps avoid over normalization,
-   cuts down on unnecessary calls to the database, and reduces the
-   likelihood of complex joins that confuse the query optimizer. This
-   only applies though if it's an enumeration that is static.
--  When writing queries, use ORM attributes over 'SQL Expression
-   Language' whenever possible, and never use 'Text'.
--  Write efficient queries. Do what you can to write the most reasonably
-   efficient query. For various reasons, Beaker has few options of
-   removing its historical data. Thus query speed and data-set size can
-   only increase over time. As Beaker's UI relies heavily on database
-   calls, writing inefficient queries can quickly become a bottleneck
-   and create a marked reduction in usability.
--  Beyond the basic relationship mapping, relationships should be
-   defined keeping performance in mind. The sqlalchemy documentation
-   provides some good
-   `ideas <http://docs.sqlalchemy.org/en/rel_0_7/orm/collections.html>`_.
--  Remember to define relevant cascade options.
+to rows in the related table.
 
 Controllers
 ^^^^^^^^^^^
 
 A controller is called when a HTTP request is made. The URL is
-translated to a particular controller. CherryPy is responsible for
-handling this method look-up. For example, a call to
+translated to a particular controller. Starting with Beaker 0.15,
+Flask handles the routing of an URL to the appropriate view method.
+(Previously, CherryPy was used). For example, a call to
 *http://beaker.example.com/tasks/executed* will call the
 ``bkr.server.tasks.executed`` method.
 
