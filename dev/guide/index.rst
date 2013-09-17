@@ -22,5 +22,6 @@ some ideas on possible changes that may be of interest, consult the
    getting-started
    virtual-fedora/index
    source-walkthrough
+   code-guidelines
    writing-a-patch
    example-patch
