@@ -112,29 +112,6 @@ for Beaker bugs with target milestones set will often provide more detail on
 the specific proposals.
 
 
-Delegating job submission
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-For system automation with clear audit trails, it's helpful if an automated
-system can submit and manage jobs, but have the owner responsible for the
-job be a specific human user.
-
-(`Included in Beaker 0.14
-<../docs-release-0.14/whats-new/release-0.14.html#submission-delegates>`__)
-
-
-Separate system architecture guide
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Aimed more at developers than at users or administrators, a dedicated
-system architecture guide would allow new developers to more quickly
-become familiar with Beaker's many moving parts, and better understand
-how the all interoperate.
-
-(`Included in Beaker 0.14
-<../docs-release-0.14/whats-new/release-0.14.html#architecture-guide>`__)
-
-
 Full Fedora compatibility
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -187,13 +164,6 @@ allowing endpoints to be implemented as either TG1 controllers or Flask
 handlers. We are also aiming to replace the front end components with
 cleaner alternatives based on Twitter Bootstrap.
 
-
-Planned development
--------------------
-
-The ideas in this section are firmly on the to-do list, but it is not yet
-clear when they will be ready for inclusion.
-
 Shared access policies
 ~~~~~~~~~~~~~~~~~~~~~~
 
@@ -209,6 +179,25 @@ can be made more flexible, building on the group management features added
 in recent releases.
 
 This idea is covered by the :ref:`proposal-access-policies` design proposal.
+
+
+Planned development
+-------------------
+
+The ideas in this section are firmly on the to-do list, but it is not yet
+clear when they will be ready for inclusion.
+
+
+Improved handling of reservations and system loans
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+While systems in Beaker can currently be loaned to other users, the workflows
+for doing so aren't particularly convenient. It would be helpful if
+Beaker included better tools for requesting System Loans, as well as a
+system for automatically returning them if unused for extended periods.
+
+This also applies to reservations, especially allowing automated
+reservations without relying on the use of a particular test harness.
 
 
 Explicit system pools
@@ -450,14 +439,6 @@ precreated and registered with Beaker as full systems with appropriate
 custom power scripts that handle the process of starting and stopping the
 underlying virtual machines. This is an unfortunate limitation.
 
-Improved "System Loan" mechanism
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-While systems in Beaker can currently be loaned to other users, the workflows
-for doing so aren't particularly convenient. It might be helpful if
-Beaker included better tools for requesting System Loans, as well as a
-system for automatically returning them if unused for extended periods.
-
 Raw SQL query API
 ~~~~~~~~~~~~~~~~~
 
@@ -494,7 +475,8 @@ Recently implemented ideas
 The following ideas were previously included on this roadmap, but are
 now implemented in Beaker:
 
-
+- `Delegating job submission <../docs/whats-new/release-0.14.html#submission-delegates>`__)
+- `Separate system architecture guide <../docs/whats-new/release-0.14.html#architecture-guide>`__)
 - `Jenkins plugin to launch Beaker jobs <https://lists.fedorahosted.org/pipermail/beaker-devel/2013-July/000657.html>`__
 - `Self-service user groups <../docs/whats-new/release-0.13.html#more-flexible-user-groups>`__
 - `Group ownership of jobs <../docs/whats-new/release-0.13.html#group-jobs>`__
