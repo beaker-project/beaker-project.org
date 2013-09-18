@@ -121,8 +121,7 @@ details.
 Beaker 0.14
 -----------
 
-Release for testing: 30th July, 2013
-Planned release date: early August 2013
+Release date: 2nd August, 2013
 
 The focus of Beaker 0.14 development was the completion of
 :ref:`proposal-enhanced-user-groups`, by allowing users to nominate
@@ -135,19 +134,44 @@ See the `Beaker 0.14 Release Notes
 Beaker 0.15
 -----------
 
-Planned release date: mid September 2013
+Planned release date: early October 2013
 
-The focus of Beaker 0.15 will be :ref:`proposal-access-policies`.
+The focus of Beaker 0.15 is the per-system access policy portion of
+:ref:`proposal-access-policies`.
 
 Just as the enhanced user group model allowed groups to assume shared
 management of jobs, the new access policy model will allow groups to
 assume shared management of systems.
 
 
-Beaker 0.16 (tentative)
+Beaker 0.16
+-----------
+
+Planned release date: mid-to-late November 2013
+
+The focus of Beaker 0.16 will be improvements to the management of system
+loans and reservations, as well as to the reliability of system provisioning.
+
+The aim of these updates will be to improve the availablity of resources
+and to minimise spurious test failures due to issues with system provisioning.
+
+
+Beaker 0.17 (tentative)
 -----------------------
 
-The tentative focus for Beaker 0.16 is :ref:`proposal-system-pools`.
+The tentative focus of Beaker 0.17 will be completion of the "Predefined
+Access Policies" portion of :ref:`proposal-access-policies`.
+
+While the initial release of "System Access Policies" allows shared
+management of systems and automation of policy updates, the Predefined
+Access Policy mechanism will make it straightforward to apply a common
+policy systematically to collections of systems.
+
+
+Beaker 0.18 (tentative)
+-----------------------
+
+The tentative focus for Beaker 0.18 is :ref:`proposal-system-pools`.
 
 This release should also cover the migration to
 :ref:`proposal-event-driven-scheduling` (as the proposed approach to
