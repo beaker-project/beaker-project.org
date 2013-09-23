@@ -35,9 +35,12 @@ def releases(git_dir):
         if commit.id not in tag_commits:
             continue
         tag = tag_commits[commit.id]
-        m = re.match(r'beaker-([\d.]*)-1', tag.name)
+        m = re.match(r'beaker-([\d.]*)$', tag.name)
         if not m:
-            continue
+            # also check for tito tags, used up to 0.14.1
+            m = re.match(r'beaker-([\d.]*)-1$', tag.name)
+            if not m:
+                continue
         version = m.group(1)
         name, email = re.match(r'(.*) <(.*)>', tag.tagger).groups()
         timestamp = datetime.datetime.fromtimestamp(tag.tag_time,
