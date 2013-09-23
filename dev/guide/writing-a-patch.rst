@@ -59,17 +59,16 @@ already have a copy of this task, you can build it from Beaker's source
 under the ``Tasks`` subdirectory. You can base your job on this `sample
 dogfood job XML <../../sample-dogfood-job.xml>`_.
 
-You can use `tito <https://github.com/dgoodwin/tito>`_ to build Beaker
-RPMs for testing::
+You can use ``Misc/rpmbuild.sh`` to build Beaker RPMs for testing::
 
-    tito build --test --rpm
+    Misc/rpmbuild.sh -bb
 
-or if you have Mock or Koji suitably configured, tito can generate an
-SRPM and you can build from that::
+or if you have Mock or Koji suitably configured, you can generate an
+SRPM and build from that::
 
-    tito build --test --srpm --dist .el6
+    Misc/rpmbuild.sh -bs
 
-The ``--test`` option to ``tito build`` will build from the HEAD commit
+The ``Misc/rpmbuild.sh`` script will build from the HEAD commit
 in git, so make sure you have committed your changes to your local
 branch.
 
