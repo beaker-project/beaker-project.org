@@ -20,6 +20,21 @@ and subsequently update them by running:
 
     git submodule update
 
+These commands should be rerun after each new Beaker release to pick up
+the new submodule.
+
+Running ./update-submodules.sh will update the submodules to the latest
+version of their respective branches. Don't forget to git commit and git
+push after doing so! (Unlike most other changes, submodule updates may be
+pushed directly to the central git server)
+
+Caching large files
+-------------------
+
+Run make in the root directory to ensure large files are cached locally.
+Otherwise each publication attempt will download all the tarballs and
+RPMs.
+
 
 Dependencies
 ------------
