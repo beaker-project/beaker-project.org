@@ -85,7 +85,7 @@ releases/%.tar.gz:
 	curl -# -R -f -o$@ http://beaker-project.org/$@ ; result=$$? ; \
 	if [ $$result -ne 22 ] ; then exit $$result ; fi ; \
 	echo "Release artefact $@ not published, building it" ; \
-	git archive --format=tar --prefix=$*/ $* | gzip >$@
+	GIT_DIR=$(BEAKER_GIT) git archive --format=tar --prefix=$*/ $* | gzip >$@
 
 releases/%.tar.xz: releases/%.tar.gz
 	mkdir -p $(dir $@)
