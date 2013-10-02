@@ -149,8 +149,9 @@ Beaker 0.16
 
 Planned release date: mid-to-late November 2013
 
-The focus of Beaker 0.16 will be improvements to the management of system
-loans and reservations, as well as to the reliability of system provisioning.
+The focus of Beaker 0.16 will be to implement
+:ref:`proposal-improved-reservations-and-loans`, as well as to make
+further improvements to the reliability of system provisioning.
 
 The aim of these updates will be to improve the availablity of resources
 and to minimise spurious test failures due to issues with system provisioning.
