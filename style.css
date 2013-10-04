@@ -202,11 +202,13 @@ nav .rellinks li:after {
 nav .rellinks li:last-child:after {
     content: none;
 }
-.branch-warning {
+.warning, .branch-warning {
     background-color: #EBC2D6;
     border-radius: 1em;
     padding: 1em;
     margin-bottom: 1em;
+}
+.branch-warning {
     text-align: center;
 }
 div.admonition {
