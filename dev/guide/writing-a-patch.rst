@@ -3,9 +3,31 @@ Writing a patch
 
 .. highlight:: console
 
+Create a local working branch
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 Start by creating a local git branch where you will commit your work::
 
-    git checkout -b myfeature develop
+    git checkout origin/develop -b myfeature
+
+This will create a local git branch called ``myfeature`` that is associated
+with the upstream ``develop`` branch for easy rebasing.
+
+For new features and any invasive bug fixes (e.g. those requiring database
+changes), the working branch should be based on ``origin/develop`` as shown.
+
+For bug fixes that don't require invasive changes, then the working branch
+should be based on the latest release branch. For example, if the latest
+release shown on the `release download page
+<http://beaker-project.org/releases/>`__ is Beaker 0.15, then local branches
+to work on bug fixes should be created with a command like::
+
+    git checkout origin/release-0.15 -b bz123456_fix_this_bug
+
+Including the bug number in the branch name isn't required (since the branch
+name is never published to anyone else), but it's a useful reference point
+when working on multiple patches in parallel.
+
 
 Testing your patch
 ~~~~~~~~~~~~~~~~~~
@@ -100,6 +122,12 @@ push your local branch to Gerrit for review::
 
     git push gerrit myfeature:refs/for/develop
 
+The destination branch in Gerrit should match the branch used as a basis for
+the patch. For a bug fix targeting Beaker 0.15, the appropriate command would
+look like::
+
+    git push gerrit bz123456_fix_this_bug:refs/for/release-0.15
+
 A new "change" in Gerrit will be created from your commit. Beaker
 developers can then review and merge it as appropriate. See the `Gerrit
 documentation <http://gerrit.googlecode.com/svn/documentation/2.2.1/index.html>`_
@@ -121,6 +149,7 @@ hook which automatically adds an appropriate "Change-Id" entry to the
 commit message when a patch is first committed locally::
 
     scp -p -P 29418 gerrit.beaker-project.org:hooks/commit-msg .git/hooks/
+
 
 Reviewing a patch
 ~~~~~~~~~~~~~~~~~
@@ -152,6 +181,8 @@ The "+1 Verified" marker indicates one of the following:
 The "+2 Approved" code review marker should only be granted when all the
 following criteria are met:
 
+-  The patch is targetting the right branch (develop for new features and
+   invasive bug fixes, latest release branch for non-invasive bug fixes)
 -  All significant review comments have been addressed, with the aim of
    ensuring the Beaker code remains maintainable rather than
    degenerating over time.
