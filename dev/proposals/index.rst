@@ -38,6 +38,7 @@ into a future version of Beaker.
    inventory-lshw-migration
    time-limited-manual-reservations
    time-limited-system-loans
+   external-tasks
 
 .. note::
 
