@@ -34,7 +34,8 @@ into a future version of Beaker.
    effective-job-priorities
    reference-harness
    inventory-lshw-migration
-   improved-reservations-and-loans
+   time-limited-manual-reservations
+   time-limited-system-loans
 
 .. note::
 
