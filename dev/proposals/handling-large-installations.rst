@@ -147,10 +147,10 @@ assume shared management of systems.
 Beaker 0.16
 -----------
 
-Planned release date: mid-to-late November 2013
+Planned release date: mid December 2013
 
 The focus of Beaker 0.16 will be to implement
-:ref:`proposal-improved-reservations-and-loans`, as well as to make
+:ref:`proposal-time-limited-manual-reservations`, as well as to make
 further improvements to the reliability of system provisioning.
 
 The aim of these updates will be to improve the availablity of resources
@@ -160,7 +160,20 @@ and to minimise spurious test failures due to issues with system provisioning.
 Beaker 0.17 (tentative)
 -----------------------
 
-The tentative focus of Beaker 0.17 will be completion of the "Predefined
+Planned release date: late January 2014
+
+The focus of Beaker 0.17 will be to implement
+:ref:`proposal-time-limited-system-loans`, including the introduction of a
+command line interface for managing system loans.
+
+The aim of these updates will be to improve the availablity of resources
+and reduce the overhead associated with system loan management.
+
+
+Beaker 0.18 (tentative)
+-----------------------
+
+The tentative focus of Beaker 0.18 will be completion of the "Predefined
 Access Policies" portion of :ref:`proposal-access-policies`.
 
 While the initial release of "System Access Policies" allows shared
@@ -169,10 +182,10 @@ Access Policy mechanism will make it straightforward to apply a common
 policy systematically to collections of systems.
 
 
-Beaker 0.18 (tentative)
+Beaker 0.19 (tentative)
 -----------------------
 
-The tentative focus for Beaker 0.18 is :ref:`proposal-system-pools`.
+The tentative focus for Beaker 0.19 is :ref:`proposal-system-pools`.
 
 This release should also cover the migration to
 :ref:`proposal-event-driven-scheduling` (as the proposed approach to
