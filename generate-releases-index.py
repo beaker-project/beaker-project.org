@@ -102,16 +102,6 @@ html_template = MarkupTemplate('''
 
 <h1>Releases</h1>
 
-<!-- temporary warning against Beaker 0.15.0, delete this when 0.15.1 is released -->
-<p class="warning">
-Beaker&#160;0.15.0 was released on 30&#160;September 2013, but a number of 
-critical regressions have since been identified in that release. It is 
-recommended <em>not to upgrade</em> to Beaker&#160;0.15 until the upcoming 
-Beaker&#160;0.15.1 bug fix release is available. (Refer to the <a 
-href="https://bugzilla.redhat.com/buglist.cgi?product=Beaker&amp;target_milestone=0.15.1">list 
-of bug fixes</a>.)
-</p>
-
 <section py:for="minor, releases in groupby(releases, lambda r: r.minor)">
 <h2>Beaker ${minor}</h2>
 ${minor_blurb(minor)}
