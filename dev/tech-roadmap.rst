@@ -131,7 +131,7 @@ controllers and test systems.
 It would be more convenient if the bare metal host wasn't needed, and the
 main server also ran inside a guest VM.
 
-Experimental instructions have been posted for ` Beaker 0.14
+Experimental instructions have been posted for `Beaker 0.14
 <../docs-release-0.14/whats-new/release-0.14.html#fedora-based-fully-virtualised-beaker-quick-start>`__,
 but these are potentially affected by the SQLAlchemy 0.8 incompatibility
 issues (since Fedora 19 is used as the host OS for the quick start).
@@ -320,7 +320,7 @@ xUnit format. The nose `xunit plugin
 useful guide to this.
 
 A potentially related change would be to support retrieval of
-`subunit results <https://pypi.python.org/pypi/python-subunit>` for
+`subunit results <https://pypi.python.org/pypi/python-subunit>`__ for
 in-progress jobs.
 
 
@@ -475,8 +475,8 @@ Recently implemented ideas
 The following ideas were previously included on this roadmap, but are
 now implemented in Beaker:
 
-- `Delegating job submission <../docs/whats-new/release-0.14.html#submission-delegates>`__)
-- `Separate system architecture guide <../docs/whats-new/release-0.14.html#architecture-guide>`__)
+- `Delegating job submission <../docs/whats-new/release-0.14.html#submission-delegates>`__
+- `Separate system architecture guide <../docs/whats-new/release-0.14.html#architecture-guide>`__
 - `Jenkins plugin to launch Beaker jobs <https://lists.fedorahosted.org/pipermail/beaker-devel/2013-July/000657.html>`__
 - `Self-service user groups <../docs/whats-new/release-0.13.html#more-flexible-user-groups>`__
 - `Group ownership of jobs <../docs/whats-new/release-0.13.html#group-jobs>`__
