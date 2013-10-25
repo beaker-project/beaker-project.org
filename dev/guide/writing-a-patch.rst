@@ -94,6 +94,11 @@ The ``Misc/rpmbuild.sh`` script will build from the HEAD commit
 in git, so make sure you have committed your changes to your local
 branch.
 
+If the patch changes an existing feature or adds a new one,
+then ideally the relevant documentation should be updated. Also note that
+linking the documented feature to the release notes, and/or using the
+'versionchanged/versionadded' directive where appropriate is encouraged.
+
 Submitting your patch
 ~~~~~~~~~~~~~~~~~~~~~
 
