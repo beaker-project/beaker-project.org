@@ -50,4 +50,4 @@ def releases(git_dir):
     releases = sorted(releases, key=lambda r: r.timestamp, reverse=True)
     # skip anything prior to 0.10
     releases = list(takewhile(lambda r: r.version != '0.9.4', releases))
-    return releases
+    return sorted(releases, key=lambda r: r.minor, reverse=True)
