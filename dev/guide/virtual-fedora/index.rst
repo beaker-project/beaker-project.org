@@ -13,11 +13,11 @@ of libvirt).
 
 .. note::
 
-   There are currently some known compatibility issues with Beaker and
-   SQLAlchemy 0.8 (see :issue:`989902`). As a result,  while a test bed
-   set up in accordance with these instructions should be fully capable of
-   running Beaker jobs, running the Beaker server components on Fedora is
-   still considered an *experimental* configuration.
+   While there are currently no known major compatibility issues running
+   Beaker on Fedora 19, running the Beaker server components on
+   Fedora is still considered an *experimental* configuration. Beaker's
+   continuous integration system currently only tests compatibility of the
+   server components with Red Hat Enterprise Linux 6.
 
 
 Basics of a Beaker test bed
@@ -165,16 +165,20 @@ Setting up Server and Lab controller
 
 Installing
 ~~~~~~~~~~
-This is to be done on the *host system*. The script `here
-<scripts/create_server_lc_vm.sh>`__ will create a virtual machine and
-start a Fedora 19 installation using an Anaconda kickstart file. This
-`kickstart <scripts/beaker-server-lc.ks>`__ installs the server and lab
-controller and other miscellaneous packages. You may want to replace
-the Fedora download location in the Bash script and the kickstart by one
-closer to your geographical location.
+This is to be done on the *host system*. First download this
+`kickstart <scripts/beaker-server-lc.ks>`__ which installs the server and lab
+controller and other miscellaneous packages. Then, from the directory where
+the kickstart file was downloaded, run `this script
+<scripts/create_server_lc_vm.sh>`__ to create a virtual machine and
+start a Fedora 19 installation using the downloaded kickstart file.
 
-Note that Beaker server and lab controller doesn't work on Fedora 17
-(and earlier) and Fedora 18 is untested.
+You may want to replace the Fedora download location in the Bash script and
+the kickstart by one closer to your geographical location.
+
+Note that the Beaker server and lab controller components are known not to
+work on Fedora 17 (and earlier). Fedora 18 may work, but testing by the
+Beaker developers has focused on Fedora 19 and later.
+
 
 Setup server
 ~~~~~~~~~~~~
@@ -313,7 +317,7 @@ is how the system will be powered on during provisioning. Go to the
 values against the fields:
 
 - Power Type: ``virsh``
-- Power Address: ``qemu+ssh:<your host ip>`` (Your host system's IP address should be entered here)
+- Power Address: ``qemu+ssh:192.168.122.1``
 - Power Login: <blank>
 - Power Password: <blank>
 - Power Port/Plug/etc: ``beaker-test-vm1``
@@ -349,15 +353,41 @@ successul PXE boot. Force off the test VM for now.
 Setup server to run jobs
 ========================
 
-We will now add a couple of task RPMs before we can run a job. Download the following task RPMs:
+Initialize the harness repo using (on the server VM as the root user)::
 
-- `beaker-distribution-install
-  <http://beaker-project.org/tasks/beaker-distribution-install-1.10-15.noarch.rpm>`__
-- `beaker-distribution-reservesys
-  <http://beaker-project.org/tasks/beaker-distribution-reservesys-2.0-52.noarch.rpm>`__
+   # beaker-repo-update
 
-Add them by going to the URL: ``http://beaker-server-lc.beaker/bkr/tasks/new``. To learn more about
-these tasks (and others), see `here <../../../docs/user-guide/beaker-provided-tasks.html>`__.
+We will now add a few task RPMs to ensure we can run jobs (including those
+with guest recipes) as well as inventory systems and reserve them through
+the scheduler. Use ``wget`` (or an equivalent command) to retrieve the
+latest versions of the standard task RPMs (this is best done on the host
+system rather than the Beaker server VM)::
+
+    $ wget -r -np -nc https://beaker-project.org/tasks/
+
+Add the tasks manually via ``http://beaker-server-lc.beaker/bkr/tasks/new``
+or by using the :man:`bkr-task-add(1)` command (in the directory where
+the scripts were downloaded, using the admin account configured when
+first installing Beaker)::
+
+    $ for f in `ls *.rpm`
+    > do
+    >    bkr task-add --hub=http://beaker-server-lc.beaker/bkr \
+    >        --username=<USER> --password=<PASSWORD> $f
+    > done
+
+Once the tasks have been added, they will be visible at the URL:
+``http://beaker-server-lc.beaker/bkr/tasks/``. At the very least, the
+following tasks should be present:
+
+* ``/distribution/install``
+* ``/distribution/inventory``
+* ``/distribution/reservesys``
+* ``/distribution/virt/install``
+* ``/distribution/virt/start``
+
+To learn more about these tasks, see
+`here <../../../docs/user-guide/beaker-provided-tasks.html>`__.
 
 Next you will have to import distributions into Beaker. These are the
 distributions that you can run your job on. So, depending on your
@@ -368,11 +398,9 @@ the ``beaker-import`` program on your server VM as follows::
 
 .. note::
 
-   It is a good idea to import a mirror closer to your geographical location.
-
-Update the harness repo using (on the server VM as the root user)::
-
-   # beaker-repo-update
+   It is a good idea to import a mirror closer to your geographical location,
+   as the given location will be used to install the operating system when
+   provisioning test systems.
 
 Now, go to the URL: ``http://beaker-server-lc.beaker/bkr/distros/`` and
 check if the distro(s) have been imported.
