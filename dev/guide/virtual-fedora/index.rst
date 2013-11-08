@@ -324,6 +324,19 @@ values against the fields:
 
 Click on :guilabel:`Save Power Changes` to save the configuration.
 
+The default scripts set up two more systems to allow for `multihost testing
+<http://beaker-project.org/docs/user-guide/multihost.html>`__ in the virtual
+Beaker instance. Follow the same steps as above to configure
+them in Beaker, changing only the system name and MAC address:
+
+- System Name: ``beaker-test-vm2``; Mac Address: ``52:54:00:c6:71:8f``
+- System Name: ``beaker-test-vm3``; Mac Address: ``52:54:00:c6:71:90``
+
+If the host system doesn't have the capacity to run all the VMs
+simultaneously, it's reasonable to skip creating or registering the
+additional systems - almost all aspects of Beaker other than multihost
+testing can be exercised with just a single registered system.
+
 As you can see from the ``Power Address`` above, the Beaker lab
 controller will communicate with your host's libvirtd instance
 using ``ssh`` to power on/off the test VM. To make this
@@ -366,7 +379,7 @@ system rather than the Beaker server VM)::
     $ wget -r -np -nc https://beaker-project.org/tasks/
 
 Add the tasks manually via ``http://beaker-server-lc.beaker/bkr/tasks/new``
-or by using the :man:`bkr-task-add(1)` command (in the directory where
+or by using the :manpage:`bkr-task-add(1)` command (in the directory where
 the scripts were downloaded, using the admin account configured when
 first installing Beaker)::
 
