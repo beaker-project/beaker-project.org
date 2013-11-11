@@ -11,6 +11,7 @@ proposals.
    guide/index
    proposals/index
    tech-roadmap
+   related-projects
    bpo
 
 You can also view the `draft documentation <../docs-develop/>`_ for the next 
