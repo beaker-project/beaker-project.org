@@ -366,7 +366,7 @@ system rather than the Beaker server VM)::
     $ wget -r -np -nc https://beaker-project.org/tasks/
 
 Add the tasks manually via ``http://beaker-server-lc.beaker/bkr/tasks/new``
-or by using the :man:`bkr-task-add(1)` command (in the directory where
+or by using the :manpage:`bkr-task-add(1)` command (in the directory where
 the scripts were downloaded, using the admin account configured when
 first installing Beaker)::
 
