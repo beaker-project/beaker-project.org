@@ -29,6 +29,12 @@ virsh net-undefine default || true
     <host ip='192.168.122.103'>
       <hostname>beaker-test-vm1</hostname>
     </host>
+    <host ip='192.168.122.104'>
+      <hostname>beaker-test-vm2</hostname>
+    </host>
+    <host ip='192.168.122.105'>
+      <hostname>beaker-test-vm3</hostname>
+    </host>
   </dns>
    <ip address='192.168.122.1' netmask='255.255.255.0'>
     <tftp root='/var/lib/tftpboot' />
@@ -36,6 +42,8 @@ virsh net-undefine default || true
       <range start='192.168.122.2' end='192.168.122.254' />
       <host mac='52:54:00:c6:73:4f' name='beaker-server-lc.beaker' ip='192.168.122.102' />
       <host mac='52:54:00:c6:71:8e' name='beaker-test-vm1' ip='192.168.122.103' />
+      <host mac='52:54:00:c6:71:8f' name='beaker-test-vm2' ip='192.168.122.104' />
+      <host mac='52:54:00:c6:71:90' name='beaker-test-vm3' ip='192.168.122.105' />
       <bootp file='pxelinux.0' server='192.168.122.102' />
     </dhcp>
   </ip>
