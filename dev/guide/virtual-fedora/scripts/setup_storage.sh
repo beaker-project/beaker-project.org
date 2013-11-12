@@ -56,17 +56,45 @@ __EOF__
 
 # define the storage volume for a beaker test VM
 # 10 GiB
-function def_test_system_storage()
+function def_test_systems_storage()
 {
 ( cat <<__EOF__
 <volume>
-  <name>test-system.img</name>
+  <name>test-system1.img</name>
   <source>
   </source>
   <capacity>10737418240</capacity>
   <allocation>10737418240</allocation>
   <target>
-    <path>/beaker_images/test-system.img</path>
+    <path>/beaker_images/test-system1.img</path>
+    <format type='raw'/>
+  </target>
+</volume>
+__EOF__
+) | virsh vol-create beaker_images /dev/stdin
+( cat <<__EOF__
+<volume>
+  <name>test-system2.img</name>
+  <source>
+  </source>
+  <capacity>10737418240</capacity>
+  <allocation>10737418240</allocation>
+  <target>
+    <path>/beaker_images/test-system2.img</path>
+    <format type='raw'/>
+  </target>
+</volume>
+__EOF__
+) | virsh vol-create beaker_images /dev/stdin
+( cat <<__EOF__
+<volume>
+  <name>test-system3.img</name>
+  <source>
+  </source>
+  <capacity>10737418240</capacity>
+  <allocation>10737418240</allocation>
+  <target>
+    <path>/beaker_images/test-system3.img</path>
     <format type='raw'/>
   </target>
 </volume>
@@ -79,4 +107,4 @@ def_storage_pool
 
 # define the storage volumes
 def_server_lc_storage
-def_test_system_storage
+def_test_systems_storage
