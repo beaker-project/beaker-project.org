@@ -6,8 +6,14 @@ Related Projects
 Beah
 ----
 
-`Beah <https://beaker-project.org/docs-beah>`__ is the default test
+`Beah <http://beah.readthedocs.org/>`__ is the default test
 harness used in Beaker.
+
+restraint
+---------
+
+`Restraint <https://github.com/p3ck/restraint>`__ is a minimal test
+harness implementation for Beaker.
 
 BeakerLib
 ---------
@@ -15,7 +21,6 @@ BeakerLib
 `BeakerLib <https://fedorahosted.org/beakerlib/wiki/Manual>`__ is a
 library useful for writing `Beaker tasks
 <../docs/user-guide/writing-tasks.html>`__.
-
 
 Jenkins Beaker builder plugin
 -----------------------------
