@@ -68,7 +68,7 @@ following functions:
 - *Authentication*: If a view function needs authentication,
   you can use the ``bkr.server.identity`` module.
 
-- *Retuning data*: Use Flask's ``jsonify()`` function to return your response
+- *Returning data*: Use Flask's ``jsonify()`` function to return your response
   as JSON objects. To learn more, see `here
   <http://flask.pocoo.org/docs/api/#module-flask.json>`__.
 
@@ -80,6 +80,36 @@ following functions:
 - *Empty response*: If the view function has nothing to return,
   return an empty string with a status code, like so: ``return '',
   204``.
+
+.. _api-stability:
+
+API Stability
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Any changes in an X.Y.z maintenance release must never break API compatibility.
+Any changes to a published API must never break the API, unless it has been
+properly deprecated. This entails updating all relevant documentation and
+code to mark it as deprecated in release X.Y, and then making it obsolete
+no sooner than version X.Y+1.
+
+These guidelines apply specifically to the HTTP and XML-RPC
+API, as well as the beaker client.
+
+This policy was first formally adopted for the Beaker 0.14 release series.
+
+Beaker Client
+~~~~~~~~~~~~~
+
+
+All versions of beaker client must be backward compatible with the previous
+major version of the server (i.e beaker-client-0.16.y must be compatible
+with beaker-server-0.15.y). However, new commands are excluded from
+this requirement. Please see :ref:`api-stability` before making changes to
+the beaker client.
+
+This policy was first formally adopted for the Beaker 0.15 release series.
+
 
 Logging Activities
 ~~~~~~~~~~~~~~~~~~
@@ -93,7 +123,7 @@ record it. For example::
 
 However, for this to be possible, the ORM class should inherit the
 ``ActivityMixin`` class and define an ``activity_type`` attribute set
-to the ``Acitivity`` subclass to use, like so::
+to the ``Activity`` subclass to use, like so::
 
     class User(MappedObject, ActivityMixin):
         @property
