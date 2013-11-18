@@ -206,9 +206,6 @@ def clean_unused_rpms(basedir, rpm_filenames):
     rpms_dir = os.path.join(basedir, 'rpms')
     print 'Cleaning unused RPMs from %s' % rpms_dir
     for filename in glob.iglob(os.path.join(basedir, 'rpms', '*.rpm')):
-        # XXX Massive hack, until 0.15.1 is released properly
-        if filename.startswith('yum/rpms/beaker') and '0.15.1' in filename:
-            continue
         if os.path.basename(filename) not in rpm_filenames:
             print 'Removing %s' % filename
             os.unlink(filename)
