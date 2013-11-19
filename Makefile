@@ -85,7 +85,7 @@ releases/%.tar.gz:
 	curl -# -R -f -o$@ http://beaker-project.org/$@ ; result=$$? ; \
 	if [ $$result -ne 22 ] ; then exit $$result ; fi ; \
 	echo "Release artefact $@ not published, building it" ; \
-	GIT_DIR=$(BEAKER_GIT) git archive --format=tar --prefix=$*/ $* | gzip >$@
+	GIT_DIR=$(BEAKER_GIT) git archive --format=tar --prefix=$*/ $* | gzip >$@.tmp && mv $@.tmp $@
 
 releases/%.tar.xz: releases/%.tar.gz
 	mkdir -p $(dir $@)
@@ -93,7 +93,7 @@ releases/%.tar.xz: releases/%.tar.gz
 	curl -# -R -f -o$@ http://beaker-project.org/$@ ; result=$$? ; \
 	if [ $$result -ne 22 ] ; then exit $$result ; fi ; \
 	echo "Release artefact $@ not published, building it" ; \
-	gunzip -c $< | xz >$@
+	gunzip -c $< | xz >$@.tmp && mv $@.tmp $@
 
 releases/SHA1SUM: $(DOWNLOADS) $(OLD_DOWNLOADS)
 	mkdir -p $(dir $@)
