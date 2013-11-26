@@ -33,44 +33,8 @@ system's presence.
 This is a living document that will be updated over the course of the
 1.x series.
 
-
-Design Proposals and Deferred Features
---------------------------------------
-
-Each release in the 1.x series (along with any further releases in the
-0.x series) will nominate a single design proposal as the release focus.
-That design proposal will then describe the primary user facing change
-to be included in that release.
-
-Each such design proposal will include a "Deferred Features" section,
-for components which are deliberately *not* being implemented until after
-we have received feedback from users on the initial approach.
-
-The planned cadence is for a new release to happen every 4-6 weeks. At any
-given point in time, a definite focus will only be chosen for the next
-release.
-
-While a tentative focus will also be identified for subsequent releases,
-it is strictly provisional, as user feedback may lead to deferred features
-from earlier design proposals being given precedence, and detailed design
-on the tentative features may identify a need to break them down into
-smaller features implemented across multiple releases.
-
-As there are limits to the number of developers that can effectively work
-on implementing a single design proposal, the release focus is not the
-*sole* change that will be made in a given release - it is merely the one
-that is expected to require the most active engagement from Beaker users
-in order to come up with a good design. The need for active user
-engagement is also the reason for restricting each release to one major
-design update - collecting and incorporating feedback takes time, and
-trying to have too many such discussions at once will not lead to good
-solutions.
-
-At the very least, bug fixes and other minor enhancements will be
-included in each release as needed and as time allows. Quality
-improvements, external collaboration and preparatory work for subsequent
-major features may also lead to the inclusion of other more significant
-changes that are not directly related to the release focus.
+Refer to :ref:`dev-lifecycle` for more information on the Beaker development
+process.
 
 
 Beaker 0.12
@@ -78,17 +42,17 @@ Beaker 0.12
 
 Release date: 5th April, 2013
 
-Beaker 0.12 lays the foundation for the Beaker 1.0 series by making
+Beaker 0.12 laid the foundation for the Beaker 1.0 series by making
 it easier for users to switch between production and development
 Beaker instances. It has three key elements:
 
-* A new script is added to the Beaker server tools, which allows a
+* A new script was added to the Beaker server tools, which allows a
   system administrator to update the task library from the task
   library of another Beaker instance
-* The Beaker client gains a new ``--hub`` parameter which makes it easy
+* The Beaker client gained a new ``--hub`` parameter which makes it easy
   to run a command against a Beaker instance other than the one in
   the system or user configuration file.
-* The Beaker client configuration architecture is adjusted to make it
+* The Beaker client configuration architecture was adjusted to make it
   easy to provide a system wide site specific configuration file, rather
   than requiring each user to define their own configuration
 
@@ -130,24 +94,38 @@ The focus of Beaker 0.14 development was the completion of
 See the `Beaker 0.14 Release Notes
 <../../docs-release-0.14/whats-new/#beaker-0-14>`__ for details.
 
+Due to the issues with the initial Beaker 0.15 update, Beaker 0.14
+received an extended maintenance life cycle (through to December 2013).
+
 
 Beaker 0.15
 -----------
 
-Planned release date: early October 2013
+Release date: 22 October 2013 (for 0.15.1)
 
-The focus of Beaker 0.15 is the per-system access policy portion of
+The focus of Beaker 0.15 was the per-system access policy portion of
 :ref:`proposal-access-policies`.
 
 Just as the enhanced user group model allowed groups to assume shared
-management of jobs, the new access policy model will allow groups to
+management of jobs, the new access policy model allows groups to
 assume shared management of systems.
+
+See the `Beaker 0.15 Release Notes
+<../../docs-release-0.15/whats-new/#beaker-0-15>`__ for details.
+
+Note that the initial release of Beaker 0.15 including a number of critical
+defects in the revised permissions model and the upgraded web interface that
+rendered it effectively undeployable. The release date given above is for the
+0.15.1 maintenance release that addressed these critical issues.
+
+Due to the extended maintenance lifecycle for Beaker 0.14, Beaker 0.15 also
+has an extended maintenance life cycle (through to January 2014).
 
 
 Beaker 0.16
 -----------
 
-Planned release date: mid December 2013
+Planned release date: mid-to-late January 2014
 
 The focus of Beaker 0.16 will be to implement
 :ref:`proposal-time-limited-manual-reservations`, as well as to make
@@ -160,14 +138,17 @@ and to minimise spurious test failures due to issues with system provisioning.
 Beaker 0.17 (tentative)
 -----------------------
 
-Planned release date: late January 2014
+Planned release date: late February/early March 2014
 
-The focus of Beaker 0.17 will be to implement
-:ref:`proposal-time-limited-system-loans`, including the introduction of a
-command line interface for managing system loans.
+The tentative focus of Beaker 0.17 is to implement
+:ref:`proposal-time-limited-system-loans`.
 
 The aim of these updates will be to improve the availablity of resources
 and reduce the overhead associated with system loan management.
+
+With the planned inclusion of a command line interface for loan management
+in one of the Beaker 0.15 maintenance releases, it is quite possible this
+proposal may be postponed to a later release.
 
 
 Beaker 0.18 (tentative)
