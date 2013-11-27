@@ -4,8 +4,9 @@ Access Policies for Systems
 ===========================
 
 :Author: Dan Callaghan, Nick Coghlan
-:Status: Proposed
-:Target Release: 0.15
+:Status: In Development
+:Initial Release: `0.15 <http://beaker-project.org/docs/whats-new/release-0.15.html>`__
+:Target Final Release: 0.18 (tentative)
 
 
 Abstract

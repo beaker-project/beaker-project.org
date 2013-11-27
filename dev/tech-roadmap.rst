@@ -211,6 +211,9 @@ reservations without relying on the use of a particular test harness.
 These ideas are covered by :ref:`proposal-time-limited-manual-reservations`
 and :ref:`proposal-time-limited-system-loans`.
 
+:issue:`734212` covers providing a command line interface to manage system
+loans.
+
 
 Planned development
 -------------------
