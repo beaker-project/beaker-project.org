@@ -81,6 +81,7 @@ The following kinds of changes will be considered for ``beah``:
 * documentation improvements
 * compatibility updates for supported test systems
 * any changes needed for image based provisioning with OpenStack
+* any changes needed for IPv6 compatibility
 * reliability fixes
 * equivalent capabilities for additions made to the stable harness API
 
@@ -92,10 +93,10 @@ be directed towards the system changes needed to better support alternative
 harnesss.
 
 To support existing Beaker users, the ``beah`` test harness will be
-maintained indefinitely, and the smaller changes noted above will continue
+maintained indefinitely, and the kinds of changes noted above will continue
 to be permitted. The only way ``beah`` itself would ever be phased out is if
-a robust autotest based alternative became available and was capable of
-correctly executing all of the existing Beaker tests that the Beaker
+a simpler and more robust alternative became available and was capable of
+correctly executing all of the existing Beaker tests that the core Beaker
 developers have access to.
 
 
@@ -117,8 +118,16 @@ Full Fedora compatibility
 
 We would like to support Fedora as a host operating system for the Beaker
 server components. This work was mostly completed in Beaker 0.14 (supporting
-Fedora 19+), but there are some backwards compatibility issues with SQL
-Alchemy 0.8 remaining (see :issue:`989902`).
+Fedora 19+), but there are ongoing issues with upgrades of dependencies
+that don't currently have solid backwards compatibility policies.
+
+The current plan is to start running Beaker's continuous integration tests
+in Fedora's `Beaker instance <http://beaker.fedoraproject.org>`__ (on Fedora),
+in addition to running them on RHEL6.
+
+We also plan to resolve the remaining packaging issues preventing inclusion
+of Beaker and its dependencies directly in the main Fedora package
+repositories.
 
 
 Virtual-only trial environment
@@ -128,13 +137,13 @@ The "Beaker-in-a-box" scripts currently require a physical machine, which
 runs the main Beaker server, and then creates some KVM guests for lab
 controllers and test systems.
 
-It would be more convenient if the bare metal host wasn't needed, and the
-main server also ran inside a guest VM.
+It is more convenient for developers if the bare metal host isn't needed, and
+the main server also runs inside a guest VM.
 
-Experimental instructions have been posted for `Beaker 0.14
-<../docs-release-0.14/whats-new/release-0.14.html#fedora-based-fully-virtualised-beaker-quick-start>`__,
-but these are potentially affected by the SQLAlchemy 0.8 incompatibility
-issues (since Fedora 19 is used as the host OS for the quick start).
+Accordingly, instructions have been added to the developer guide for an
+:ref:`entirely virtual <virtual-fedora>` Fedora based local installation.
+These instructions are still considered experimental until a more permanent
+solution to the recurring Fedora compatibility issues is found.
 
 
 Improved inventory task
@@ -159,33 +168,33 @@ uses SQLAlchemy rather than SQLObject for the database access layer). This
 makes some aspects of development more awkward than they might be with a
 more recent web framework.
 
-The main web server is in the process of being migrated to Flask, by
-allowing endpoints to be implemented as either TG1 controllers or Flask
-handlers. We are also aiming to replace the front end components with
-cleaner alternatives based on Twitter Bootstrap.
+Starting with the Beaker 0.15 release, the main web server is in the
+process of being migrated to Flask, by allowing endpoints to be
+implemented as either TG1 controllers or Flask handlers. We are also
+aiming to replace the front end components with cleaner alternatives
+based on Twitter Bootstrap.
+
+As part of this upgrade, we also plan to allow installation-specific theming
+of the main web UI. This allows Beaker installations to refer to appropriate
+local resources to report issues and look up documentation, rather than
+always linking directly to the site for the upstream project.
+
 
 Shared access policies
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Currently, the permission settings for individual systems are quite limited,
-and making them more fine-grained would be unmanageable, as there is no way
-to share a single policy across multiple systems.
+Beaker 0.15 implemented the first phase of the :ref:`proposal-access-policies`
+design proposal, taking the previously limited permissions model for
+individual systems and providing a far more fine-grained model. Remote
+access through the Beaker command line client makes it possible to manage
+access to large numbers of systems this way.
 
-Separating out access policies as a distinct entity in Beaker's conceptual
-model helps deal with both notions: several system-specific settings can
-be moved out to access policies (leaving only a single per-system setting
-to say which access policy to use), while the access policies themselves
-can be made more flexible, building on the group management features added
-in recent releases.
-
-This idea is covered by the :ref:`proposal-access-policies` design proposal.
-
-
-Planned development
--------------------
-
-The ideas in this section are firmly on the to-do list, but it is not yet
-clear when they will be ready for inclusion.
+A future release will implement the second phase of the
+:ref:`proposal-access-policies` proposal, separating out access policies as
+a distinct entity in Beaker's user interface, allowing a common access policy
+to be shared amongst multiple systems (system access policies are already a
+distinct concept in the data model, but cannot currently be shared
+across multiple systems).
 
 
 Improved handling of reservations and system loans
@@ -193,11 +202,21 @@ Improved handling of reservations and system loans
 
 While systems in Beaker can currently be loaned to other users, the workflows
 for doing so aren't particularly convenient. It would be helpful if
-Beaker included better tools for requesting System Loans, as well as a
+Beaker included better tools for managing System Loans, as well as a
 system for automatically returning them if unused for extended periods.
 
 This also applies to reservations, especially allowing automated
 reservations without relying on the use of a particular test harness.
+
+These ideas are covered by :ref:`proposal-time-limited-manual-reservations`
+and :ref:`proposal-time-limited-system-loans`.
+
+
+Planned development
+-------------------
+
+The ideas in this section are firmly on the to-do list, but it is not yet
+clear when they will be ready for inclusion.
 
 
 Explicit system pools
