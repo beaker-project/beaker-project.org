@@ -5,7 +5,7 @@ Time Limited System Loans
 
 :Author: Nick Coghlan
 :Status: Proposed
-:Target Release: 0.17
+:Target Release: 0.17 (tentative)
 
 
 Abstract
@@ -26,9 +26,6 @@ To avoid surprising users when their loans are returned automatically, the
 "alert email" mechanism described in
 :ref:`proposal-time-limited-manual-reservations` would be updated to include
 notifications of expiring loans.
-
-Finally, a command line interface will be provided for system loan
-management.
 
 
 Time limited loans
@@ -92,9 +89,6 @@ Command line
 ~~~~~~~~~~~~
 
 TBD
-
-:issue:`734212` (CLI for system loans)
-
 
 References
 ----------
