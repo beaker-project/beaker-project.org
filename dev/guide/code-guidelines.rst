@@ -65,17 +65,20 @@ should not use TurboGears or CherryPy unless necessary.
 In most controller methods, you may need to perform one or more of the
 following functions:
 
-- *Authentication*: If a view function needs authentication,
-  you can use the ``bkr.server.identity`` module.
+- *Authentication*: If a view function requires authentication, it should
+  be decorated using the ``bkr.server.flask_util.auth_required``
+  decorator (added in Beaker 0.15.2).
 
 - *Returning data*: Use Flask's ``jsonify()`` function to return your response
   as JSON objects. To learn more, see `here
   <http://flask.pocoo.org/docs/api/#module-flask.json>`__.
 
-- *Aborting*: If something is not right, use the ``abort()`` function
-  to raise a HTTPException. For eg, abort(403) would indicate a
-  request to a forbidden resource. To learn more, see `here
-  <http://flask.pocoo.org/docs/api/#flask.abort>`__.
+- *Aborting*: If something is not right, raise an appropriate
+  exception from one of the exception classes defined in
+  ``bkr.server.flask_util`` (starting with Beaker 0.15.2). For
+  example, ``raise NotFound404('System not found')``. If an
+  appropriate exception is not found, please add one in this module
+  along with your patch.
 
 - *Empty response*: If the view function has nothing to return,
   return an empty string with a status code, like so: ``return '',
