@@ -183,7 +183,7 @@ if __name__ == '__main__':
     releases = git_tags.releases(args[0])
     if options.format == 'html':
         stream = html_template.generate(**globals())
-        sys.stdout.write(stream.render('xhtml', doctype='html5'))
+        sys.stdout.write(stream.render('xhtml', doctype='html5', encoding='utf8'))
     elif options.format == 'atom':
         stream = atom_template.generate(**globals())
         sys.stdout.write(stream.render('xml'))
