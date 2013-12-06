@@ -313,6 +313,13 @@ As part of this, Beaker will need to be updated to support OpenStack's host
 initialisation capabilities rather than relying solely on kickstart post
 operations.
 
+While the initial integration will likely be based on a bootstrap image that
+launches Beaker's existing kickstart based provisioning process, the
+OpenStack support is also the first step towards image based provisioning.
+This should not only be faster than kickstart based provisioning, but also
+allow for provisioning of other Linux distributions and even other operating
+systems.
+
 OpenStack also offers some interesting possibilities in terms of dynamically
 creating isolated subnets. Integrating with that could allow Beaker to
 support testing of scenarios that are currently difficult to set up due
