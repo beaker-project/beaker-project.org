@@ -208,6 +208,11 @@ following criteria are met:
 -  For changes driven by a Bugzilla entry, the correct "Bug: NNNNNN"
    reference is present in the commit message (as described above in
    "Submitting your patch").
+-  For functional and testing changes (that is, changes affecting code, not
+   just documentation), another core developer has already granted
+   "+1 Looks good to me, but someone else must approve" based on the
+   above criteria (this criterion may occasionally be waived based on
+   core developer availability).
 
 Reviewers should also be looking for "missing updates": changes which
 *should* have been made, but are not part of the current patch. For
@@ -226,3 +231,32 @@ eliminated entirely by changing the implementation). That way, the
 missing updates should be picked up automatically as a failure in the
 test suite, rather than requiring the patch creator or reviewer to
 notice that additional changes are needed.
+
+
+Exceptions to the review process
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Core developers are permitted to bypass the review process by setting the
+review on their own patches in at least the following circumstances:
+
+- when a previously approved patch needs to be rebased to get Gerrit to merge
+  it, but no actual changes were needed as part of the rebase (Gerrit is
+  configured to rebase automatically, but the web UI sometimes gets confused
+  and hides the submit button even though the rebase would work automatically)
+- when minor fixes have been made to a previously approved documentation
+  patch (documentation patch reviews are mainly aimed at overall structure
+  and picking up omissions and technical errors. Fixing a typo or grammar
+  error doesn't require restarting the entire review process)
+- updating the git submodules for the beaker-project.org documentation (this
+  may be pushed directly to git, bypassing Gerrit entirely)
+- design proposal updates (design proposals should generally be discussed on
+  the development mailing list rather than in a Gerrit review, although the
+  latter can be useful for line-by-line commenting on specific details)
+- technical road map updates (the overall technical road map is only updated
+  by, or at the direction of, the Beaker Development Lead, rather than using
+  the regular change review process)
+- any changes to the beaker-administrivia repo (these scripts are just used
+  to help with issue management and status tracking, and don't directly
+  impact the actual functional code, tests or documentation)
+
+As other exceptional cases are identified, they will also be noted here.
