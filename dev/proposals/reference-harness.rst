@@ -78,3 +78,11 @@ the harness.
 .. _glib: http://developer.gnome.org/glib/
 .. _libcurl: http://curl.haxx.se/libcurl/
 .. _libarchive: http://www.libarchive.org/
+
+
+Current status
+--------------
+
+The initial version of the reference harness was created by Dan Callaghan,
+and is now being further developed by Bill Peck on
+`GitHub <https://github.com/p3ck/restraint/>`__.
