@@ -15,8 +15,8 @@ Rather than approving designs as a whole, specific elements of the design are ul
 Gerrit. It is expected that some of the details in design proposals may
 change as implementation reveals additional aspects that were not previously considered.
 
-Current design proposals
-~~~~~~~~~~~~~~~~~~~~~~~~
+Design proposals under consideration
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 These are design proposals currently under consideration for incorporation
 into a future version of Beaker.
@@ -29,8 +29,6 @@ into a future version of Beaker.
 .. toctree::
    :maxdepth: 1
 
-   handling-large-installations
-   access-policies-for-systems
    system-pools
    event-driven-scheduler
    effective-job-priorities
@@ -52,10 +50,24 @@ into a future version of Beaker.
    on the implementation.
 
 
+In progress design proposals
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+These are design proposals that are currently in progress, with at least
+some features available in a released version of Beaker (or a related
+project).
+
+.. toctree::
+   :maxdepth: 1
+
+   handling-large-installations
+   access-policies-for-systems
+
+
 Completed design proposals
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-These are design proposals that have been incorporated into a previous
+These are design proposals that have been incorporated into a released
 version of Beaker.
 
 .. toctree::
