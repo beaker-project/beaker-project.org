@@ -3,7 +3,7 @@ Reference Harness
 
 :Author: Dan Callaghan
 :Status: Proposed
-:Target Release: 1.0
+:Target Release: TBD
 
 This proposal is for a "reference harness" implementation to be developed for 
 Beaker. The purpose of the reference harness is to validate the proposed 

@@ -5,7 +5,7 @@ Time Limited System Loans
 
 :Author: Nick Coghlan
 :Status: Proposed
-:Target Release: 0.17 (tentative)
+:Target Release: TBD
 
 
 Abstract
