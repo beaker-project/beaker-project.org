@@ -5,7 +5,7 @@ Time Limited Manual Reservations
 
 :Author: Nick Coghlan
 :Status: Proposed
-:Target Release: 0.16
+:Target Release: TBD
 
 
 Abstract
