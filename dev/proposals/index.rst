@@ -37,6 +37,7 @@ into a future version of Beaker.
    time-limited-manual-reservations
    time-limited-system-loans
    external-tasks
+   dynamic-virtualization
 
 .. note::
 
