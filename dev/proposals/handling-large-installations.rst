@@ -30,8 +30,8 @@ confident that they remain in full control of the usage policies for those
 systems, including whether or not other users are even aware of the
 system's presence.
 
-This is a living document that will be updated over the course of the
-1.x series.
+This is a living document that will be updated over the course of the 0.x
+and 1.x series.
 
 Refer to :ref:`dev-lifecycle` for more information on the Beaker development
 process.
@@ -127,12 +127,18 @@ Beaker 0.16
 
 Planned release date: mid-to-late January 2014
 
-The focus of Beaker 0.16 will be to implement
-:ref:`proposal-time-limited-manual-reservations`, as well as to make
-further improvements to the reliability of system provisioning.
+The focus of Beaker 0.16 will be to implement an improved system
+details page in the Beaker web UI, as the Beaker 0.15 release not only
+highlighted many of the shortcomings of the existing interface, but also
+provided greatly improved tools for dealing with them.
 
-The aim of these updates will be to improve the availablity of resources
-and to minimise spurious test failures due to issues with system provisioning.
+This release also provides command line access to a number of features that
+were previously only accessible through the web UI.
+
+These updates take advantage of the improved web application development
+infrastructure adopted in Beaker 0.15 to ensure that tasks previously
+accomplished by screen-scraping the web UI HTML can instead be accomplished
+though well-defined programmatic interfaces.
 
 
 Beaker 0.17 (tentative)
@@ -140,7 +146,26 @@ Beaker 0.17 (tentative)
 
 Planned release date: late February/early March 2014
 
-The tentative focus of Beaker 0.17 is to implement
+.. note::
+
+   The relative order of the focus feature in this and subsequent releases is
+   being reviewed based on the improved command line interfaces provided in
+   Beaker 0.15 and 0.16, as those allow some of these features to be emulated
+   outside Beaker itself. This means that these features may be delayed while
+   development of other features is brought forward.
+
+The focus of Beaker 0.17 will be to implement
+:ref:`proposal-time-limited-manual-reservations`, as well as to make
+further improvements to the reliability of system provisioning.
+
+The aim of these updates will be to improve the availablity of resources
+and to minimise spurious test failures due to issues with system provisioning.
+
+
+Beaker 0.18 (tentative)
+-----------------------
+
+The tentative focus of Beaker 0.18 is to implement
 :ref:`proposal-time-limited-system-loans`.
 
 The aim of these updates will be to improve the availablity of resources
@@ -151,7 +176,7 @@ in one of the Beaker 0.15 maintenance releases, it is quite possible this
 proposal may be postponed to a later release.
 
 
-Beaker 0.18 (tentative)
+Beaker 0.19 (tentative)
 -----------------------
 
 The tentative focus of Beaker 0.18 will be completion of the "Predefined
@@ -163,7 +188,7 @@ Access Policy mechanism will make it straightforward to apply a common
 policy systematically to collections of systems.
 
 
-Beaker 0.19 (tentative)
+Beaker 0.20 (tentative)
 -----------------------
 
 The tentative focus for Beaker 0.19 is :ref:`proposal-system-pools`.
@@ -174,10 +199,10 @@ expressing pool preferences doesn't really make sense with the
 current scheduling model).
 
 
-Beaker 1.0 (tentative)
-----------------------
+Beaker 1.0
+----------
 
-The tentative focus of Beaker 1.0 is :ref:`proposal-effective-job-priorities`
+The focus of Beaker 1.0 will be :ref:`proposal-effective-job-priorities`.
 
 The key element of this proposal is the ability for system owners to control
 the effective precedence of recipes handled by their systems (including
@@ -200,6 +225,6 @@ feature may also require the ability to bypass the public task library for
 sensitive tasks, as well as the ability to specify an alternative
 archive server for sensitive log files.
 
-Earlier releases in the 1.x series will include changes and additional
+Earlier releases in the 0.x and 1.x series will include changes and additional
 tools to make running multiple Beaker instances less painful, as such tools
 are useful regardless of the reasons for additional instances.

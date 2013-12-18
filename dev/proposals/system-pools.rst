@@ -5,7 +5,7 @@ System Pools
 
 :Author: Dan Callaghan, Nick Coghlan
 :Status: Proposed
-:Target Release: 0.16 (tentative)
+:Target Release: TBD
 
 
 Abstract
