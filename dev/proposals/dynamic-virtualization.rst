@@ -99,7 +99,7 @@ physical machines *will* be supported.
 Host filtering
 ~~~~~~~~~~~~~~
 
-Beaker will translate memory and local disk requirements for x86 and x86_64
+Beaker will translate memory and virtual CPU requirements for x86 and x86_64
 hosts into suitable queries against the available VM "flavours" in OpenStack.
 If a suitable flavour is available, and there are no other specific hardware
 requirements for the recipe, then that recipe will be considered a candidate
@@ -115,13 +115,47 @@ Provisioning
 The initial iteration of Beaker's OpenStack based dynamic virtualization will
 not directly use image based provisioning.
 
-Instead, Beaker will provision a bootstrap image that launches the regular
-Anaconda installer. This approach is based on the `OpenStack image building
-proof of concept <https://github.com/redhat-openstack/image-building-poc>`__,
-and involves Beaker generating bootstrap images in Glance for imported distro
-trees in each lab, and then using those to launch the existing kickstart
-based provisioning operations rather than relying DHCP based netbooting of
-bare metal systems.
+Instead, Beaker will rely on a common `iPXE <http://ipxe.org/download>`__
+image, which will allow Beaker to point to the appropriate kernel and
+initrd URLs dynamically, and allow Anaconda to handle the installation as
+usual.
+
+This approach is preferred for the initial implementation, as many Beaker
+recipes currently take advantage of Anaconda specific features (most of
+the post install customisation explicitly uses kickstart specific syntax),
+and Beaker itself relies on Anaconda to handle tasks like disk partitioning,
+package installation and yum repo configuration.
+
+With the assumption of Anaconda based provisioning currently pervasive in
+the Beaker server code, deferring image based provisioning to a later
+release should significantly reduce the amount of change needed for the
+initial OpenStack integration.
+
+
+Disk configuration
+~~~~~~~~~~~~~~~~~~
+
+The initial iteration of the OpenStack integration will *not* support recipes
+which request a particular disk configuration in their host requirements,
+and will not support the use of persistent block storage volumes.
+
+Instead, virtual machines will simply receive the amount of ephemeral storage
+allocated for the system flavour that satisfies their memory and virtual CPU
+requirements.
+
+
+Network configuration
+~~~~~~~~~~~~~~~~~~~~~
+
+The initial iteration of the OpenStack integration will use a predefined
+subnet that must be specified as part of the lab controller configuration in
+Beaker.
+
+Systems on this subnet must have the same level of network access as any
+other systems in that Beaker lab. In particular, they must be able to access
+the lab controller (to report results), the web server that hosts the
+distro trees and any custom repository hosts that are supported by that
+lab.
 
 
 Console logging
@@ -139,6 +173,21 @@ deliberately omitted in order to reduce the complexity of the initial
 iteration of the design:
 
 * Provisioning directly from predefined OpenStack images. While this
-  feature is expected to be implemented eventually, the migration from
-  Anaconda kickstarts to cloud-init is better handled as a separate follow-on
-  activity (:issue:`1040245`)
+  feature is expected to be implemented eventually, adding the ability to
+  support cloud-init in addition to Anaconda kickstarts is better handled as
+  a separate follow-on activity (:issue:`1040245`)
+
+* Using OpenStack Cinder to support alternative requested block storage
+  configurations (for example, multiple disks of particular sizes).
+
+* Using OpenStack Neutron to dynamically create individual subnets for
+  each recipe set.
+
+
+Rejected alternatives
+---------------------
+
+An earlier draft of this proposal suggested building `bootstrap images
+<https://github.com/redhat-openstack/image-building-poc>`__ when a distro
+tree was imported and uploading them to glance. Dan Callaghan suggested
+using iPXE instead, which looks like it should be a much simpler alternative.
