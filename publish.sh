@@ -71,6 +71,16 @@ commit=$(git commit-tree $tree -p $parent -p $(git rev-parse HEAD) <<EOF
 Automatic commit of generated web site from $(git rev-parse HEAD)
 EOF
 )
+
+# Sanity check: did the new commit delete or change any lines in 
+# releases/SHA1SUM? This is verboten!
+deleted=$(git diff $parent..$commit --numstat -- releases/SHA1SUM | cut -f1)
+if [[ "$deleted" -gt 0 ]] ; then
+    echo "Checksum of released artefact changed!"
+    git diff $parent..$commit -- releases/SHA1SUM | cat
+    exit 1
+fi
+
 git update-ref refs/heads/published $commit $parent
 
 rm -rf "$D"
