@@ -24,7 +24,7 @@ Beaker's current dynamic virtualization support is based on oVirt Engine,
 and has several limitations that make it unusable in practice.
 
 Some of those issues are inherent in the fact that dynamic creation of
-ephemental virtual machines is a task that oVirt doesn't handle well, so
+ephemeral virtual machines is a task that oVirt doesn't handle well, so
 rather than fixing the problems directly, it is proposed that Beaker's
 dynamic virtualization support instead be redesigned to be based on
 OpenStack.
