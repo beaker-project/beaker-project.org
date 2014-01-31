@@ -2,6 +2,7 @@
 /changelogs.mk
 /dev/.buildinfo
 /dev/.doctrees/
+/dev/_images/
 /dev/_static/
 /dev/_sources/
 /dev/*.html
