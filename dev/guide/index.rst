@@ -23,6 +23,7 @@ some ideas on possible changes that may be of interest, consult the
    virtual-fedora/index
    source-walkthrough
    code-guidelines
+   ui-guidelines
    writing-a-patch
    example-patch
    development-lifecycle
