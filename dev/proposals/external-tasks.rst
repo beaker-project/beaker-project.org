@@ -5,7 +5,7 @@ External Tasks for Jobs
 
 :Author: Bill Peck
 :Status: Proposed
-:Target Release: TBD
+:Target Release: 0.16
 
 Abstract
 --------
