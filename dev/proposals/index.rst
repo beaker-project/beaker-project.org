@@ -29,6 +29,7 @@ into a future version of Beaker.
 .. toctree::
    :maxdepth: 1
 
+   system-page-improvements
    system-pools
    event-driven-scheduler
    effective-job-priorities
