@@ -39,7 +39,7 @@ anyone considering the use of Beaker to have a clear idea of its significance
 for Red Hat, without having their own workflows overly constrained by the
 specific ways Red Hat chooses to use it.
 
-The following elements have been identified as the objectives of Beaker 1.0,
+The following elements have been identified as key objectives of Beaker 1.0,
 and we will continue with as many regular 0.x releases as are needed to
 achieve them:
 
@@ -97,7 +97,8 @@ maintained indefinitely, and the kinds of changes noted above will continue
 to be permitted. The only way ``beah`` itself would ever be phased out is if
 a simpler and more robust alternative became available and was capable of
 correctly executing all of the existing Beaker tests that the core Beaker
-developers have access to.
+developers have access to. The :doc:`proposals/reference-harness` design
+proposal is expected to lead to the eventual creation of just such a harness.
 
 
 Active development
@@ -309,24 +310,9 @@ and long term high availability of oVirt. This suggests that OpenStack will
 be a substantially better fit for Beaker's dynamic provisioning use case
 than oVirt.
 
-As part of this, Beaker will need to be updated to support OpenStack's host
-initialisation capabilities rather than relying solely on kickstart post
-operations.
+This idea is covered by the :doc:`proposals/dynamic-virtualization` design
+proposal.
 
-While the initial integration will likely be based on a bootstrap image that
-launches Beaker's existing kickstart based provisioning process, the
-OpenStack support is also the first step towards image based provisioning.
-This should not only be faster than kickstart based provisioning, but also
-allow for provisioning of other Linux distributions and even other operating
-systems.
-
-OpenStack also offers some interesting possibilities in terms of dynamically
-creating isolated subnets. Integrating with that could allow Beaker to
-support testing of scenarios that are currently difficult to set up due
-to interference with the network of the hosting lab. For example, a full
-bare metal Beaker provisioning cycle currently can't be tested easily
-within Beaker, as doing so requires taking control of DHCP responses,
-while still retaining access to the distro trees used for installation.
 
 
 Exploration
@@ -428,20 +414,6 @@ It seems like it should be possible to substantially reduce the level of
 duplication between these two components, and thus make it easier to add
 new filtering and sorting criteria in the future.
 
-Support testing IPv6 only systems
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The Beaker test harness currently relies on a version of Twisted which doesn't 
-support IPv6. This means Beaker can't currently be used to test IPv6 only 
-operation of a system, as an IPv4 connection is needed between the test harness 
-and the lab controller. :issue:`810893` gives some additional background.
-
-At least on more recent operating systems, it should be possible to use
-the test harness with a newer version of Twisted. With appropriate
-configuration of the lab controller and network, this should make it
-possible to provision systems in Beaker with no IPv4 interfaces
-configured.
-
 
 Speculative ideas
 -----------------
@@ -504,6 +476,7 @@ Recently implemented ideas
 The following ideas were previously included on this roadmap, but are
 now implemented in Beaker:
 
+- `IPv6 support in the default test harness <http://beah.readthedocs.org/en/latest/admin.html#using-beah-for-ipv6-testing>`__
 - `Delegating job submission <../docs/whats-new/release-0.14.html#submission-delegates>`__
 - `Separate system architecture guide <../docs/whats-new/release-0.14.html#architecture-guide>`__
 - `Jenkins plugin to launch Beaker jobs <https://lists.fedorahosted.org/pipermail/beaker-devel/2013-July/000657.html>`__

@@ -55,9 +55,12 @@ away when the recipe set completes execution. This use case is a much
 better fit for OpenStack than it is for OpenShift.
 
 Furthermore, it became clear that oVirt didn't provide a clear path
-towards image based provisioning for Beaker (it lacks a counterpart to
-the OpenStack Glance component), and the lack of a straightforward approach
-to remotely capturing console log details was also problematic.
+towards image based provisioning for Beaker (although more recent versions
+of oVirt do support integration with the OpenStack Glance image library, and
+the lack of a straightforward approach to remotely capturing console log
+details was also problematic (as some Beaker features, like automatic panic
+detection, do not work without remote console log access, and the console
+log data is also often invaluable when debugging test and system failures).
 
 
 Proposal
@@ -130,6 +133,10 @@ With the assumption of Anaconda based provisioning currently pervasive in
 the Beaker server code, deferring image based provisioning to a later
 release should significantly reduce the amount of change needed for the
 initial OpenStack integration.
+
+This proposed approach to provisioning is very similar to that taken by
+Rackspace in the design of their `boot.rackspace.com
+<http://rackerlabs.github.io/boot.rackspace.com/>`__ utility scripts.
 
 
 Disk configuration
