@@ -1,3 +1,4 @@
+.. _proposal-system-page-improvements:
 
 System Page Improvements
 ========================
