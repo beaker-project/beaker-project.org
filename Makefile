@@ -11,8 +11,6 @@ SPHINXBUILDOPTS =
 .PHONY: all
 all: all-docs all-website yum
 
-ARTICLES = COPYING.html cobbler-migration.html
-
 include downloads.mk
 include old-downloads.mk
 include changelogs.mk
@@ -36,7 +34,6 @@ all-website: \
      in-a-box/beaker-setup.html \
      in-a-box/beaker-distros.html \
      in-a-box/beaker-virt.html \
-     $(ARTICLES)
 
 docs.mk: beaker-branches generate-docs-mk.sh
 	./generate-docs-mk.sh >$@
@@ -104,15 +101,6 @@ yum::
 
 in-a-box/%.html: in-a-box/% shocco.sh
 	./shocco.sh $< >$@
-
-%.html: %.txt pandoc-header.html pandoc-before-body.html pandoc-after-body.html pandoc-fixes.py
-	pandoc -f markdown -t html5 --standalone --section-divs \
-	    --smart --variable=lang=en --css=style.css \
-	    --include-in-header=pandoc-header.html \
-	    --toc \
-	    --include-before-body=pandoc-before-body.html \
-	    --include-after-body=pandoc-after-body.html \
-	    <$< | ./pandoc-fixes.py >$@
 
 .PHONY: check clean
 check:
