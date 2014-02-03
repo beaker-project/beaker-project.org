@@ -3,89 +3,168 @@
 External Tasks for Jobs
 =======================
 
-:Author: Bill Peck
+:Author: Bill Peck, Dan Callaghan
 :Status: Proposed
 :Target Release: 0.16
 
-Abstract
---------
+This document proposes de-coupling recipe tasks in Beaker from the task 
+library. It will be possible to specify tasks in a recipe using an external URL 
+without any corresponding task in Beaker's task library.
 
-This is a proposal to add support for specifying tasks that are not
-registered in the beaker scheduler.  Advantages of removing the task
-library from beaker are as follows:
+This feature requires support on the harness side for fetching and unpacking 
+tasks from arbitrary URLs. This proposal does not cover updating Beah to 
+support external tasks. In this initial iteration, external tasks will only be 
+usable with alternative harnesses.
 
-* Tasks can be retrieved directly from a version control system
-* Developers can make changes to existing tests in a test branch and verify
-  those changes before affecting production runs.
-* createrepo will no longer need to be run on the beaker scheduler.  This
-  will greatly reduce the load.
-* For tasks retrieved directly from git the sha1 can be stored.  This allows
-  for running previous jobs with the exact same version of the task.  Current
-  system would require you to re-submit the old version and that would affect
-  all jobs, not just yours.
-* When a release goes gold the tasks can be branched with that release name.
-  This allows z-stream testing to use the same task version as gold.
-* Moves test plan management out of beaker (excluded families)
+Background and rationale
+------------------------
 
+The ability to run tasks directly from source control or other arbitrary URLs 
+has been a long-standing feature request in Beaker. It addresses the 
+shortcomings of the centralized, linear, forwards-only versioning model of the 
+task library, by allowing users to:
 
-Accepting Jobs
---------------
+* test individual forks, feature branches, or development versions of a task
+  without affecting other users of the same task
+* run an exact revision of a task, for reproducing previous results or testing
+  older versions
+* devise their own branching strategy for their tasks (for example, maintaining
+  separate branches for different distro families)
 
-When specifying a task in a beaker job it is only valid to specify either a
-task from the beaker library or an external task.
+An expanded recipe-task model
+-----------------------------
 
-Example of specifying a task from the beaker libary::
+Currently each "recipe-task" in Beaker must have a correspondingly named entry 
+in the task library. Beaker stores the recipe-task as a reference to the task 
+library record.
 
-        <task name="/task/from/beaker/library"/>
+The database schema will be altered so that:
 
-Example of specifying an external task that is not registered in the beaker
-library::
+* the relationship from recipe-task to the task library is optional
+* each recipe-task stores the name of the task that is to be run
+* each recipe-task can optionally store the version of the task that was run
+* each recipe-task can optionally have an associated "fetch URL" where the task
+  source code is fetched from
 
-        <task>
-         <fetch url="git://server.domain.com/path/to/repo?branch#path/in/branch"/>
-        </task>
+The harness API will be extended to allow harness implementations to report the 
+name and version of a task back to Beaker.
 
-Alternativly we could drop fetch and task would either have an attribute name
-or url but never both.
+Specifying name and fetch URL for recipe-tasks
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+It is important that a recipe-task always have a sensible name, so that recipe 
+results can be meaningfully displayed even before the recipe starts. This will 
+also avoid backwards compatibility issues with external tools expecting every 
+recipe-task to have a proper task name. Therefore, when a new recipe is 
+submitted Beaker will use the following rules to determine the name of each 
+recipe-task.
 
-Harness Support
-----------------------
+If the submitted XML only specifies a name for the task, the task must exist in 
+Beaker's task library. The recipe-task name is set to the given name. This 
+represents no change from the current Beaker behaviour and preserves 
+compatibility for harness implementations.
 
-When a task is specified from the beaker library, the rpm node will be filled
-in for the task::
+::
 
-        <task name="/task/from/beaker/library">
-         <rpm name="beaker-task-1.11.noarch.rpm" path="/mnt/tests/task/from/beaker/library"/>
-        </task>
+    <task name="/distribution/reservesys" />
 
-The harness should install the rpm name via the system package installer. The
-harness can assume that the neccasary repos are configured for this to
-succeed.
+If the submitted XML specifies both a name and a fetch URL, the task need not 
+exist in Beaker's task library. The recipe-task name is set to the given name, 
+the fetch URL is set to the given URL, and the recipe-task is not associated 
+with any task library entry (even if the name matches a task library entry). 
 
-When a task is specified via the external url the harness is responsible for
-fetching the task. Beaker will do no verification of the url.
+Beaker will treat the fetch URL as an opaque string and does not attempt to 
+validate or fetch it. The details of how to fetch, unpack, and run the task are 
+left up to the harness implementation.
 
+::
 
-Reporting
----------
+    <task name="/distribution/reservesys">
+      <fetch url="git://git.beaker-project.org/beaker-core-tasks?master#reservesys" />
+    </task>
 
-For the first time we will be able to support multiple task repositories.
-The down side to this is that task names could be duplicated and conflict.
-In order to keep task names unique the url will be used as the task name.
+If the submitted XML specifies a fetch URL, then the ``name=""`` attribute may 
+be omitted. In this case there is no associated task library entry. Initially 
+Beaker will set the recipe-task name to the value of the fetch URL, so that it 
+has a meaningful value, but it is expected that the harness will later update 
+the recipe-task name to some "prettier" value (for example, by extracting the 
+name from :file:`testinfo.desc`).
 
-This presents another potential problem if the url is long.  The use of css's
-overflow attribute may be one option if it can truncate from the beginnning.
-There will need to be some way for the user to see the full url though.
-Possibly using a hover option?
+::
 
-Truncate example::
+    <task>
+      <fetch url="git://git.beaker-project.org/beaker-core-tasks?master#reservesys" />
+    </task>
 
-        ...ernel?master#filesystems/nfs/sanity
+Fetch URLs in recipe XML
+~~~~~~~~~~~~~~~~~~~~~~~~
 
-Hover would show::
+When a recipe-task is associated with a task library entry (no fetch URL), the 
+recipe XML served by Beaker will include an ``<rpm/>`` element with the details 
+of the RPM from the task library. The harness should install the named RPM 
+using the system package installer. This represents no change from the current 
+Beaker behaviour and preserves compatibility for harness implementations.
 
-        git://git.example.com/tests/kernel?master#filesystems/nfs/sanity
+::
 
-The user will still be able to use wildcards in the task name search which
-will make it easy to compare task results from different branches if needed.
+    <task name="/distribution/reservesys">
+      <rpm name="beaker-core-tasks-distribution-reservesys"
+           path="/mnt/tests/distribution/reservesys" />
+      ...
+    </task>
+
+When a recipe-task has a fetch URL, the recipe XML served by Beaker will 
+instead contain a ``<fetch/>`` element, matching the submitted job XML::
+
+    <task>
+      <fetch url="git://git.beaker-project.org/beaker-core-tasks?master#reservesys" />
+      ...
+    </task>
+
+Version for recipe-tasks
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+For recipe-tasks which have an entry in the task library, Beaker will copy the 
+current version from the task library to the recipe-task when the recipe is 
+Scheduled (this is the point at which the task library snapshot is generated). 
+This is the version of the task which should be run (if all goes well).
+
+For recipe-tasks with a fetch URL, the version will be initially empty. Harness 
+implementations can update Beaker with the version of the task which was run. 
+This is particularly important when fetching from source control. For example, 
+a harness implementation might set the version to ``<branch>@<sha>`` for a task 
+fetched from git.
+
+Beaker will treat the version as an opaque string. The format of the version 
+string is left up to the harness implementation.
+
+The versions will be displayed with the recipe results in Beaker's web UI and 
+included in the job results XML.
+
+Harness API
+-----------
+
+The following new HTTP resource will be available on the lab controller. 
+Harness implementations can use this to update the name and version of 
+a recipe-task.
+
+.. http:patch:: /recipes/(recipe_id)/tasks/(task_id)
+
+   Updates the recipe-task. Accepts JSON :mimetype:`application/json` or 
+   :mimetype:`application/x-www-form-urlencoded` with the following 
+   keys/parameters: *name*, *version*, *status*.
+
+Deferred features
+-----------------
+
+This proposal does not provide any mechanism for fetching tasks from source 
+control with the current version of Beah. If a recipe uses external tasks, it 
+must also use a suitable harness implementation. In future it may be possible 
+to implement task fetching in Beah itself, or to supply a shim task which can 
+handle task fetching when executed by Beah.
+
+In a future release the recipe-task schema could be extended further, to make 
+a copy of the RPM name and version when the recipe's task library snapshot is 
+created. This would fix two outstanding bugs caused by inconsistencies between 
+the Beaker database and the task library snapshot: :issue:`1040258` and 
+:issue:`1044934`.
