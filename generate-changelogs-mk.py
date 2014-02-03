@@ -2,7 +2,7 @@
 
 import sys
 import git_tags
-versions = [(r.version, r.tag) for r in git_tags.releases(sys.argv[1])] + [('0.9.4', 'beaker-0.9.4-1')]
+versions = [(r.version, r.tag) for r in git_tags.releases(sys.argv[1])] + [('0.8.2', 'beaker-0.8.2-1')]
 changelogs = []
 for i in xrange(len(versions) - 1):
     changelog = 'releases/beaker-%s-ChangeLog' % versions[i][0]

@@ -24,6 +24,10 @@ class Release(object):
     def minor(self):
         return '.'.join(self.version.split('.')[:2])
 
+    @property
+    def version_tuple(self):
+        return tuple(int(x) for x in self.version.split('.'))
+
 def releases(git_dir):
     repo = dulwich.repo.Repo(git_dir)
     releases = []
@@ -53,6 +57,6 @@ def releases(git_dir):
         releases.append(Release(version=m.group(1), timestamp=timestamp,
                 name=name, email=email, tag=tag.name))
     releases = sorted(releases, key=lambda r: r.timestamp, reverse=True)
-    # skip anything prior to 0.10
-    releases = list(takewhile(lambda r: r.version != '0.9.4', releases))
-    return sorted(releases, key=lambda r: r.minor, reverse=True)
+    # skip anything prior to 0.9
+    releases = list(takewhile(lambda r: r.version != '0.8.99', releases))
+    return sorted(releases, key=lambda r: r.version_tuple, reverse=True)

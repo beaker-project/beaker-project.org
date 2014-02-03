@@ -142,26 +142,16 @@ OLD_DOWNLOADS = \
     releases/beaker-0.9.0-5.patch \
     releases/beaker-0.9.0-6.patch \
     releases/beaker-0.9.0-7.patch \
-    releases/beaker-0.9.0.tar.gz \
-    releases/beaker-0.9.0.tar.xz \
     releases/beaker-0.9.1-2.patch \
     releases/beaker-0.9.1-3.patch \
-    releases/beaker-0.9.1.tar.gz \
-    releases/beaker-0.9.1.tar.xz \
     releases/beaker-0.9.2-2.patch \
     releases/beaker-0.9.2-3.patch \
-    releases/beaker-0.9.2.tar.gz \
-    releases/beaker-0.9.2.tar.xz \
     releases/beaker-0.9.3-2.patch \
     releases/beaker-0.9.3-3.patch \
     releases/beaker-0.9.3-4.patch \
     releases/beaker-0.9.3-5.patch \
     releases/beaker-0.9.3-6.patch \
     releases/beaker-0.9.3-7.patch \
-    releases/beaker-0.9.3.tar.gz \
-    releases/beaker-0.9.3.tar.xz \
     releases/beaker-0.9.4-2.patch \
-    releases/beaker-0.9.4.tar.gz \
-    releases/beaker-0.9.4.tar.xz \
     releases/beaker-0.10.1-2.patch \
     releases/beaker-0.10.5-2.patch
