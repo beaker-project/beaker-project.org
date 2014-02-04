@@ -7,18 +7,15 @@ while adding new code to Beaker.
 Model
 ~~~~~
 
-From version 0.11 Object Relational Mapped classes should be defined `declaratively
+From version 0.16 onwards, Object Relational Mapped classes should be defined 
+`declaratively
 <http://docs.sqlalchemy.org/en/rel_0_7/orm/extensions/declarative.html>`__. Previous
 versions used `Classical Mapping
-<http://docs.sqlalchemy.org/en/rel_0_7/orm/mapper_config.html#classical-mappings>`__.
+<http://docs.sqlalchemy.org/en/rel_0_7/orm/mapper_config.html#classical-mappings>`__ 
+for some classes.
 
 Some basic guidelines to follow when modifying model:
 
--  For versions < 0.11, definitions of Tables, ORM classes, and calls to
-   ``mapper()`` are segregated into three distinct sections. Tables are
-   defined above ORM classes, and ORM classes above mapper functions. If
-   possible define related Tables in the vicinity of each other, and
-   likewise for ORM classes and mappers.
 -  Commonly used queries should be encapsulated as class methods of the
    respective classes or using `hybrid attributes
    <http://docs.sqlalchemy.org/en/rel_0_7/orm/extensions/hybrid.html>`__.
