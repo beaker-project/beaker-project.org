@@ -71,3 +71,14 @@ Group related actions together as a `button group
 Use `alerts <http://getbootstrap.com/2.3.2/components.html#alerts>`_ only when 
 the user's attention must be drawn to something in particular: a change that 
 has just taken place, a condition out of the ordinary, a failed action.
+
+Capitalize appropriately
+------------------------
+
+Use sentence case for all UI elements, except the following which should be 
+labelled in title case:
+
+* buttons
+* tabs
+* menus and menu items
+* column headings
