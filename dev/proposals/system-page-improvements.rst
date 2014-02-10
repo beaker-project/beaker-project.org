@@ -7,22 +7,22 @@ System Page Improvements
 :Status: In Progress
 :Target Release: 0.17
 
-The system form --- the set of fields arranged in two columns at the top of the 
-system page --- has existed since Beaker's inception as Medusa, a lab inventory 
-tracking system. This document proposes rearranging the system page to replace 
-the system form with three "quick info" boxes. The goal of the quick info boxes 
-is to show the most important facts about the system and to give quick access 
-to the most common operations, while occupying a very small amount of vertical 
-space. The interface elements previously contained in the system form will be 
-grouped in tabs below.
+This document proposes rearranging the system page to replace the system form 
+with three "quick info" boxes. The goal of the quick info boxes is to show the 
+most important facts about the system and to give quick access to the most 
+common operations, while occupying a very small amount of vertical space. The 
+interface elements previously contained in the system form will be grouped in 
+tabs below.
 
 Background and rationale
 ------------------------
 
-The system form is the original basis of the system page, and has always been 
-its focal point. Over the years of Beaker's growth, additional functionality 
-has accumulated either in tabs below the system form or as extra interface 
-elements cluttered inside the form itself.
+The system form --- the set of fields arranged in two columns at the top of the 
+system page --- has existed since Beaker's inception as Medusa, a lab inventory 
+tracking system. The system form is the original basis of the page, and has 
+always been its focal point. Over the years of Beaker's growth, additional 
+functionality has accumulated either in tabs below the system form or as extra 
+interface elements cluttered inside the form itself.
 
 As a result, the system form conveys a disorganized assortment of data about 
 the system, of which only a small amount is relevant for any given workflow on 
