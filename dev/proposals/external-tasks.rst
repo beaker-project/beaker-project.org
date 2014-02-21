@@ -4,7 +4,7 @@ External Tasks for Jobs
 =======================
 
 :Author: Bill Peck, Dan Callaghan
-:Status: Proposed
+:Status: In Progress
 :Target Release: 0.16
 
 This document proposes de-coupling recipe tasks in Beaker from the task 
@@ -80,20 +80,35 @@ left up to the harness implementation.
 ::
 
     <task name="/distribution/reservesys">
-      <fetch url="git://git.beaker-project.org/beaker-core-tasks?master#reservesys" />
+      <fetch url="git://example.com/tasks/reservesys#master" />
     </task>
 
-If the submitted XML specifies a fetch URL, then the ``name=""`` attribute may 
-be omitted. In this case there is no associated task library entry. Initially 
-Beaker will set the recipe-task name to the value of the fetch URL, so that it 
-has a meaningful value, but it is expected that the harness will later update 
-the recipe-task name to some "prettier" value (for example, by extracting the 
-name from :file:`testinfo.desc`).
+If a fetch URL is specified, a subdirectory may also be specified. This is for 
+cases where the fetch URL points at an archive or source repository which 
+contains multiple tasks. The subdirectory indicates to the harness where it 
+should look to find the task to run. This is represented as a separate 
+attribute in the XML, because URLs do not have a standard mechanism to express 
+paths within an archive or repository.
+
+::
+
+    <task name="/distribution/reservesys">
+      <fetch url="git://git.beaker-project.org/beaker-core-tasks#master"
+             subdir="reservesys" />
+    </task>
+
+The ``name=""`` attribute may be omitted if a fetch URL is specified. In this 
+case there is no associated task library entry. Initially Beaker will set the 
+recipe-task name to the value of the fetch URL combined with the subdirectory, 
+so that it has a distinct and meaningful value by default, but it is expected 
+that the harness will later update the recipe-task name to some "prettier" 
+value (for example, by extracting the name from :file:`testinfo.desc`).
 
 ::
 
     <task>
-      <fetch url="git://git.beaker-project.org/beaker-core-tasks?master#reservesys" />
+      <fetch url="git://git.beaker-project.org/beaker-core-tasks#master"
+             subdir="reservesys" />
     </task>
 
 Fetch URLs in recipe XML
@@ -116,8 +131,9 @@ Beaker behaviour and preserves compatibility for harness implementations.
 When a recipe-task has a fetch URL, the recipe XML served by Beaker will 
 instead contain a ``<fetch/>`` element, matching the submitted job XML::
 
-    <task>
-      <fetch url="git://git.beaker-project.org/beaker-core-tasks?master#reservesys" />
+    <task name="/distribution/reservesys">
+      <fetch url="git://git.beaker-project.org/beaker-core-tasks#master"
+             subdir="reservesys" />
       ...
     </task>
 
@@ -152,7 +168,7 @@ a recipe-task.
 
    Updates the recipe-task. Accepts JSON :mimetype:`application/json` or 
    :mimetype:`application/x-www-form-urlencoded` with the following 
-   keys/parameters: *name*, *version*, *status*.
+   keys/parameters: *name*, *version*, *status*, *message*.
 
 Deferred features
 -----------------
