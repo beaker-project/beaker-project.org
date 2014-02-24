@@ -105,12 +105,8 @@ yum::
 in-a-box/%.html: in-a-box/% shocco.sh
 	./shocco.sh $< >$@
 
-# This is annoying... at some point pandoc started ignoring the -5 option,
-# instead you have to specify -t html5 to select HTML5 output.
-PANDOC_OUTPUT_OPTS := $(if $(shell pandoc --help | grep 'Output formats:.*html5'),-t html5,-t html -5)
-
 %.html: %.txt pandoc-header.html pandoc-before-body.html pandoc-after-body.html pandoc-fixes.py
-	pandoc -f markdown $(PANDOC_OUTPUT_OPTS) --standalone --section-divs \
+	pandoc -f markdown -t html5 --standalone --section-divs \
 	    --smart --variable=lang=en --css=style.css \
 	    --include-in-header=pandoc-header.html \
 	    --toc \
