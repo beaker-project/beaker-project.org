@@ -125,7 +125,7 @@ has an extended maintenance life cycle (through to February 2014).
 Beaker 0.16
 -----------
 
-Planned release date: late February 2014
+Planned release date: mid-to-late March 2014
 
 The focus of Beaker 0.16 will be the :ref:`proposal-external-tasks` design
 proposal, allowing tasks to be managed as references to external git
@@ -143,7 +143,7 @@ end up containing thousands of tasks.
 Beaker 0.17 (tentative)
 -----------------------
 
-Planned release date (tentative): late March 2014
+Planned release date (tentative): late April/early May 2014
 
 The tentative focus of Beaker 0.17 is to implement an improved system
 details page in the Beaker web UI, as the Beaker 0.15 release not only
