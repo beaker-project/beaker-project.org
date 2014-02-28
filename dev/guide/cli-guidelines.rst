@@ -60,10 +60,26 @@ appreciable output for human consumption. If the default output is designed to
 be machine readable, then make sure there is a more human friendly option for
 ``--format``.
 
-In case of errors and reporting error messages, tracebacks are fine.
-However, ensure that the tracebacks give user friendly error messages.
-This usually means that they will need to be raised in Beaker, rather than
-allowing exceptions that do not originate in Beaker to cascade up to the user.
+Whenever it is practical to implement, CLI users should not see Python 
+tracebacks for things that we anticipate them getting wrong, as the traceback 
+is just irrelevant noise in that situation. Instead, the CLI should catch the 
+relevant exception, display a clear message on stderr that explains what went 
+wrong (and ideally how to fix it), and then exit with a non-zero return code.
+
+The argument parsing library automatically takes care of this for many simpler 
+user errors, and the client command framework should automatically handle it 
+for authentication errors and most server side data validation and access 
+control errors.
+
+This CLI requirement also impacts the server code handling HTTP requests, as it 
+usually means that an appropriate exception should be raised in Beaker itself, 
+rather than allowing exceptions from library code to cascade up to the web 
+framework and hence on to the CLI user. The 
+:py:func:`bkr.server.flask_util.convert_internal_errors` context manager is 
+provided specifically for this purpose.
+
+However, care needs to be taken not to hide genuine programming errors by 
+misreporting them as errors in the user's input.
 
 
 Backwards compatibility
