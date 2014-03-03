@@ -314,6 +314,28 @@ This idea is covered by the :doc:`proposals/dynamic-virtualization` design
 proposal.
 
 
+Integration with Teiid and Metrique
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To quote their project descriptions, `Teiid <https://www.jboss.org/teiid/>`__
+is a "data virtualization system that allows applications to use data from
+multiple heterogenous data stores", while `Metrique
+<https://github.com/kejbaly2/metrique>`__ provides a "simple Python and REST
+API for ETL (extract, transform, load) workloads" and "tight clientside
+integration with popular python scientific computing libraries".
+
+What this means for Beaker is that Teiid can be used to extract data from a
+Beaker database for data mining purposes, while Metrique is a data mining
+tool that serves to make that data readily available to scientific
+computing analysis and visualisation tools (including `IPython notebooks
+<http://ipython.org/notebook>`__).
+
+Integrating cleanly with data mining tools is a better approach to building
+prediction tools for large Beaker instances than attempting to add such
+analytical capabilities to Beaker itself. Even if an installation uses other
+data extraction and warehousing systems, Teiid and Metrique based examples
+in the Beaker repos may serve as an illustrative guide.
+
 
 Exploration
 -----------
@@ -469,6 +491,7 @@ PostgreSQL have drastically difference performance characteristics
 (and there's no solution that performs well in both), and the
 challenge of actually doing a data migration for any existing
 Beaker installations.
+
 
 Recently implemented ideas
 --------------------------
