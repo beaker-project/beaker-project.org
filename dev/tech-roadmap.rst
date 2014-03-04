@@ -452,6 +452,38 @@ if some of them are feasible at all. Some of them may prove to be bad ideas,
 regardless of feasibility.
 
 
+Automated classification of intermittent and spurious test failures
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The OpenStack CI infrastructure includes a tool called "Elastic Recheck".
+Essentially what they do is take the automated logs from particular
+OpenStack CI runs, feed them into an ElasticSearch instance, and then run
+various classifiers over those logs. Elastic Recheck then posts back to
+the failed change proposal, indicating the likely cause of the failure (and
+potentially triggering a second check attempt).
+
+While such a tool wouldn't need to be part of Beaker itself, it may still be
+a useful feature to explore, and there may be a place for publishing suitable
+classifiers in a related project.
+
+A Beaker installation could potentially make use of such a tool in two ways.
+Firstly, Beaker includes the concept of "result acknowledgements", where
+users can "NAK" a result to indicate that it wasn't a valid test run (for
+example, there was an error in the test else, or something failed in the
+lab environment). An Bayesian classifier could be used to scan the logs of
+NAKed results, looking for patterns that are likely to indicate these kinds
+of "failures", which don't actually reflect a fault in the software being
+tested.
+
+Secondly, for genuine test failures, a Bayesian classifier could be used to
+identify log data that is likely to correspond with a failed test, and
+suggest that as a probable cause when a test fails, rather than requiring
+users to trawl through the logs themselves. This is one of the key approaches
+the OpenStack CI team used to build their Elastic Recheck tool - many of
+the common failures were identified by automated scanning of previous failed
+test runs rather than by identifying the causes of the failure directly.
+
+
 Provisioning other hypervisors
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
