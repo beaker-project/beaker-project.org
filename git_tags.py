@@ -29,18 +29,23 @@ def releases(git_dir):
     releases = []
     tags = [repo.get_object(repo.refs['refs/tags/%s' % tag])
             for tag in repo.refs.keys(base='refs/tags/')]
-    tag_commits = dict((tag.object[1], tag) for tag in tags
-            if tag.type_name == 'tag')
+    tag_commits = {}
+    for tag in tags:
+        if tag.type_name == 'tag':
+            tag_commits.setdefault(tag.object[1], []).append(tag)
     for commit in repo.revision_history(repo.refs['HEAD']):
         if commit.id not in tag_commits:
             continue
-        tag = tag_commits[commit.id]
-        m = re.match(r'beaker-([\d.]*)$', tag.name)
-        if not m:
+        for tag in tag_commits[commit.id]:
+            m = re.match(r'beaker-([\d.]*)$', tag.name)
+            if m:
+                break
             # also check for tito tags, used up to 0.14.1
             m = re.match(r'beaker-([\d.]*)-1$', tag.name)
-            if not m:
-                continue
+            if m:
+                break
+        if not m:
+            continue
         version = m.group(1)
         name, email = re.match(r'(.*) <(.*)>', tag.tagger).groups()
         timestamp = datetime.datetime.fromtimestamp(tag.tag_time,
