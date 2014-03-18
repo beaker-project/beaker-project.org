@@ -4,8 +4,8 @@ External Tasks for Jobs
 =======================
 
 :Author: Bill Peck, Dan Callaghan
-:Status: In Progress
-:Target Release: 0.16
+:Status: Implemented
+:Release: `0.16 <https://beaker-project.org/docs/whats-new/release-0.16.html#external-tasks>`__
 
 This document proposes de-coupling recipe tasks in Beaker from the task 
 library. It will be possible to specify tasks in a recipe using an external URL 
