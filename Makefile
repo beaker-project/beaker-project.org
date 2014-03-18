@@ -69,7 +69,7 @@ releases/index.atom: git-rev-beaker-master releases/SHA1SUM generate-releases-in
 
 $(OLD_DOWNLOADS):
 	mkdir -p $(dir $@)
-	cd $(dir $@) && curl -# -R -f -O http://beaker-project.org/$@
+	cd $(dir $@) && curl -# -R -f -O https://beaker-project.org/$@
 
 # Release artefacts (tarballs and patches) must never change once they have 
 # been published. So when "building" one, we always first try to grab it from 
@@ -79,7 +79,7 @@ $(OLD_DOWNLOADS):
 releases/%.tar.gz:
 	mkdir -p $(dir $@)
 	@echo "Trying to fetch release artefact $@" ; \
-	curl -# -R -f -o$@ http://beaker-project.org/$@ ; result=$$? ; \
+	curl -# -R -f -o$@ https://beaker-project.org/$@ ; result=$$? ; \
 	if [ $$result -ne 22 ] ; then exit $$result ; fi ; \
 	echo "Release artefact $@ not published, building it" ; \
 	GIT_DIR=$(BEAKER_GIT) git archive --format=tar --prefix=$*/ $* | gzip >$@.tmp && mv $@.tmp $@
@@ -87,7 +87,7 @@ releases/%.tar.gz:
 releases/%.tar.xz: releases/%.tar.gz
 	mkdir -p $(dir $@)
 	@echo "Trying to fetch release artefact $@" ; \
-	curl -# -R -f -o$@ http://beaker-project.org/$@ ; result=$$? ; \
+	curl -# -R -f -o$@ https://beaker-project.org/$@ ; result=$$? ; \
 	if [ $$result -ne 22 ] ; then exit $$result ; fi ; \
 	echo "Release artefact $@ not published, building it" ; \
 	gunzip -c $< | xz >$@.tmp && mv $@.tmp $@
