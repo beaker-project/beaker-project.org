@@ -37,7 +37,6 @@ into a future version of Beaker.
    inventory-lshw-migration
    time-limited-manual-reservations
    time-limited-system-loans
-   external-tasks
    dynamic-virtualization
 
 .. note::
@@ -77,6 +76,7 @@ version of Beaker.
 
    harness-api
    enhanced-user-groups
+   external-tasks
 
 
 Rejected/withdrawn design proposals
