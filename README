@@ -42,6 +42,7 @@ Dependencies
 * python-sphinx
 * pandoc
 * python-dulwich (to generate release changelogs)
+* rubygem-rdiscount ( to install markdown for shocco)
 
 Building docs from a local checkout
 -----------------------------------
