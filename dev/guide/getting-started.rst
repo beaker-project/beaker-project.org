@@ -39,6 +39,10 @@ repository <http://git.beaker-project.org/cgit/beaker/>`_::
 
     git clone git://git.beaker-project.org/beaker
 
+Update git submodules to keep track of all (recent) JS libraries::
+
+    git submodule update --init
+
 For the purposes of development, Beaker should be run on the ``develop``
 branch::
 
@@ -96,7 +100,7 @@ You can then start a development server using the ``start-server.py``
 script, with ``PYTHONPATH`` adjusted for the git checkout::
 
     cd Server/
-    PYTHONPATH=../Common:. ./start-server.py
+    ./run-server.sh
 
 The Beaker team uses `RHEL
 6 <http://www.redhat.com/products/enterprise-linux/server/>`_ for
