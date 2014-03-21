@@ -143,9 +143,26 @@ end up containing thousands of tasks.
 Beaker 0.17 (tentative)
 -----------------------
 
-Planned release date (tentative): late April/early May 2014
+Planned release date (tentative): late May 2014
 
-The tentative focus of Beaker 0.17 is to implement an improved system
+The planned focus of Beaker 0.17 is the ability to force execution of jobs
+on particular systems, allowing automated inventory scans on systems in
+Manual mode, and easier testing of Broken systems before setting them
+back to Automated mode.
+
+This release will also change the handling of Removed systems, so that
+they are omitted from almost all parts of the web UI, with a new dedicated
+page added to provide access to the details of previously removed systems.
+
+Refer to :issue:`851354` and :issue:`1000092` for details.
+
+
+Beaker 0.18 (tentative)
+-----------------------
+
+Planned release date (tentative): late July 2014
+
+The tentative focus of Beaker 0.18 is to implement an improved system
 details page in the Beaker web UI, as the Beaker 0.15 release not only
 highlighted many of the shortcomings of the existing interface, but also
 provided greatly improved tools for dealing with them.

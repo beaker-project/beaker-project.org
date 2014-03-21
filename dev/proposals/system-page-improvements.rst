@@ -5,7 +5,7 @@ System Page Improvements
 
 :Author: Dan Callaghan
 :Status: In Progress
-:Target Release: 0.17
+:Target Release: 0.18
 
 This document proposes rearranging the system page to replace the system form 
 with three "quick info" boxes. The goal of the quick info boxes is to show the 
