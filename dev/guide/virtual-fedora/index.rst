@@ -231,14 +231,6 @@ username should be ``host/localhost.localdomain`` and password as
 default settings setup during installation in
 :file:`/etc/beaker/labcontroller.conf`. Save the changes.
 
-Next, we will fetch the bootloaders using Cobbler, copy it to the TFTP
-root directory and then stop the ``cobbler`` daemon::
-
-    # systemctl start cobblerd
-    # cobbler get-loaders
-    # cobbler sync
-    # systemctl stop cobblerd
-
 Restart ``xinetd`` service using ``systemctl restart xinetd``.
 
 Add firewall rules to enable access to the TFTP server (port 69) and
@@ -339,7 +331,7 @@ on the test system from Beaker's web UI. Let's try that. Go the
 :guilabel:`commands` tab of the system at
 ``http://beaker-server-lc.beaker/bkr/view/beaker-test-vm1`` and
 click on :guilabel:`Power On System`. After sometime you should see
-the test VM powered on and the ``cobbler`` boot menu should appear signalling a
+the test VM powered on and the PXE boot menu should appear signalling a
 successul PXE boot. Force off the test VM for now.
 
 Setup server to run jobs
