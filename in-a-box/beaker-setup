@@ -98,11 +98,6 @@ service beaker-provision start
 #chkconfig beaker-transfer on
 #service beaker-transfer start
 
-# Fetch some common boot loaders and copy them to the TFTP directory. (For now
-# we still use Cobbler for this.)
-cobbler get-loaders
-cobbler sync
-
 # Finally, we can start up the beakerd scheduler daemon.
 chkconfig beakerd on
 service beakerd start

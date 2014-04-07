@@ -37,7 +37,6 @@ mariadb-server
 MySQL-python
 tftp-server
 mod_ssl
-cobbler
 
 # we will need to power on the test systems from the LC, so we need
 # virsh
