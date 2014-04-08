@@ -19,9 +19,10 @@ pygments_style = 'sphinx'
 templates_path = ['../sphinx-templates']
 
 
-intersphinx_mapping = {'python': ('http://docs.python.org/',
-                                  '../python-intersphinx.inv'),
-                      }
+intersphinx_mapping = {
+    'python': ('http://docs.python.org/', '../python-intersphinx.inv'),
+    'sqlalchemy': ('http://docs.sqlalchemy.org/en/rel_0_7/', '../sqlalchemy-intersphinx.inv'),
+}
 
 # This config is also a Sphinx extension with some Beaker-specific customisations:
 
