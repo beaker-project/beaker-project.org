@@ -41,6 +41,30 @@ Some basic guidelines to follow when modifying model:
 -  Remember to define relevant cascade options.
 
 
+Database column defaults
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+For database columns with `default values 
+<http://docs.sqlalchemy.org/en/rel_0_7/core/schema.html#column-insert-update-defaults>`__, 
+always use a Python-level default: pass a scalar or Python callable as the 
+*default* parameter for the :py:class:`Column() <sqlalchemy.schema.Column>` 
+constructor.
+
+Note that this means the default value will *not* appear on the column 
+definition in the database schema. Schema upgrade notes which add a new column 
+with a default value should look like this (note no ``DEFAULT`` clause)::
+
+    ALTER TABLE power ADD COLUMN power_quiescent_period INT NOT NULL;
+    UPDATE power SET power_quiescent_period = 5;
+
+Do not use server-side column defaults (*server_default* parameter, or 
+*default* with a SQL expression). That way we avoid defining the default value 
+in two places (model code and the database schema); Beaker can skip the extra 
+database round-trip to fetch the generated defaults, which might be expensive 
+in some cases; and we have one consistent mechanism for defining column 
+defaults throughout the application.
+
+
 Controller methods
 ~~~~~~~~~~~~~~~~~~
 
