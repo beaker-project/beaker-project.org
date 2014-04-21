@@ -96,8 +96,8 @@ By default this uses the ``beaker`` database on localhost. This can be
 changed by editing ``dev.cfg`` and updating the above configuration
 commands appropriately.
 
-You can then start a development server using the ``start-server.py``
-script, with ``PYTHONPATH`` adjusted for the git checkout::
+You can then start a development server using the ``run-server.sh``
+script::
 
     cd Server/
     ./run-server.sh
