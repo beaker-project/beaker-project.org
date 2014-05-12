@@ -19,8 +19,8 @@ cat /etc/my.cnf-orig | awk '
             print "character-set-server=utf8";
         }' > /etc/my.cnf
 
-systemctl start mysqld
-systemctl enable mysqld
+systemctl start mariadb
+systemctl enable mariadb
 
 # setup Beaker DB
 echo "CREATE DATABASE beaker;" | mysql
