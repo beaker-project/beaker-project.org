@@ -1,10 +1,8 @@
 # See http://fedoraproject.org/wiki/Anaconda/Kickstart
-url --url=http://dl.fedoraproject.org/pub/fedora/linux/releases/19/Everything/x86_64/os/
+url --url=http://dl.fedoraproject.org/pub/fedora/linux/releases/20/Everything/x86_64/os/
 repo --name=updates
-repo --name=beaker-server --baseurl=http://beaker-project.org/yum/server/Fedora19
+repo --name=beaker-server --baseurl=http://beaker-project.org/yum/server/Fedora20
 
-# uncomment this for any testing *before* 0.14 release
-# repo --name=beaker-server-testing --baseurl=http://beaker-project.org/yum/server-testing/Fedora19
 
 auth --useshadow --enablemd5
 firstboot --disable
