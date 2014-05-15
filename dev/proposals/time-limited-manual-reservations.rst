@@ -19,11 +19,6 @@ To assist with voluntarily returning system loans, it is also proposed that
 the ability be added to indicate when reserving a system manually that the
 loan should also be returned when the reservation is returned.
 
-To avoid surprising users when their manual reservations are returned
-automatically, the existing "alert email" mechanism will be redesigned to
-focus on informing users of such upcoming events, as well as improving the
-handling of existing alerts.
-
 
 Recipe independent watchdog timers
 ----------------------------------
@@ -78,71 +73,6 @@ linked reservation will be able to edit this setting.
 This will be stored as a new ``return_loan`` attribute on each reservation.
 
 (also see :issue:`651477`)
-
-
-Beaker usage report emails
---------------------------
-
-The existing usage alert email mechanism will be redesigned to send at
-most one email per user, per day. An alert email will be the sent to users
-under the following conditions:
-
-* Expiring Manual Reservations
-
-  * they have a time limited manual reservation that will expire within
-    25 hours
-
-* Open Loans & Reservations for In Demand Systems
-
-  * they have had a system reserved for at least 3 days, at least 1 recipe
-    is waiting for that system and the reservation has no expiry time set
-  * they have had a system on loan for at least 3 days and at least 1 recipe
-    is waiting for that system and the loan has no expiry time set
-
-* Delayed Jobs
-
-  * they have a job which is more than 14 days old but still contains Queued
-    recipes
-  * they have a job which is more than 1 hour old but still contains a
-    Waiting recipe (as Waiting is expected to be a transient state while
-    power commands are processed)
-
-The given limits would all be server configuration options, with these
-values as the defaults.
-
-As long as a user triggers one of the alerts, then once a day they would get
-an email with the subject line::
-
-    [Beaker] Usage report for <name> (<date>)
-
-The usage report would contain up to three sections, corresponding to the
-different alert conditions:
-
-* Expiring Manual Reservations
-* Open Loans & Reservations for In Demand Systems
-* Delayed Jobs
-
-For expiring reservations, the time of expiration would be given along with
-the FQDN of the system. If there is a loan linked to be automatically
-returned with the reservation, this will also be indicated in the entry.
-
-For in demand systems, the duration of the current loan or reservation would
-be given, the number of recipes currently waiting, and then the FQDN of the
-system. Loans and reservations will be shown separately, unless the
-reservation is set to automatically return the loan (in which case only
-the reservation is shown).
-
-For purposes of the usage report, waiting recipes would be those that:
-
-* are at least 1 hour old (filtering out transient noise due to new jobs being
-  processed and scheduled)
-* would be able to run on this system if it was in Automated mode and neither
-  loaned to this user nor reserved by them
-
-For delayed jobs, the time since the job was submitted would be given, along
-with a link to the job details page.
-
-(See also: :issue:`994325`)
 
 
 User interface proposals
