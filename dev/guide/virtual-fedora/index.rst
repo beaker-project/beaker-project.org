@@ -7,14 +7,14 @@ This guide will help you setup a `Beaker <http://beaker-project.org>`__
 test bed using two virtual machines (VMs). To setup the VMs, we
 will use `libvirt <http://libvirt.org>`__ with `qemu
 <http://qemu.org>`__ driver. The host system is assumed to be running
-an installation of Fedora 19 (although the instructions should also
+an installation of Fedora 20 (although the instructions should also
 work with any other Linux distribution with a suitably recent version
 of libvirt).
 
 .. note::
 
    While there are currently no known major compatibility issues running
-   Beaker on Fedora 19, running the Beaker server components on
+   Beaker on Fedora 20, running the Beaker server components on
    Fedora is still considered an *experimental* configuration. Beaker's
    continuous integration system currently only tests compatibility of the
    server components with Red Hat Enterprise Linux 6.
@@ -170,15 +170,10 @@ This is to be done on the *host system*. First download this
 controller and other miscellaneous packages. Then, from the directory where
 the kickstart file was downloaded, run `this script
 <scripts/create_server_lc_vm.sh>`__ to create a virtual machine and
-start a Fedora 19 installation using the downloaded kickstart file.
+start a Fedora 20 installation using the downloaded kickstart file.
 
 You may want to replace the Fedora download location in the Bash script and
 the kickstart by one closer to your geographical location.
-
-Note that the Beaker server and lab controller components are known not to
-work on Fedora 17 (and earlier). Fedora 18 may work, but testing by the
-Beaker developers has focused on Fedora 19 and later.
-
 
 Setup server
 ~~~~~~~~~~~~
@@ -210,22 +205,6 @@ You may want to confirm that both the services are running (Use
 Enable the ``httpd`` and ``beakerd`` services so that they start on system boot::
 
     # systemctl enable httpd beakerd
-
-.. note::
-
-   Apache may fail to start on system boot if it fails to determine
-   the server's fully qualified domain name. Hence, we will define the
-   the ``ServerName`` configuration variable in
-   :file:`/etc/httpd/conf/httpd.conf`  as follows::
-
-       ServerName beaker-server-lc.beaker
-
-   We will also add add an entry to :file:`/etc/hosts`::
-
-       192.168.122.102 beaker-server-lc.beaker
-
-   For further details, see `here
-   <http://wiki.apache.org/httpd/CouldNotDetermineServerName>`__.
 
 To be able to access the server web application from your host system,
 add the ``http`` service to the ``default`` zone of ``firewalld`` and
@@ -407,7 +386,7 @@ distributions that you can run your job on. So, depending on your
 needs, these will vary. For example, to import a Fedora 19 mirror, run
 the ``beaker-import`` program on your server VM as follows::
 
-   # beaker-import http://dl.fedoraproject.org/pub/fedora/linux/releases/19/Fedora/x86_64/os/
+   # beaker-import http://dl.fedoraproject.org/pub/fedora/linux/releases/20/Fedora/x86_64/os/
 
 .. note::
 
@@ -440,10 +419,12 @@ Troubleshooting
 ===============
 
 If you see that the test system is not being powered on, or there is
-something unexpected going on, take a look at the
-:file:`/var/log/beaker/provision.log` file in the server VM. It should
-give you clues as to what may be going wrong. The other log files in
-the directory can also be investigated.
+something unexpected going on, look for any hints in the
+``beaker-provision`` logs (accessible using ``journalctl -u
+beaker-provision``) in the server VM. Log messages from the scheduler
+are accessible via ``journalctl -u beakerd`` and similarly for the other
+services (``beaker-watchdog`` and ``beaker-proxy``). The Beaker web
+application logs are accessible via ``journalctl SYSLOG_IDENTIFIER=beaker-server``. 
 
 If you see something is going wrong with the web application, useful
 information may be found in the Apache error logs.
