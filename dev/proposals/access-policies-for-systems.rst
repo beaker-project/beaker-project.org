@@ -4,7 +4,7 @@ Access Policies for Systems
 ===========================
 
 :Author: Dan Callaghan, Nick Coghlan
-:Status: In Development
+:Status: Deferred
 :Initial Release: `0.15 <http://beaker-project.org/docs/whats-new/release-0.15.html>`__
 :Target Final Release: TBD
 
@@ -15,6 +15,15 @@ Abstract
 This proposal replaces the existing mechanisms for controlling access to 
 systems with a single unified "access policy". It also provides a way to 
 optionally apply the same access policy consistently across many systems.
+
+
+Implementation deferral
+-----------------------
+
+The "predefined access policy" component of this proposal is not yet
+implemented. Since the per-system policies can be configured remotely,
+implementation of the remainder of the design is currently deferred
+indefinitely.
 
 
 Access policies

@@ -26,18 +26,10 @@ into a future version of Beaker.
    Proposals will be referred to by their title or URL rather than by a
    number (this is similar to Fedora feature names)
 
+* There are currently no completely new design proposals under consideration
+
 .. toctree::
    :maxdepth: 1
-
-   system-page-improvements
-   system-pools
-   event-driven-scheduler
-   effective-job-priorities
-   reference-harness
-   inventory-lshw-migration
-   time-limited-manual-reservations
-   time-limited-system-loans
-   dynamic-virtualization
 
 .. note::
 
@@ -56,14 +48,35 @@ In progress design proposals
 
 These are design proposals that are currently in progress, with at least
 some features available in a released version of Beaker (or a related
-project).
+project), or else under active development for an upcoming Beaker release.
 
 .. toctree::
    :maxdepth: 1
 
    handling-large-installations
-   access-policies-for-systems
    beaker-usage-report-emails
+   reference-harness
+   system-page-improvements
+   inventory-lshw-migration
+   dynamic-virtualization
+
+
+Deferred design proposals
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+These are design proposals that have been deferred pending further research
+into alternative options, or else have had their priority reassessed based
+on other changes.
+
+.. toctree::
+   :maxdepth: 1
+
+   access-policies-for-systems
+   system-pools
+   event-driven-scheduler
+   effective-job-priorities
+   time-limited-manual-reservations
+   time-limited-system-loans
 
 
 Completed design proposals

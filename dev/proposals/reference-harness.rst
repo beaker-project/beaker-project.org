@@ -2,7 +2,7 @@ Reference Harness
 =================
 
 :Author: Dan Callaghan
-:Status: Proposed
+:Status: In Progress
 :Target Release: TBD
 
 This proposal is for a "reference harness" implementation to be developed for 

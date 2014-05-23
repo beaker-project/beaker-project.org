@@ -125,9 +125,9 @@ has an extended maintenance life cycle (through to February 2014).
 Beaker 0.16
 -----------
 
-Planned release date: mid-to-late March 2014
+Release date: 14 March 2014
 
-The focus of Beaker 0.16 will be the :ref:`proposal-external-tasks` design
+The focus of Beaker 0.16 was the :ref:`proposal-external-tasks` design
 proposal, allowing tasks to be managed as references to external git
 repositories, rather than forcing reliance on Beaker's centralised library of
 task RPMs.
@@ -139,22 +139,37 @@ structure), this proposal also has the benefit of avoiding the need to
 frequently regenerate yum repo metadata for a central task library that may
 end up containing thousands of tasks.
 
+See the `Beaker 0.16 Release Notes
+<../../docs-release-0.16/whats-new/#beaker-0-16>`__ for details.
 
-Beaker 0.17 (tentative)
------------------------
 
-Planned release date (tentative): late May 2014
+Beaker 0.17
+-----------
 
-The planned focus of Beaker 0.17 is the ability to force execution of jobs
-on particular systems, allowing automated inventory scans on systems in
-Manual mode, and easier testing of Broken systems before setting them
-back to Automated mode.
+Planned release date: early June 2014
+
+Beaker 0.17 will include the ability to force execution of jobs
+on particular systems through the scheduler, allowing automated inventory
+scans on systems in Manual mode, and easier testing of Broken systems
+before setting them back to Automated mode (:issue:`851354`).
 
 This release will also change the handling of Removed systems, so that
 they are omitted from almost all parts of the web UI, with a new dedicated
-page added to provide access to the details of previously removed systems.
+page added to provide access to the details of previously removed systems
+(:issue:`1000092`).
 
-Refer to :issue:`851354` and :issue:`1000092` for details.
+This release also adds the previously missing job history tracking
+(:issue:`995012`) needed to properly support group jobs and the ability to
+configure a custom, instance specific, theme for a particular Beaker
+installation (:issue:`1012224`).
+
+Beaker 0.17 will also provide an initial experimental implementation for the
+:ref:`proposal-dynamic-virtualization` design proposal.
+
+Other notable changes that may be included in Beaker 0.17 are:
+
+* a redesigned usage email system (:ref:`proposal-beaker-usage-report-emails`)
+* a harness independent automated reservation system (:issue:`639938`)
 
 
 Beaker 0.18 (tentative)
@@ -173,11 +188,10 @@ Refer to :ref:`proposal-system-page-improvements` for details.
 Beaker 1.0
 ----------
 
-The following design proposals are expected to be implemented across
-several additional 0.x releases in the lead up to declaring a Beaker 1.0
-release:
+The following design proposals, or functional equivalents, are expected to be
+implemented across several additional 0.x releases in the lead up to
+declaring a Beaker 1.0 release:
 
-* :ref:`proposal-dynamic-virtualization`
 * :ref:`proposal-time-limited-manual-reservations`
 * :ref:`proposal-time-limited-system-loans`
 * the "Predefined Access Policies" portion of :ref:`proposal-access-policies`
@@ -190,23 +204,3 @@ with comprehensive and flexible control over their systems, allowing them
 to make them readily available to other users, while still ensuring they
 can access the system when they need to (including prioritising their own
 jobs, or those of their team, over jobs submitted by other users).
-
-
-Beaker 1.1 (tentative)
-----------------------
-
-Currently, clean isolation of sensitive systems, tasks and job details
-requires running multiple Beaker instances, which imposes a lot of
-management and maintenance overhead, as well as contributing to
-inefficient use of test hardware.
-
-The tentative focus of Beaker 1.1 is to build on the existing NDA
-functionality, the enhanced user groups and the new system pool model to
-provide clean isolation of sensitive systems, tasks and job details. This
-feature may also require the ability to bypass the public task library for
-sensitive tasks, as well as the ability to specify an alternative
-archive server for sensitive log files.
-
-Earlier releases in the 0.x and 1.x series will include changes and additional
-tools to make running multiple Beaker instances less painful, as such tools
-are useful regardless of the reasons for additional instances.
