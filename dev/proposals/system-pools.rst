@@ -4,7 +4,7 @@ System Pools
 ============
 
 :Author: Dan Callaghan, Nick Coghlan
-:Status: Proposed
+:Status: Deferred
 :Target Release: TBD
 
 
@@ -14,6 +14,14 @@ Abstract
 This proposal adds the ability to mark systems as members of various
 system pools. Job submitters can then express preferences and requirements for 
 system pools in their jobs.
+
+
+Proposal deferral
+-----------------
+
+Further work on this proposal is currently deferred, pending research into
+the Apache Mesos scheduling meta-framework, and its potential suitability
+as a replacement for the current bespoke Beaker scheduler.
 
 
 Proposal

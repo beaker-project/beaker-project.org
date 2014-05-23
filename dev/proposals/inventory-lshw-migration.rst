@@ -4,7 +4,7 @@ Migrating to lshw for inventory task
 ====================================
 
 :Author: Amit Saha
-:Status: Proposed
+:Status: In Progress
 :Target Release: TBD
 
 Abstract

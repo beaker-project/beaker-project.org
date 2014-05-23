@@ -4,8 +4,8 @@ Effective Job Priorities
 ========================
 
 :Author: Nick Coghlan
-:Status: Proposed
-:Target Release: 1.0
+:Status: Deferred
+:Target Release: TBD
 
 
 Abstract
@@ -15,8 +15,13 @@ This proposal adds the ability for system owners to provide shared access
 to systems, while allowing jobs submitted on behalf of particular groups to
 be given precedence when the system is in high demand.
 
-Implementation of this proposal is the main gating criterion for declaring
-a Beaker 1.0 release.
+
+Proposal deferral
+-----------------
+
+Further work on this proposal is currently deferred, pending research into
+the Apache Mesos scheduling meta-framework, and its potential suitability
+as a replacement for the current bespoke Beaker scheduler.
 
 
 Dependencies

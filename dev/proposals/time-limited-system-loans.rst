@@ -4,7 +4,7 @@ Time Limited System Loans
 =========================
 
 :Author: Nick Coghlan
-:Status: Proposed
+:Status: Deferred
 :Target Release: TBD
 
 
@@ -26,6 +26,18 @@ To avoid surprising users when their loans are returned automatically, the
 "alert email" mechanism described in
 :ref:`proposal-time-limited-manual-reservations` would be updated to include
 notifications of expiring loans.
+
+
+Proposal deferral
+-----------------
+
+Further work on this proposal is currently deferred, as the remote API
+improvements in Beaker 0.15 now allow greater control of Beaker systems
+from external services, and the ability to force recipe execution on
+Manual systems in Beaker 0.17 will further enhance that capability.
+
+This proposal needs to be reassessed after further experience has been gained
+with the impact of those changes.
 
 
 Time limited loans

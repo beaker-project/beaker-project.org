@@ -4,7 +4,7 @@ Time Limited Manual Reservations
 ================================
 
 :Author: Nick Coghlan
-:Status: Proposed
+:Status: Deferred
 :Target Release: TBD
 
 
@@ -18,6 +18,18 @@ new reservation timer is then used to offer time limited manual reservations.
 To assist with voluntarily returning system loans, it is also proposed that
 the ability be added to indicate when reserving a system manually that the
 loan should also be returned when the reservation is returned.
+
+
+Proposal deferral
+-----------------
+
+Further work on this proposal is currently deferred, as the remote API
+improvements in Beaker 0.15 now allow greater control of Beaker systems
+from external services, and the ability to force recipe execution on
+Manual systems in Beaker 0.17 will further enhance that capability.
+
+This proposal needs to be reassessed after further experience has been gained
+with the impact of those changes.
 
 
 Recipe independent watchdog timers
@@ -87,27 +99,6 @@ Command line
 ~~~~~~~~~~~~
 
 TBD
-
-
-Deferred features
------------------
-
-* Allowing use of a new ``reservesys`` element in recipe definitions as a
-  harness independent mechanism allowing reservation of the task at the end
-  of the recipe. Unlike the existing harness dependent mechanism, this
-  automatic reservation mechanism would allow systems to be reserved even
-  if the recipe aborts (:issue:`639938`).
-
-* Allowing the ``reservesys`` element to be specified at the recipe set level
-  to reserve all systems in the recipe set whenever one or more of them
-  encounters a problem.
-
-* Updating the reserve workflow and the scheduled provisioning mechanism for
-  systems in Automated mode to use the new harness independent mechanism
-  rather than the reservesys task.
-
-* Providing a page in the web UI that includes the information provided in
-  the Beaker usage email.
 
 
 Rejected features

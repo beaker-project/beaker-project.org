@@ -4,7 +4,7 @@ Event Driven Scheduling
 =======================
 
 :Author: Nick Coghlan
-:Status: Proposed
+:Status: Deferred
 :Target Release: TBD
 
 
@@ -34,6 +34,14 @@ This proposal also covers a plan to better separate out time spent
 provisioning systems from the time spent executing user submitted tasks.
 (that part can, and probably will, be separated out and implemented before
 the rest of the probosal)
+
+
+Proposal deferral
+-----------------
+
+Further work on this proposal is currently deferred, pending research into
+the Apache Mesos scheduling meta-framework, and its potential suitability
+as a replacement for the current bespoke Beaker scheduler.
 
 
 Dependencies

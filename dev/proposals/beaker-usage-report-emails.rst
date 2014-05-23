@@ -4,8 +4,8 @@ Beaker Usage Report Emails
 ==========================
 
 :Author: Nick Coghlan, Matt Jia
-:Status: Proposed
-:Target Release: TBD
+:Status: In Progress
+:Target Release: 0.17
 
 
 Abstract

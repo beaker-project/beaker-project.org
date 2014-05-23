@@ -4,8 +4,8 @@ OpenStack Based Dynamic Virtualization
 ======================================
 
 :Author: Nick Coghlan
-:Status: Proposed
-:Target Release: TBD
+:Status: In Progress
+:Target Release: 0.17
 
 
 Abstract
