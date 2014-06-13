@@ -34,11 +34,9 @@ under the following conditions:
   * they have a recipe running /distribution/reservesys or in "Reserved"
     status and the associated watchdog timer will expire within 24 hours.
 
-* Open Loans & Reservations for In Demand Systems
+* Reservations for In Demand Systems
 
   * they have had a system reserved for at least 3 days, at least 1 recipe
-    is waiting for that system.
-  * they have had a system on loan for at least 3 days and at least 1 recipe
     is waiting for that system.
 
 * Delayed Jobs
@@ -111,5 +109,9 @@ An example report would look like this::
 Deferred features
 -----------------
 
-In future, it would be possible to build a dashboard page that displays users' systems
-and jobs.
+* To reduce the the complexity of the initial iteration of the design, users who have
+  systems on loan will not receive the reminder emails.
+
+* In future, it would be possible to build a dashboard page that displays users' systems
+  and jobs. Then we can use it in the email template to give users an overview of their
+  Beaker usage.
