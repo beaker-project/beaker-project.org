@@ -109,7 +109,7 @@ An example report would look like this::
 Deferred features
 -----------------
 
-* To reduce the the complexity of the initial iteration of the design, users who have
+* To reduce the complexity of the initial iteration of the design, users who have
   systems on loan will not receive the reminder emails.
 
 * In future, it would be possible to build a dashboard page that displays users' systems
