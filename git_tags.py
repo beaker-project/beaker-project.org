@@ -37,10 +37,10 @@ def releases(git_dir):
     for tag in tags:
         if tag.type_name == 'tag':
             tag_commits.setdefault(tag.object[1], []).append(tag)
-    for commit in repo.revision_history(repo.refs['HEAD']):
-        if commit.id not in tag_commits:
+    for walker in repo.get_walker(repo.refs['HEAD']):
+        if walker.commit.id not in tag_commits:
             continue
-        for tag in tag_commits[commit.id]:
+        for tag in tag_commits[walker.commit.id]:
             m = re.match(r'beaker-([\d.]*)$', tag.name)
             if m:
                 break
