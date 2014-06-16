@@ -29,10 +29,9 @@ directly from the procfs file system) to gather the details of various
 hardware devices on a system. Due to the `retirement announcement
 <https://fedoraproject.org/wiki/Smolt_retirement>`__  of smolt, this
 will make it impossible to run the inventory task on current and
-future Fedora releases and future releases of Red Hat Enterprise
-Linux, unless an effort is made to maintain smolt exclusively for
-Beaker's purposes. Users have also reported smolt's ineffectiveness in
-certain cases (see bug report: :issue:`541294`). On the other hand, `lshw
+future releases of Red Hat Enterprise Linux and Fedora. Users have
+also reported smolt's ineffectiveness in certain cases (see bug
+report: :issue:`541294`). On the other hand, `lshw
 <http://ezix.org/project/wiki/HardwareLiSter>`__ is actively
 maintained and is thus a future-proof alternative for Beaker's
 inventory task. For this migration to be successful without affecting
@@ -73,6 +72,13 @@ fork of `lshw <http://git.beaker-project.org/cgit/lshw/>`__ and then
 pull requests sent to the `upstream repository
 <https://github.com/lyonel/lshw>`__ via GitHub. 
 
+The major enhancements merged to the fork so far are:
+
+- A "chroot" based testing framework. This is described briefly in the
+  next section.
+
+- Better support for retrieving CPU information on ARM and s390x systems.
+
 Maintaining a fork of lshw is motivated by two factors:
 
 - Allow beaker-system-scan to be updated independently of the upstream
@@ -81,24 +87,17 @@ Maintaining a fork of lshw is motivated by two factors:
 - Allow sufficient testing of the changes and then submit requests for
   integration into upstream
 
-
 Test suite development for lshw
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-There are absolutely no tests in lshw of any kind.
-One direction (also considering how Beaker will use lshw) is to have a
-test framework in place which will present a particular hardware
-configuration to lshw and match it's XML output to what is expected,
-thus helping prevent regressions, for one thing.
+The chroot based testing framework runs lshw in a chroot so that
+instead of reading files from /proc and /sys on the 
+system, they read the test data files made available in the chroot.
 
-Next, we need to find a way to provide these test hardware configurations
-as input to lshw. A large number of lshw's features are implemented
-by directly reading information from procfs and sysfs. For at least
-these features, an approach similar to :program:`lscpu` (part of `util-linux
-<https://www.kernel.org/pub/linux/utils/util-linux/>`__) may be
-useful. It has an option, :option:`-s` to read a system snapshot
-instead of reading directly from the "live" system (see bug report:
-:issue:`986157`).
+Although this doesn't allow testing data which are retrieved by
+lshw using system calls, it allows a basic level of sanity
+testing to make sure regressions are caught.
+
 
 Comparing the data obtained from smolt and lshw
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -110,9 +109,11 @@ smolt would give us. If not, either lshw  should be enhanced to
 retrieve those data or if the data is not important to Beaker's users,
 document it as such.
 
-Miscellaneous tasks
-~~~~~~~~~~~~~~~~~~~
-The current inventory task uses :command:`hal-find-by-property` and
+Related tasks
+~~~~~~~~~~~~~
+
+beaker-system-scan currently uses :command:`hal-find-by-property` and
 :command:`hal-get-property` to retrieve storage controller
-details. lshw will be used to retrieve these data (also, see bug
-report: :issue:`896302`).
+details and libparted to retrieve details of disk drives. 
+In both the cases, lshw will be used instead (See :issue:`896302` and
+:issue:`902567` for details).
