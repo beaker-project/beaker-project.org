@@ -109,8 +109,14 @@ An example report would look like this::
 Deferred features
 -----------------
 
-* To reduce the complexity of the initial iteration of the design, users who have
-  systems on loan will not receive the reminder emails.
+* The usage e-mail covers outstanding reservations, but it does not currently
+  include information about outstanding loans. This is because Beaker does not 
+  track the start date of loans apart from in the system history, which cannot 
+  be efficiently queried for generating the usage e-mail. 
+
+* In future, when Beaker supports loan expiry, the usage e-mails could be
+  updated to include loans expiring soon (in addition to reservations expiring 
+  soon).
 
 * In future, it would be possible to build a dashboard page that displays users' systems
   and jobs. Then we can use it in the email template to give users an overview of their
