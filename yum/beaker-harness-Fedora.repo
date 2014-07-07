@@ -1,0 +1,11 @@
+[beaker-harness]
+name=Beaker Harness - Fedora$releasever
+baseurl=https://beaker-project.org/yum/harness/Fedora$releasever/
+enabled=1
+gpgcheck=0
+
+[beaker-harness-testing]
+name=Beaker Harness - Fedora$releasever - Testing
+baseurl=https://beaker-project.org/yum/harness-testing/Fedora$releasever/
+enabled=0
+gpgcheck=0
