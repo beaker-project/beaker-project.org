@@ -1,0 +1,11 @@
+[beaker-harness]
+name=Beaker Harness - RedHatEnterpriseLinux$releasever
+baseurl=https://beaker-project.org/yum/harness/RedHatEnterpriseLinux$releasever
+enabled=1
+gpgcheck=0
+
+[beaker-harness-testing]
+name=Beaker Harness - RedHatEnterpriseLinux$releasever
+baseurl=https://beaker-project.org/yum/harness-testing/RedHatEnterpriseLinux$releasever
+enabled=0
+gpgcheck=0
