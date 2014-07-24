@@ -59,6 +59,7 @@ project), or else under active development for an upcoming Beaker release.
    system-page-improvements
    inventory-lshw-migration
    dynamic-virtualization
+   custom-distros
 
 
 Deferred design proposals
