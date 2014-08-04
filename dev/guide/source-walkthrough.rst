@@ -157,7 +157,12 @@ server utilizes them.
 
 *CSS*
     Starting with Beaker 0.15, `Bootstrap` is used for the Web UI front-end.
-   
+
+*Alembic*
+    Alembic provides for the creation, management, and invocation of change
+    management scripts for a relational database, using SQLAlchemy as the underlying
+    engine.
+
 As a result of being built on TG, Beaker is an MVC inspired application.
 Whilst it mostly follows TG conventions, Beaker does sometimes go
 outside of these when it's appropriate (and advantageous) to do so.
