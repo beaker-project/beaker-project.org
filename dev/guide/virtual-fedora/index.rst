@@ -231,7 +231,11 @@ username should be ``host/localhost.localdomain`` and password as
 default settings setup during installation in
 :file:`/etc/beaker/labcontroller.conf`. Save the changes.
 
-Restart ``xinetd`` service using ``systemctl restart xinetd``.
+Enabled and start the TFTP service, which is used to serve netboot files to the 
+test VMs::
+
+    # systemctl enable tftp.socket
+    # systemctl start tftp.socket
 
 Add firewall rules to enable access to the TFTP server (port 69) and
 ``beaker-proxy`` running on port 8000::
