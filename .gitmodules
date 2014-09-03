@@ -27,3 +27,7 @@
 	path = beaker-branches/release-0.17
 	url = git://git.beaker-project.org/beaker
 	branch = release-0.17
+[submodule "beaker-branches/release-0.18"]
+	path = beaker-branches/release-0.18
+	url = git://git.beaker-project.org/beaker
+	branch = release-0.18
