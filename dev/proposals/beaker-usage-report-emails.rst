@@ -4,8 +4,8 @@ Beaker Usage Report Emails
 ==========================
 
 :Author: Nick Coghlan, Matt Jia
-:Status: In Progress
-:Target Release: 0.17
+:Status: Implemented
+:Release: `0.18 <https://beaker-project.org/docs/whats-new/release-0.18.html#usage-reminder-emails>`__
 
 
 Abstract

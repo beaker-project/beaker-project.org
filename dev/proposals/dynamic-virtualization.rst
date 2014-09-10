@@ -4,8 +4,8 @@ OpenStack Based Dynamic Virtualization
 ======================================
 
 :Author: Nick Coghlan
-:Status: In Progress
-:Target Release: 0.17
+:Status: Implemented
+:Release: `0.17 <https://beaker-project.org/docs/whats-new/release-0.17.html#openstack-as-dynamic-virtualization-backend>`__
 
 
 Abstract
@@ -169,7 +169,8 @@ Console logging
 ~~~~~~~~~~~~~~~
 
 Beaker will make use of the console APIs in OpenStack to ensure that console
-logs for dynamically provisioned systems are captured correctly.
+logs for dynamically provisioned systems are captured correctly
+(:issue:`950903`).
 
 
 Deferred features
@@ -182,7 +183,7 @@ iteration of the design:
 * Provisioning directly from predefined OpenStack images. While this
   feature is expected to be implemented eventually, adding the ability to
   support cloud-init in addition to Anaconda kickstarts is better handled as
-  a separate follow-on activity (:issue:`1040245`)
+  a separate follow-on activity (also see :issue:`1108455`).
 
 * Using OpenStack Cinder to support alternative requested block storage
   configurations (for example, multiple disks of particular sizes).

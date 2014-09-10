@@ -5,8 +5,6 @@ Improved Handling of Large Beaker Installations
 
 :Author: Nick Coghlan
 :Status: In Progress
-:Release Series: 0.x, 1.x
-
 
 Abstract
 --------
@@ -17,21 +15,21 @@ members of specified groups are able to access the system for any
 purpose). Furthermore, making changes to group membership requires
 action by the administrators of the Beaker installation.
 
-The general theme of the Beaker 1.x series, and the remainder of the 0.x
-series, will be to make a progressive set of smaller changes, each useful in
-its own right, that combine in later releases to offer a rich policy
-administration capability that allows
-system owners to prioritise access to their own hardware.
+The general theme of this design proposal will be to document
+a progressive set of smaller changes, each useful in its own right,
+that combine in later releases to offer a rich policy administration
+capability that allows system owners to prioritise access to their own
+hardware.
 
-The intent is that, by the time of the final 1.x series release, owners
+The intent is that, by the time this proposal is implemented, owners
 of systems in Beaker should be comfortable making their systems available
 for use by other users of the same Beaker installation, while being
 confident that they remain in full control of the usage policies for those
 systems, including whether or not other users are even aware of the
 system's presence.
 
-This is a living document that will be updated over the course of the 0.x
-and 1.x series.
+This is a living document that will be updated over the course of
+Beaker's development.
 
 Refer to :ref:`dev-lifecycle` for more information on the Beaker development
 process.
@@ -42,9 +40,8 @@ Beaker 0.12
 
 Release date: 5th April, 2013
 
-Beaker 0.12 laid the foundation for the Beaker 1.0 series by making
-it easier for users to switch between production and development
-Beaker instances. It has three key elements:
+Beaker 0.12 made it easier for users to switch between production and
+development Beaker instances. It has three key elements:
 
 * A new script was added to the Beaker server tools, which allows a
   system administrator to update the task library from the task
@@ -146,51 +143,59 @@ See the `Beaker 0.16 Release Notes
 Beaker 0.17
 -----------
 
-Planned release date: early June 2014
+Release date: 11th June, 2014
 
-Beaker 0.17 will include the ability to force execution of jobs
-on particular systems through the scheduler, allowing automated inventory
-scans on systems in Manual mode, and easier testing of Broken systems
-before setting them back to Automated mode (:issue:`851354`).
+Beaker 0.17 included two new scheduler features:
 
-This release will also change the handling of Removed systems, so that
-they are omitted from almost all parts of the web UI, with a new dedicated
-page added to provide access to the details of previously removed systems
-(:issue:`1000092`).
+* A test harness independent system reservation mechanism via the
+  ``<reservesys/>`` Job XML element. This makes it possible to debug
+  issues during test execution which may have caused the external
+  watchdog to expire, a kernel panic or an installation failure.
 
-This release also adds the previously missing job history tracking
-(:issue:`995012`) needed to properly support group jobs and the ability to
-configure a custom, instance specific, theme for a particular Beaker
-installation (:issue:`1012224`).
+* Force schedule a job on a system irrespective of its status. This
+  makes it possible to run diagnostic tests on broken or manual
+  systems before adding them back to the pool of available systems.
 
-Beaker 0.17 will also provide an initial experimental implementation for the
-:ref:`proposal-dynamic-virtualization` design proposal.
+In addition, it included experimental integration with OpenStack for
+dynamically creating VMs (additional background available in the
+:ref:`proposal-dynamic-virtualization` design proposal).
 
-Other notable changes that may be included in Beaker 0.17 are:
-
-* a redesigned usage email system (:ref:`proposal-beaker-usage-report-emails`)
-* a harness independent automated reservation system (:issue:`639938`)
+See the `Beaker 0.17 Release Notes
+<../../docs-release-0.17/whats-new/#beaker-0-17>`__ for details.
 
 
-Beaker 0.18 (tentative)
------------------------
+Beaker 0.18
+-----------
 
-Planned release date (tentative): late July 2014
+Release date: 4th September, 2014
 
-The tentative focus of Beaker 0.18 is to implement an improved system
+Beaker 0.18 included improved usage reminder emails as described in
+the :ref:`proposal-beaker-usage-report-emails` design propsal and
+introduced better support for custom distros (as described in the
+:ref:`custom-distros` design proposal).
+
+See the `Beaker 0.18 Release Notes
+<../../docs-release-0.18/whats-new/#beaker-0-18>`__ for details.
+
+Beaker 19 (tentative)
+---------------------
+
+Planned Release date: October, 2014
+
+The tentative focus of Beaker 19 is to implement an improved system
 details page in the Beaker web UI, as the Beaker 0.15 release not only
 highlighted many of the shortcomings of the existing interface, but also
 provided greatly improved tools for dealing with them.
-
+ 
 Refer to :ref:`proposal-system-page-improvements` for details.
 
 
-Beaker 1.0
-----------
+Future Beaker releases
+----------------------
 
 The following design proposals, or functional equivalents, are expected to be
-implemented across several additional 0.x releases in the lead up to
-declaring a Beaker 1.0 release:
+implemented across several additional releases and should all
+contribute to improve Beaker's usefulness in large installations:
 
 * :ref:`proposal-time-limited-manual-reservations`
 * :ref:`proposal-time-limited-system-loans`
