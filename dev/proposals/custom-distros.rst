@@ -1,9 +1,11 @@
+.. _custom-distros:
+
 Handling Custom Distros
 =======================
 
 :Author: Dan Callaghan
-:Status: In Progress
-:Target Release: 0.18
+:Status: Implemented
+:Target Release: `0.18 <https://beaker-project.org/docs/whats-new/release-0.18.html#better-support-for-custom-distros>`__
 
 This document proposes a number of backwards-compatible changes to Beaker's 
 kickstart templates, to make it easier to use custom distros without modifying 

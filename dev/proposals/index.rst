@@ -54,12 +54,9 @@ project), or else under active development for an upcoming Beaker release.
    :maxdepth: 1
 
    handling-large-installations
-   beaker-usage-report-emails
    reference-harness
    system-page-improvements
-   inventory-lshw-migration
-   dynamic-virtualization
-   custom-distros
+   inventory-lshw-migration      
 
 
 Deferred design proposals
@@ -92,6 +89,9 @@ version of Beaker.
    harness-api
    enhanced-user-groups
    external-tasks
+   beaker-usage-report-emails
+   custom-distros
+   dynamic-virtualization
 
 
 Rejected/withdrawn design proposals
