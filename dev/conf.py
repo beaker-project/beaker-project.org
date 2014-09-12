@@ -13,11 +13,8 @@ release = version = "Project"
 html_title = 'Beaker development'
 html_use_index = False
 html_domain_indices = False
-html_theme = 'basic'
-html_theme_options = {'nosidebar': True}
-pygments_style = 'sphinx'
-templates_path = ['../sphinx-templates']
-
+html_theme = 'beaker'
+html_theme_path = ['../sphinx-theme']
 
 intersphinx_mapping = {
     'python': ('http://docs.python.org/', '../python-intersphinx.inv'),
