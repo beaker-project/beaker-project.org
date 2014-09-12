@@ -1,4 +1,4 @@
-{% extends '!layout.html' %}
+{% extends 'basic/layout.html' %}
 {%- block htmltitle %}
 <title>{{ title|striptags|e }}{% if pagename != 'index' %} &#183; {{ docstitle|e }}{% endif %}</title>
 {%- endblock %}

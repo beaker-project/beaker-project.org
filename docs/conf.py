@@ -6,10 +6,8 @@
 import os, os.path
 execfile(os.path.join(os.environ['BEAKER'], 'documentation', 'conf.py'))
 
-html_theme = 'basic'
-html_theme_options = {'nosidebar': True}
-pygments_style = 'sphinx'
-templates_path = ['../sphinx-templates']
+html_theme = 'beaker'
+html_theme_path = ['../sphinx-theme']
 
 intersphinx_mapping['python'] = ('http://docs.python.org/',
         os.path.join(os.path.dirname(__file__), '..', 'python-intersphinx.inv'))
