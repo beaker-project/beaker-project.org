@@ -341,10 +341,6 @@ successul PXE boot. Force off the test VM for now.
 Setup server to run jobs
 ========================
 
-Initialize the harness repo using (on the server VM as the root user)::
-
-   # beaker-repo-update
-
 We will now add a few task RPMs to ensure we can run jobs (including those
 with guest recipes) as well as inventory systems and reserve them through
 the scheduler. Use ``wget`` (or an equivalent command) to retrieve the
@@ -392,6 +388,13 @@ the ``beaker-import`` program on your server VM as follows::
 
 Now, go to the URL: ``http://beaker-server-lc.beaker/bkr/distros/`` and
 check if the distro(s) have been imported.
+
+Initialize the harness repos using (on the server VM as the root user)::
+
+   # beaker-repo-update
+
+This initializes the harness repositories for each of the distros
+imported above.
 
 Run a job
 =========
