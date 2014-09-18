@@ -107,33 +107,31 @@ following functions:
 
 .. _api-stability:
 
-API Stability
+API compatibility
+~~~~~~~~~~~~~~~~~
+
+To avoid unnecessary churn for our users, Beaker maintains API compatibility 
+across all maintenance releases in a series (for example 19.0, 19.1, …). Any 
+patches in a maintenance release must not break API compatibility.
+
+APIs can be removed (if absolutely necessary) only after they have been through 
+a deprecation period of at least one release. This entails updating all 
+relevant documentation and code to mark the API as deprecated in version N, and 
+then removing it no sooner than version N+1.
+
+These guidelines apply specifically to (programmatic) HTTP interfaces, XML-RPC
+interfaces, and the bkr client.
+
+Client–server compatibility
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+The bkr client must be backwards compatible with at least the previous version 
+of the server (for example, client 20.x must be compatible with server 19.x). 
+New commands are excluded from this requirement.
 
-Any changes in an X.Y.z maintenance release must never break API compatibility.
-Any changes to a published API must never break the API, unless it has been
-properly deprecated. This entails updating all relevant documentation and
-code to mark it as deprecated in release X.Y, and then making it obsolete
-no sooner than version X.Y+1.
-
-These guidelines apply specifically to the HTTP and XML-RPC
-API, as well as the beaker client.
-
-This policy was first formally adopted for the Beaker 0.14 release series.
-
-Beaker Client
-~~~~~~~~~~~~~
-
-
-All versions of beaker client must be backward compatible with the previous
-major version of the server (i.e beaker-client-0.16.y must be compatible
-with beaker-server-0.15.y). However, new commands are excluded from
-this requirement. Please see :ref:`api-stability` before making changes to
-the beaker client.
-
-This policy was first formally adopted for the Beaker 0.15 release series.
-
+Also note that the bkr client itself is considered an API for scripting 
+purposes, so it must also maintain API compatibility with older versions of 
+itself as described above.
 
 Logging Activities
 ~~~~~~~~~~~~~~~~~~
