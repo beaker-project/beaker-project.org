@@ -1,0 +1,11 @@
+[beaker-harness]
+name=Beaker Harness - CentOS$releasever
+baseurl=https://beaker-project.org/yum/harness/CentOS$releasever
+enabled=1
+gpgcheck=0
+
+[beaker-harness-testing]
+name=Beaker Harness - CentOS$releasever
+baseurl=https://beaker-project.org/yum/harness-testing/CentOS$releasever
+enabled=0
+gpgcheck=0
