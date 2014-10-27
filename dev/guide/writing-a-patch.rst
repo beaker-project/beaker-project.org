@@ -37,22 +37,18 @@ many `Selenium/WebDriver <http://code.google.com/p/selenium/>`_ browser
 tests. You should test your patch by running the test suite either
 locally or in Beaker, or both.
 
-In order to run the test suite locally, you must create the additional
-test database in your local MySQL instance::
+In order to run the test suite locally, you must create two additional
+test databases in your local MySQL instance::
 
     mysql -uroot <<"EOF"
     CREATE DATABASE beaker_test;
     GRANT ALL ON beaker_test.* TO 'beaker'@'localhost' IDENTIFIED BY 'beaker';
     EOF
 
-In addition, the necessary Selenium support is not yet available as an
-RPM, so it is necessary to download `this jar
-file <http://code.google.com/p/selenium/downloads/detail?name=selenium-server-standalone-2.35.0.jar&can=1&q=>`_
-and save it as
-``/usr/local/share/selenium/selenium-server-standalone-2.35.0.jar``.
-(Yes, it must be that exact version at that exact path. The longer term
-fix to make this step cleaner is to provide an appropriate RPM in the
-Beaker repos)
+    mysql -uroot <<"EOF"
+    CREATE DATABASE beaker_migration_test;
+    GRANT ALL ON beaker_migration_test.* TO 'beaker'@'localhost' IDENTIFIED BY 'beaker';
+    EOF
 
 While working on your patch, you would run the unit test for your new
 feature/fix::
