@@ -21,8 +21,10 @@ class Release(object):
         return 'beaker-%s-ChangeLog' % self.version
 
     @property
-    def minor(self):
-        return '.'.join(self.version.split('.')[:2])
+    def major(self):
+        if self.version.startswith('0.'):
+            return '.'.join(self.version.split('.')[:2])
+        return self.version.split('.')[0]
 
     @property
     def version_tuple(self):

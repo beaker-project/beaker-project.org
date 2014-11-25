@@ -15,8 +15,8 @@ from genshi.template import MarkupTemplate
 
 import git_tags
 
-def minor_blurb(minor):
-    section_id = 'beaker-%s' % (minor.replace('.', '-'))
+def major_blurb(major):
+    section_id = 'beaker-%s' % (major.replace('.', '-'))
     tree = lxml.html.parse('docs/whats-new/index.html')
     blurb = tree.find('//div[@id="%s"]/p[1]' % section_id)
     if blurb is None:
@@ -102,9 +102,9 @@ html_template = MarkupTemplate('''
 
 <h1>Releases</h1>
 
-<section py:for="minor, releases in groupby(releases, lambda r: r.minor)">
-<h2>Beaker ${minor}</h2>
-${minor_blurb(minor)}
+<section py:for="major, releases in groupby(releases, lambda r: r.major)">
+<h2>Beaker ${major}</h2>
+${major_blurb(major)}
 
 <article class="release hentry" py:for="release in releases" id="beaker-${release.version}-1">
     <h2 class="entry-title">Beaker ${release.version}</h2>
