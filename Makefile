@@ -23,7 +23,6 @@ docs: SPHINXBUILDOPTS += -W
 .PHONY: all-website
 all-website: \
      dev \
-     schema/beaker-job.rng \
      releases/SHA1SUM \
      releases/index.html \
      releases/index.atom \
@@ -42,10 +41,6 @@ docs.mk: beaker-branches generate-docs-mk.sh
 dev: SPHINXBUILDOPTS += -W
 dev:
 	$(SPHINXBUILD) $(SPHINXBUILDOPTS) -c $@ -b html ./dev/ $@/
-
-schema/beaker-job.rng: $(BEAKER)/Common/bkr/common/schema/beaker-job.rng
-	mkdir -p $(dir $@)
-	cp -p $< $@
 
 .PHONY:
 git-rev-beaker-master:
