@@ -232,3 +232,10 @@ div.admonition {
 .descname {
     font-size: 1em !important;
 }
+/* Sphinx sets download links in bold monospace, I guess under the assumption 
+ * that the anchor is a filename? But it's not always. */
+tt.download {
+    letter-spacing: inherit !important;
+    font-weight: normal !important;
+    font-family: inherit !important;
+}
