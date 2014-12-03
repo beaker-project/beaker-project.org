@@ -1,28 +1,19 @@
 SHELL = /bin/bash
-BEAKER = beaker-branches/master
-BEAKER_GIT = .git/modules/beaker-branches/master
-SPHINXBUILD = $(shell command -v sphinx-1.0-build sphinx-build)
-SPHINXBUILDOPTS =
+BEAKER = ../beaker
+BEAKER_GIT = $(BEAKER)/.git
 
 # Symbolic targets defined in this Makefile:
-# 	all-docs: 	all branches of the Sphinx docs from Beaker git
 # 	all-website: 	all the web site bits, *except* yum repos
 # 	all:		all of the above, plus yum repos
 .PHONY: all
-all: all-docs all-website yum
+all: all-website yum
 
 include downloads.mk
 include old-downloads.mk
 include changelogs.mk
 
-include docs.mk # defines all-docs target
-
-# treat warnings as errors only for the released docs
-docs: SPHINXBUILDOPTS += -W
-
 .PHONY: all-website
 all-website: \
-     dev \
      releases/SHA1SUM \
      releases/index.html \
      releases/index.atom \
@@ -34,31 +25,17 @@ all-website: \
      in-a-box/beaker-distros.html \
      in-a-box/beaker-virt.html \
 
-docs.mk: beaker-branches generate-docs-mk.sh
-	./generate-docs-mk.sh >$@
-
-.PHONY: dev
-dev: SPHINXBUILDOPTS += -W
-dev:
-	$(SPHINXBUILD) $(SPHINXBUILDOPTS) -c $@ -b html ./dev/ $@/
-
-.PHONY:
-git-rev-beaker-master:
-	read old_sha <$@ ; \
-	new_sha=$$(git ls-tree HEAD beaker-branches/master | awk '{ print $$3 }') && \
-	if [[ $$old_sha != $$new_sha ]] ; then echo $$new_sha >$@ ; fi
-
-downloads.mk: git-rev-beaker-master generate-downloads-mk.py git_tags.py
+downloads.mk: generate-downloads-mk.py git_tags.py
 	./generate-downloads-mk.py $(BEAKER_GIT) >$@
 
-changelogs.mk: git-rev-beaker-master generate-changelogs-mk.py git_tags.py
+changelogs.mk: generate-changelogs-mk.py git_tags.py
 	./generate-changelogs-mk.py $(BEAKER_GIT) >$@
 
-releases/index.html: git-rev-beaker-master releases/SHA1SUM generate-releases-index.py git_tags.py docs
+releases/index.html: releases/SHA1SUM generate-releases-index.py git_tags.py
 	mkdir -p $(dir $@)
 	./generate-releases-index.py --format=html $(BEAKER_GIT) >$@
 
-releases/index.atom: git-rev-beaker-master releases/SHA1SUM generate-releases-index.py git_tags.py
+releases/index.atom: releases/SHA1SUM generate-releases-index.py git_tags.py
 	mkdir -p $(dir $@)
 	./generate-releases-index.py --format=atom $(BEAKER_GIT) >$@
 
@@ -103,4 +80,4 @@ check:
 	./check-yum-repos.py
 
 clean:
-	rm -f changelogs.mk docs.mk downloads.mk releases/SHA1SUM releases/index.* in-a-box/*.html
+	rm -f changelogs.mk downloads.mk releases/SHA1SUM releases/index.* in-a-box/*.html
