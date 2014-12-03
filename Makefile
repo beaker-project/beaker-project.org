@@ -108,5 +108,4 @@ check:
 	./check-yum-repos.py
 
 clean:
-	rm changelogs.mk docs.mk downloads.mk
-	rm releases/SHA1SUM releases/index.*
+	rm -f changelogs.mk docs.mk downloads.mk releases/SHA1SUM releases/index.* in-a-box/*.html
