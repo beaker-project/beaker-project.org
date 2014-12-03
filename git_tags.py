@@ -21,6 +21,14 @@ class Release(object):
         return 'beaker-%s-ChangeLog' % self.version
 
     @property
+    def relnotes_href(self):
+        if self.version == self.major + '.0':
+            return '../docs/whats-new/#beaker-%s' % self.major.replace('.', '-')
+        else:
+            return '../docs/whats-new/release-%s.html#beaker-%s' % (self.major,
+                    self.version.replace('.', '-'))
+
+    @property
     def major(self):
         if self.version.startswith('0.'):
             return '.'.join(self.version.split('.')[:2])

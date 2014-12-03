@@ -15,21 +15,6 @@ from genshi.template import MarkupTemplate
 
 import git_tags
 
-def major_blurb(major):
-    section_id = 'beaker-%s' % (major.replace('.', '-'))
-    tree = lxml.html.parse('docs/whats-new/index.html')
-    blurb = tree.find('//div[@id="%s"]/p[1]' % section_id)
-    if blurb is None:
-        return None
-    if len(blurb):
-        blurb[-1].tail = (blurb[-1].tail or '') + ' '
-    else:
-        blurb.text = (blurb.text or '') + ' '
-    more_link = lxml.html.Element('a', style='font-style: italic;', href='../docs/whats-new/#%s' % section_id)
-    more_link.text = u'(more\u2026)'
-    blurb.append(more_link)
-    return Markup(lxml.html.tostring(blurb))
-
 _sha1sums = dict((line[42:].rstrip('\n'), line[:40]) for line in open('releases/SHA1SUM'))
 def sha1(filename):
     return _sha1sums[filename]
@@ -53,11 +38,11 @@ html_template = MarkupTemplate('''
         display: inline-block;
         font-size: 1em;
     }
-    .date:before, .changelog-link:before {
+    .date:before, .relnotes-link:before, .changelog-link:before {
         content: "·";
         margin-right: 0.3em;
     }
-    .date, .changelog-link {
+    .date, .relnotes-link, .changelog-link {
         display: inline-block;
         margin-left: 0.4em;
     }
@@ -104,12 +89,14 @@ html_template = MarkupTemplate('''
 
 <section py:for="major, releases in groupby(releases, lambda r: r.major)">
 <h2>Beaker ${major}</h2>
-${major_blurb(major)}
 
 <article class="release hentry" py:for="release in releases" id="beaker-${release.version}-1">
     <h2 class="entry-title">Beaker ${release.version}</h2>
     <div class="date">
         <time datetime="${release.timestamp}" pubdate="pubdate">${release.timestamp.strftime('%-1d %B %Y')}</time>
+    </div>
+    <div class="relnotes-link">
+        <a href="${release.relnotes_href}">Release notes</a>
     </div>
     <div class="changelog-link">
         <a href="${release.changelog_href}">Change log</a>
@@ -158,6 +145,7 @@ atom_template = MarkupTemplate('''
     <title type="text">Beaker ${release.version}</title>
     <content type="xhtml">
     <div xmlns="http://www.w3.org/1999/xhtml">
+        <p><a href="${release.relnotes_href}">Release notes</a></p>
         <p><a href="${release.changelog_href}">Change log</a></p>
         <p py:for="download in release.downloads">
             <a href="${download}">${download}</a><br />
