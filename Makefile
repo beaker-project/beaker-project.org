@@ -11,6 +11,11 @@ all: all-website yum
 include downloads.mk
 include old-downloads.mk
 include changelogs.mk
+INABOX = \
+     in-a-box/beaker.ks.html \
+     in-a-box/beaker-setup.html \
+     in-a-box/beaker-distros.html \
+     in-a-box/beaker-virt.html
 
 .PHONY: all-website
 all-website: \
@@ -20,10 +25,7 @@ all-website: \
      $(DOWNLOADS) \
      $(OLD_DOWNLOADS) \
      $(CHANGELOGS) \
-     in-a-box/beaker.ks.html \
-     in-a-box/beaker-setup.html \
-     in-a-box/beaker-distros.html \
-     in-a-box/beaker-virt.html \
+     $(INABOX)
 
 downloads.mk: generate-downloads-mk.py git_tags.py
 	./generate-downloads-mk.py $(BEAKER_GIT) >$@
@@ -80,4 +82,4 @@ check:
 	./check-yum-repos.py
 
 clean:
-	rm -f changelogs.mk downloads.mk releases/SHA1SUM releases/index.* in-a-box/*.html
+	rm -f changelogs.mk downloads.mk releases/SHA1SUM releases/index.* $(INABOX)
