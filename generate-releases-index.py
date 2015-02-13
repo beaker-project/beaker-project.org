@@ -75,7 +75,9 @@ html_template = MarkupTemplate('''
       <a href="../"><img src="../images/logo.png" alt="Beaker" width="110" height="40" /></a>
     </div>
     <nav class="menu">
-      <a href="../">about</a>
+      <form class="search" method="get" action="../search.html">
+        <input type="search" name="q" placeholder="search" />
+      </form>
       <a href="../docs/">help</a>
       <a href="../dev/">develop</a>
       <a href="../download.html">download</a>
