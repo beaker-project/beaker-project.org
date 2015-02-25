@@ -145,7 +145,7 @@ class TargetRepo(object):
         for rpm in rpms:
             if rpm['arch'] not in self.arches + ['noarch', 'src']:
                 continue
-            if rpm['name'] not in self.rpm_names:
+            if rpm['name'] not in self.rpm_names and rpm['arch'] != 'src':
                 continue
             filename = os.path.join(self.basedir, 'rpms',
                     os.path.basename(pathinfo.rpm(rpm)))
