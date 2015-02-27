@@ -3,11 +3,15 @@
 
 # These are the tasks which we will fetch and upload to Beaker below.
 rpms="
-    http://beaker-project.org/tasks/beaker-distribution-install-1.10-15.noarch.rpm
-    http://beaker-project.org/tasks/beaker-distribution-inventory-1.1-57.noarch.rpm
-    http://beaker-project.org/tasks/beaker-distribution-reservesys-2.0-52.noarch.rpm
-    http://beaker-project.org/tasks/beaker-distribution-updateDistro-1.2-1.noarch.rpm
-    http://beaker-project.org/tasks/rh-tests-kernel-distribution-ltp-nfs-1.0-0.noarch.rpm
+    https://beaker-project.org/tasks/beaker-distribution-install-1.12-1.noarch.rpm
+    https://beaker-project.org/tasks/beaker-distribution-inventory-1.2-4.noarch.rpm
+    https://beaker-project.org/tasks/beaker-distribution-reservesys-3.4-5.noarch.rpm
+    https://beaker-project.org/tasks/beaker-distribution-updateDistro-1.2-1.noarch.rpm
+    https://beaker-project.org/tasks/distribution-distribution-command-1.1-4.noarch.rpm
+    https://beaker-project.org/tasks/distribution-distribution-utils-dummy-1.0-3.noarch.rpm
+    https://beaker-project.org/tasks/distribution-distribution-virt-install-4.0-86.noarch.rpm
+    https://beaker-project.org/tasks/distribution-distribution-virt-start-2.0-1.noarch.rpm
+    https://beaker-project.org/tasks/rh-tests-kernel-distribution-ltp-nfs-1.0-0.noarch.rpm
 "
 
 # We need to collect a few details from the user.
@@ -15,10 +19,8 @@ echo "This script will do the following"
 echo " - backup /etc/my.cnf and replace it with new defaults."
 echo " - create the beaker DB, DB user and initialize the DB."
 echo " - Add lab controller account for this machine."
-echo " - Add the following tasks to the scheduler"
-echo "   - /distribution/install"
-echo "   - /distribution/reservesys"
-echo "   - /distribution/inventory"
+echo " - Add some standard tasks to the scheduler"
+echo "   (see https://beaker-project.org/docs/user-guide/beaker-provided-tasks.html)"
 echo -n "Do you want to proceed? (y/n) "
 read answer
 if [ "$answer" != "y" -a $answer != "Y" ]; then
