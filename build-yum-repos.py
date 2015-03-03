@@ -139,7 +139,6 @@ class TargetRepo(object):
             self.rpm_filenames.add(os.path.basename(filename))
 
     def _mirror_rpms_for_build(self, builds, rpms):
-        print 'Mirroring RPMs from %s' % self.topurl
         pathinfo = koji.PathInfo(self.topurl)
         builds = dict((build['build_id'], build) for build in builds)
         for rpm in rpms:
