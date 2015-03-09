@@ -259,7 +259,8 @@ def target_repos_from_config(*config_filenames):
                 repos[descr].add_package(package_name, rpm_names.split(), tag)
                 # appending -candidate here is perhaps an unwise hack...
                 # we just need to work towards eliminating these exceptional sections
-                testing_repos[descr].add_package(package_name, rpm_names.split(), tag + '-candidate')
+                testing_tag = tag + '-candidate' if not tag.endswith('-candidate') else tag
+                testing_repos[descr].add_package(package_name, rpm_names.split(), testing_tag)
         elif rest == 'scratch-builds':
             for identifier, rpm_names in config.items(section):
                 scratch_build_ids = config.get('scratch_build_ids', identifier).split()
