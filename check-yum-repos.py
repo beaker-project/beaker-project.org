@@ -57,9 +57,11 @@ def check_deps(base, local_repo, repo_urls, arches, build_deps=False,
             print str(pkg)
             for breakage in broken:
                 print '    ' + repr(breakage)
-        sys.exit(1)
+        return True
+    return False
 
 def checks_from_config(base, config):
+    failed = False
     for section in config.sections():
         local_repo, _, descr = section.partition('.')
         print 'Checking dependencies for %s' % section
@@ -71,7 +73,9 @@ def checks_from_config(base, config):
         ignored_breakages = frozenset()
         if config.has_option(section, 'ignored-breakages'):
             ignored_breakages = frozenset(config.get(section, 'ignored-breakages').split())
-        check_deps(base, local_repo, repos, arches, build_deps, ignored_breakages)
+        failed |= check_deps(base, local_repo, repos, arches, build_deps, ignored_breakages)
+    if failed:
+        sys.exit(1)
 
 if __name__ == '__main__':
     from optparse import OptionParser
