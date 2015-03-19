@@ -19,7 +19,7 @@
       <form class="search" method="get" action="{{ pathto('../search.html', 1) }}">
         <input type="search" name="q" placeholder="search" />
       </form>
-      <a href="{{ pathto('../docs/', 1) }}"{% if shorttitle == 'Beaker' and pagename == 'index' %} class="active"{% endif %}>help</a>
+      <a href="{{ pathto('../docs/', 1) }}"{% if shorttitle == 'Beaker' and pagename == 'index' %} class="active"{% endif %}>docs</a>
       <a href="{{ pathto('../dev/', 1) }}"{% if shorttitle == 'Beaker development' and pagename == 'index' %} class="active"{% endif %}>develop</a>
       <a href="{{ pathto('../download.html', 1) }}">download</a>
     </nav>
