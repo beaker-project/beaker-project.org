@@ -44,8 +44,6 @@ class TargetRepo(object):
         self.package_names = set()
         self.package_tags = {}
         self.rpm_names = set()
-        self.buildarch_task_ids = set()
-        self.manual_builds = set()
         self.rpm_filenames = set()
 
     def __repr__(self):
@@ -61,23 +59,6 @@ class TargetRepo(object):
         if tag:
             self.package_tags[package_name] = tag
 
-    def add_scratch_build(self, buildarch_task_id, rpm_names):
-        """
-        Use this if you need to grab a package built in a Koji scratch build,
-        instead of a normal tagged build.
-        Pass the id of the buildArch task (not the build task!)
-        """
-        self.buildarch_task_ids.add(int(buildarch_task_id))
-        self.rpm_names.update(rpm_names)
-
-    def add_manual_build(self, rpm_glob, rpm_names):
-        """
-        Use this if you need to add packages that were built outside of
-        koji or brew.
-        """
-        self.manual_builds.add(rpm_glob)
-        self.rpm_names.update(rpm_names)
-
     def build(self, dest):
         self.basedir = dest
         self._mirror_all_rpms()
@@ -87,7 +68,6 @@ class TargetRepo(object):
         print 'Mirroring RPMs for %r' % self
         ensure_dir(os.path.join(self.basedir, 'rpms'))
         koji_session = koji.ClientSession(self.hub_url)
-        # normal tagged builds
         package_names = list(self.package_names)
         koji_session.multicall = True
         for package_name in package_names:
@@ -107,36 +87,6 @@ class TargetRepo(object):
                         self.package_tags.get(package_names[i], self.tag)))
             (rpms, builds), = result
             self._mirror_rpms_for_build(builds, rpms)
-        # scratch builds by task id
-        task_ids = list(self.buildarch_task_ids)
-        koji_session.multicall = True
-        for task_id in task_ids:
-            koji_session.listTaskOutput(task_id)
-        for task_id, result in zip(task_ids, koji_session.multiCall()):
-            if 'faultCode' in result:
-                raise xmlrpclib.Fault(result['faultCode'], result['faultString'])
-            filenames, = result
-            if not filenames:
-                raise ValueError('No output files for task %d -- scratch build expired?' % task_id)
-            self._mirror_rpms_for_task(koji_session, task_id, filenames)
-        # manual builds by file glob
-        manual_builds = list(self.manual_builds)
-        for manual_build in manual_builds:
-            rpms = glob.glob(manual_build)
-            if not rpms:
-                raise ValueError('No output files for manual glob %s -- mispelled?' % manual_build)
-            self._mirror_rpms_for_manual(rpms)
-
-    def _mirror_rpms_for_manual(self, rpms):
-        for rpm in rpms:
-            filename = os.path.join(self.basedir, 'rpms',
-                    os.path.basename(rpm))
-            if os.path.exists(filename):
-                print 'Skipping %s' % filename
-            else:
-                print 'Copying %s' % rpm
-                shutil.copyfileobj(open(rpm, 'r'), open(filename, 'w'))
-            self.rpm_filenames.add(os.path.basename(filename))
 
     def _mirror_rpms_for_build(self, builds, rpms):
         pathinfo = koji.PathInfo(self.topurl)
@@ -226,8 +176,6 @@ def target_repos_from_config(*config_filenames):
     testing_repos = {}
     skipped = set()
     for section in sorted(config.sections()):
-        if section == 'scratch_build_ids':
-            continue # skip it
         descr, _, rest = section.partition('.')
         if not rest:
             hub_url = koji_config.get(config.get(section, 'source'), 'server')
@@ -261,16 +209,6 @@ def target_repos_from_config(*config_filenames):
                 # we just need to work towards eliminating these exceptional sections
                 testing_tag = tag + '-candidate' if not tag.endswith('-candidate') else tag
                 testing_repos[descr].add_package(package_name, rpm_names.split(), testing_tag)
-        elif rest == 'scratch-builds':
-            for identifier, rpm_names in config.items(section):
-                scratch_build_ids = config.get('scratch_build_ids', identifier).split()
-                for scratch_build_id in scratch_build_ids:
-                    repos[descr].add_scratch_build(scratch_build_id, rpm_names.split() or [identifier])
-                    testing_repos[descr].add_scratch_build(scratch_build_id, rpm_names.split() or [identifier])
-        elif rest == 'manual-builds':
-            for glob, rpm_names in config.items(section):
-                repos[descr].add_manual_build(glob, rpm_names.split())
-                testing_repos[descr].add_manual_build(glob, rpm_names.split())
         else:
             raise ValueError('Unrecognised section: %s' % rest)
     for descr in skipped:
