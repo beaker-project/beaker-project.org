@@ -33,16 +33,18 @@ class TargetRepo(object):
     then call build() to do it.
     """
 
-    def __init__(self, name, distro, tag, arches, downgradeable, hub_url, topurl):
+    def __init__(self, name, distro, tag, arches, downgradeable, all_packages, hub_url, topurl):
         self.name = name
         self.distro = distro
         self.tag = tag
         self.arches = arches
         self.downgradeable = downgradeable
+        self.all_packages = all_packages
         self.hub_url = hub_url
         self.topurl = topurl
         self.package_names = set()
         self.package_tags = {}
+        self.excluded_rpms = set()
         self.rpm_names = set()
         self.rpm_filenames = set()
 
@@ -59,6 +61,9 @@ class TargetRepo(object):
         if tag:
             self.package_tags[package_name] = tag
 
+    def add_excluded_rpm(self, rpm_name):
+        self.excluded_rpms.add(rpm_name)
+
     def build(self, dest):
         self.basedir = dest
         self._mirror_all_rpms()
@@ -68,8 +73,13 @@ class TargetRepo(object):
         print 'Mirroring RPMs for %r' % self
         ensure_dir(os.path.join(self.basedir, 'rpms'))
         koji_session = koji.ClientSession(self.hub_url)
-        package_names = list(self.package_names)
         koji_session.multicall = True
+        if self.all_packages:
+            if self.downgradeable:
+                koji_session.listTaggedRPMS(self.tag, inherit=True)
+            else:
+                koji_session.getLatestRPMS(self.tag)
+        package_names = list(self.package_names)
         for package_name in package_names:
             if self.downgradeable:
                 koji_session.listTaggedRPMS(
@@ -79,7 +89,18 @@ class TargetRepo(object):
                 koji_session.getLatestRPMS(
                         self.package_tags.get(package_name, self.tag),
                         package_name)
-        for i, result in enumerate(koji_session.multiCall()):
+        results = koji_session.multiCall()
+        if self.all_packages:
+            result = results.pop(0)
+            if 'faultCode' in result:
+                raise xmlrpclib.Fault(result['faultCode'], result['faultString'])
+            if not result:
+                raise ValueError('No packages in tag %s' % self.tag)
+            for rpms, builds in result:
+                self.rpm_names.update(rpm['name'] for rpm in rpms
+                        if rpm['name'] not in self.excluded_rpms)
+                self._mirror_rpms_for_build(builds, rpms)
+        for i, result in enumerate(results):
             if 'faultCode' in result:
                 raise xmlrpclib.Fault(result['faultCode'], result['faultString'])
             if not result or not result[0] or not result[0][1]:
@@ -183,20 +204,29 @@ def target_repos_from_config(*config_filenames):
             downgradeable = True
             if config.has_option(section, 'downgradeable'):
                 downgradeable = config.getboolean(section, 'downgradeable')
+            all_packages = False
+            if config.has_option(section, 'all-packages'):
+                all_packages = config.getboolean(section, 'all-packages')
             repos[descr] = TargetRepo(name=config.get(section, 'name'),
                     distro=config.get(section, 'distro'),
                     arches=config.get(section, 'arches').split(),
                     tag=config.get(section, 'tag'),
                     downgradeable=downgradeable,
+                    all_packages=all_packages,
                     hub_url=hub_url, topurl=topurl)
             testing_repos[descr] = TargetRepo(name=config.get(section, 'testing-name'),
                     distro=config.get(section, 'distro'),
                     arches=config.get(section, 'arches').split(),
                     tag=config.get(section, 'testing-tag'),
                     downgradeable=downgradeable,
+                    all_packages=all_packages,
                     hub_url=hub_url, topurl=topurl)
             if config.has_option(section, 'skip') and config.getboolean(section, 'skip'):
                 skipped.add(descr)
+            if config.has_option(section, 'excluded-rpms'):
+                for name in config.get(section, 'excluded-rpms').split():
+                    repos[descr].add_excluded_rpm(name)
+                    testing_repos[descr].add_excluded_rpm(name)
         elif rest == 'packages':
             for package_name, rpm_names in config.items(section):
                 repos[descr].add_package(package_name, rpm_names.split())
