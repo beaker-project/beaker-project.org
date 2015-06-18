@@ -58,10 +58,12 @@
 /yum/server/Fedora18/
 /yum/server/Fedora19/
 /yum/server/Fedora21/
+/yum/server/Fedora22/
 /yum/server/RedHatEnterpriseLinux6/
 /yum/server/RedHatEnterpriseLinux7/
 /yum/server-testing/Fedora18/
 /yum/server-testing/Fedora19/
 /yum/server-testing/Fedora21/
+/yum/server-testing/Fedora22/
 /yum/server-testing/RedHatEnterpriseLinux6/
 /yum/server-testing/RedHatEnterpriseLinux7/
