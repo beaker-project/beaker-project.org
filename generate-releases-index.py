@@ -78,7 +78,7 @@ html_template = MarkupTemplate('''
       <form class="search" method="get" action="../search.html">
         <input type="search" name="q" placeholder="search" />
       </form>
-      <a href="../docs/">help</a>
+      <a href="../docs/">docs</a>
       <a href="../dev/">develop</a>
       <a href="../download.html">download</a>
     </nav>
