@@ -26,9 +26,17 @@
 /yum/client/RedHatEnterpriseLinux5/
 /yum/client/RedHatEnterpriseLinux6/
 /yum/client/RedHatEnterpriseLinux7/
+/yum/client/Fedora18/
+/yum/client/Fedora19/
+/yum/client/Fedora21/
+/yum/client/Fedora22/
 /yum/client-testing/RedHatEnterpriseLinux5/
 /yum/client-testing/RedHatEnterpriseLinux6/
 /yum/client-testing/RedHatEnterpriseLinux7/
+/yum/client-testing/Fedora18/
+/yum/client-testing/Fedora19/
+/yum/client-testing/Fedora21/
+/yum/client-testing/Fedora22/
 /yum/harness/Fedora16/
 /yum/harness/Fedora17/
 /yum/harness/Fedora18/
