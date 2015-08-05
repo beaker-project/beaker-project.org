@@ -3,7 +3,7 @@
 
 # These are the tasks which we will fetch and upload to Beaker below.
 rpms="
-    https://beaker-project.org/tasks/beaker-distribution-install-1.12-1.noarch.rpm
+    https://beaker-project.org/tasks/beaker-distribution-install-1.12-2.noarch.rpm
     https://beaker-project.org/tasks/beaker-distribution-inventory-1.2-4.noarch.rpm
     https://beaker-project.org/tasks/beaker-distribution-reservesys-3.4-5.noarch.rpm
     https://beaker-project.org/tasks/beaker-distribution-updateDistro-1.2-1.noarch.rpm
