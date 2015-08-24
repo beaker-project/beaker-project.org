@@ -37,6 +37,7 @@
 /yum/client-testing/Fedora19/
 /yum/client-testing/Fedora21/
 /yum/client-testing/Fedora22/
+/yum/harness/Fedora15/
 /yum/harness/Fedora16/
 /yum/harness/Fedora17/
 /yum/harness/Fedora18/
@@ -51,6 +52,7 @@
 /yum/harness/RedHatEnterpriseLinux5/
 /yum/harness/RedHatEnterpriseLinux6/
 /yum/harness/RedHatEnterpriseLinux7/
+/yum/harness-testing/Fedora15/
 /yum/harness-testing/Fedora16/
 /yum/harness-testing/Fedora17/
 /yum/harness-testing/Fedora18/
