@@ -20,6 +20,7 @@ INABOX = \
 .PHONY: all-website
 all-website: \
      releases/SHA1SUM \
+     releases/SHA256SUM \
      releases/index.html \
      releases/index.atom \
      $(DOWNLOADS) \
@@ -33,11 +34,11 @@ downloads.mk: generate-downloads-mk.py git_tags.py
 changelogs.mk: generate-changelogs-mk.py git_tags.py
 	./generate-changelogs-mk.py $(BEAKER_GIT) >$@
 
-releases/index.html: releases/SHA1SUM generate-releases-index.py git_tags.py
+releases/index.html: releases/SHA256SUM generate-releases-index.py git_tags.py
 	mkdir -p $(dir $@)
 	./generate-releases-index.py --format=html $(BEAKER_GIT) >$@
 
-releases/index.atom: releases/SHA1SUM generate-releases-index.py git_tags.py
+releases/index.atom: releases/SHA256SUM generate-releases-index.py git_tags.py
 	mkdir -p $(dir $@)
 	./generate-releases-index.py --format=atom $(BEAKER_GIT) >$@
 
@@ -70,6 +71,10 @@ releases/SHA1SUM: $(DOWNLOADS) $(OLD_DOWNLOADS)
 	mkdir -p $(dir $@)
 	( cd $(dir $@) && ls -rv $(notdir $(DOWNLOADS)) $(notdir $(OLD_DOWNLOADS)) | xargs sha1sum ) >$@
 
+releases/SHA256SUM: $(DOWNLOADS) $(OLD_DOWNLOADS)
+	mkdir -p $(dir $@)
+	( cd $(dir $@) && ls -rv $(notdir $(DOWNLOADS)) $(notdir $(OLD_DOWNLOADS)) | xargs sha256sum ) >$@
+
 yum::
 	./build-yum-repos.py --config yum-repos.conf --dest $@
 
@@ -82,4 +87,4 @@ check:
 	./check-yum-repos.py
 
 clean:
-	rm -f changelogs.mk downloads.mk releases/SHA1SUM releases/index.* $(INABOX)
+	rm -f changelogs.mk downloads.mk releases/SHA1SUM releases/SHA256SUM releases/index.* $(INABOX)
