@@ -15,9 +15,9 @@ from genshi.template import MarkupTemplate
 
 import git_tags
 
-_sha1sums = dict((line[42:].rstrip('\n'), line[:40]) for line in open('releases/SHA1SUM'))
-def sha1(filename):
-    return _sha1sums[filename]
+_checksums = dict(reversed(line.rstrip('\n').split()) for line in open('releases/SHA256SUM'))
+def checksum(filename):
+    return _checksums[filename]
 
 html_template = MarkupTemplate('''
 <html xmlns="http://www.w3.org/1999/xhtml"
@@ -111,7 +111,7 @@ html_template = MarkupTemplate('''
         <p py:for="download in release.downloads"
            class="download ${'.tar' in download and 'tarball' or ''} ${'.patch' in download and 'patch' or ''}">
             <a href="${download}">${download}</a><br />
-            <span class="hash">SHA1: <tt>${sha1(download)}</tt></span>
+            <span class="hash">SHA256: <tt>${checksum(download)}</tt></span>
         </p>
     </div>
 </article>
@@ -151,7 +151,7 @@ atom_template = MarkupTemplate('''
         <p><a href="${release.changelog_href}">Change log</a></p>
         <p py:for="download in release.downloads">
             <a href="${download}">${download}</a><br />
-            <span class="hash">SHA1: <tt>${sha1(download)}</tt></span>
+            <span class="hash">SHA256: <tt>${checksum(download)}</tt></span>
         </p>
     </div>
     </content>
