@@ -15,7 +15,7 @@ import imp
 repoclosure = imp.load_source('repoclosure', '/usr/bin/repoclosure') # from yum-utils
 
 def check_deps(base, local_repo, repo_urls, arches, build_deps=False,
-        ignored_breakages=frozenset()):
+        ignored_packages=frozenset(), ignored_breakages=frozenset()):
     closure_arches = ['noarch'] + arches
     if build_deps:
         closure_arches.append('src')
@@ -37,8 +37,11 @@ def check_deps(base, local_repo, repo_urls, arches, build_deps=False,
         rc.add_enable_repo(repo_url.replace('/', '-'), baseurls=[repo_url])
     rc.readMetadata()
     # Only check deps for our local repo, not the entire distro
-    rc.pkgonly = list(set(pkg.name for pkg in
-            rc.repos.getRepo(local_repo_id).getPackageSack().returnNewestByNameArch()))
+    only_pkgs = set(pkg.name for pkg in
+            rc.repos.getRepo(local_repo_id).getPackageSack().returnNewestByNameArch())
+    # Also skip any ignored packages
+    only_pkgs.difference_update(ignored_packages)
+    rc.pkgonly = list(only_pkgs)
     broken_deps = rc.getBrokenDeps()
 
     for pkg in broken_deps:
@@ -94,10 +97,14 @@ def checks_from_config(base, config):
         build_deps = False
         if config.has_option(section, 'build-deps'):
             build_deps = config.getboolean(section, 'build-deps')
+        ignored_packages = frozenset()
+        if config.has_option(section, 'ignored-packages'):
+            ignored_packages = frozenset(config.get(section, 'ignored-packages').split())
         ignored_breakages = frozenset()
         if config.has_option(section, 'ignored-breakages'):
             ignored_breakages = frozenset(config.get(section, 'ignored-breakages').split())
-        failed |= check_deps(base, local_repo, repos, arches, build_deps, ignored_breakages)
+        failed |= check_deps(base, local_repo, repos, arches, build_deps,
+                ignored_packages, ignored_breakages)
 
     # This is a particular edge case which we check for specifically, because 
     # it's not covered by the general repoclosure check above. We need to 
