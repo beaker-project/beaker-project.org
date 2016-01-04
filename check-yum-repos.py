@@ -8,6 +8,7 @@ import sys
 import os, os.path
 from ConfigParser import SafeConfigParser
 import urlparse
+import yum
 
 # XXX dodgy
 import imp
@@ -21,10 +22,6 @@ def check_deps(base, local_repo, repo_urls, arches, build_deps=False,
     rc = repoclosure.RepoClosure(arch=closure_arches, config='/etc/yum/yum.conf')
     rc.setCacheDir(True)
     rc.repos.disableRepo('*')
-    if not urlparse.urlparse(base).scheme:
-        base = 'file://' + os.path.abspath(base)
-    if not base.endswith('/'):
-        base += '/' # it's supposed to be a dir
     local_repo_url = urlparse.urljoin(base, local_repo)
     local_repo_id = local_repo_url.replace('/', '-')
     rc.add_enable_repo(local_repo_id, baseurls=[local_repo_url])
@@ -60,8 +57,35 @@ def check_deps(base, local_repo, repo_urls, arches, build_deps=False,
         return True
     return False
 
+def check_rhts_version_match(base, client_repo, harness_repo):
+    yb = yum.YumBase()
+    yb.doConfigSetup(fn='/etc/yum/yum.conf', init_plugins=False)
+    yb.setCacheDir(True)
+    yb.repos.disableRepo('*')
+    client_repo_url = urlparse.urljoin(base, client_repo)
+    client_repo_id = client_repo_url.replace('/', '-')
+    yb.add_enable_repo(client_repo_id, baseurls=[client_repo_url])
+    harness_repo_url = urlparse.urljoin(base, harness_repo)
+    harness_repo_id = harness_repo_url.replace('/', '-')
+    yb.add_enable_repo(harness_repo_id, baseurls=[harness_repo_url])
+    pkgs = yb.pkgSack.returnNewestByName(patterns=['rhts*'])
+    versions = set(pkg['version'] for pkg in pkgs)
+    if len(versions) > 1:
+        print 'Mismatched rhts versions across %s and %s:' % (client_repo, harness_repo)
+        for pkg in pkgs:
+            print '    ' + str(pkg)
+        return True
+    return False
+
 def checks_from_config(base, config):
     failed = False
+
+    # Convert base to absolute URL
+    if not urlparse.urlparse(base).scheme:
+        base = 'file://' + os.path.abspath(base)
+    if not base.endswith('/'):
+        base += '/' # it's supposed to be a dir
+
     for section in config.sections():
         local_repo, _, descr = section.partition('.')
         print 'Checking dependencies for %s' % section
@@ -74,6 +98,26 @@ def checks_from_config(base, config):
         if config.has_option(section, 'ignored-breakages'):
             ignored_breakages = frozenset(config.get(section, 'ignored-breakages').split())
         failed |= check_deps(base, local_repo, repos, arches, build_deps, ignored_breakages)
+
+    # This is a particular edge case which we check for specifically, because 
+    # it's not covered by the general repoclosure check above. We need to 
+    # ensure that the highest version of rhts matches across client and harness 
+    # repos, otherwise users who have both client and harness configured on 
+    # their system will have upgrade failures like this:
+    # http://post-office.corp.redhat.com/archives/beaker-user-list/2015-December/msg00044.html
+    client_distros = set()
+    for section in config.sections():
+        local_repo, _, descr = section.partition('.')
+        repotype, _, distro = local_repo.partition('/')
+        if repotype == 'client':
+            client_distros.add(distro)
+    for client_distro in client_distros:
+        # For every client repo we have, there should be a matching harness repo
+        client_repo = 'client/%s' % client_distro
+        harness_repo = 'harness/%s' % client_distro
+        print 'Checking rhts versions for %s and %s' % (client_repo, harness_repo)
+        failed |= check_rhts_version_match(base, client_repo, harness_repo)
+
     if failed:
         sys.exit(1)
 
