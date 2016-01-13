@@ -10,6 +10,7 @@ various yum repos for Beaker.
 
 import sys
 import os, os.path
+import glob
 import errno
 import re
 import shutil
@@ -184,8 +185,9 @@ def target_repos_from_config(*config_filenames):
     # We need the hub and package URLs for Koji and Brew.
     # We can load those from the relevant config files.
     koji_config = SafeConfigParser()
-    koji_config.read(['/etc/brewkoji.conf', '/etc/koji.conf',
-            os.path.expanduser('~/.koji/config')])
+    koji_config.read(['/etc/brewkoji.conf', '/etc/koji.conf'] +
+            glob.glob('/etc/koji.conf.d/*.conf') +
+            [os.path.expanduser('~/.koji/config')])
 
     config = SafeConfigParser()
     config.optionxform = str # package names are case sensitive
