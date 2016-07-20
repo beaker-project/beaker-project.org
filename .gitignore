@@ -15,10 +15,6 @@
 /docs-*/
 /downloads.mk
 /git-rev*
-/in-a-box/beaker.ks.html
-/in-a-box/beaker-setup.html
-/in-a-box/beaker-distros.html
-/in-a-box/beaker-virt.html
 /old-downloads.mk
 /releases/
 /schema/

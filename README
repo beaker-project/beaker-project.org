@@ -21,4 +21,3 @@ Dependencies
 ------------
 
 * python-dulwich (to generate release changelogs)
-* rubygem-rdiscount ( to install markdown for shocco)

@@ -11,11 +11,6 @@ all: all-website yum
 include downloads.mk
 include old-downloads.mk
 include changelogs.mk
-INABOX = \
-     in-a-box/beaker.ks.html \
-     in-a-box/beaker-setup.html \
-     in-a-box/beaker-distros.html \
-     in-a-box/beaker-virt.html
 
 .PHONY: all-website
 all-website: \
@@ -25,8 +20,7 @@ all-website: \
      releases/index.atom \
      $(DOWNLOADS) \
      $(OLD_DOWNLOADS) \
-     $(CHANGELOGS) \
-     $(INABOX)
+     $(CHANGELOGS)
 
 downloads.mk: generate-downloads-mk.py git_tags.py
 	./generate-downloads-mk.py $(BEAKER_GIT) >$@
@@ -78,13 +72,10 @@ releases/SHA256SUM: $(DOWNLOADS) $(OLD_DOWNLOADS)
 yum::
 	./build-yum-repos.py --config yum-repos.conf --dest $@
 
-in-a-box/%.html: in-a-box/% shocco.sh
-	./shocco.sh $< >$@
-
 .PHONY: check clean
 check:
 # ideas: spell check everything, validate HTML, check for broken links, run sphinx linkcheck builder
 	./check-yum-repos.py
 
 clean:
-	rm -f changelogs.mk downloads.mk releases/SHA1SUM releases/SHA256SUM releases/index.* $(INABOX)
+	rm -f changelogs.mk downloads.mk releases/SHA1SUM releases/SHA256SUM releases/index.*
