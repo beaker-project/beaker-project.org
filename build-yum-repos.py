@@ -25,6 +25,10 @@ import koji
 import xmlrpclib
 import createrepo # needs createrepo >= 0.9
 
+# This is the GPG key id of the Beaker signing key,
+# as it is known to Koji (8 characters lower case).
+GPG_KEY_ID = '4df16b33'
+
 def ensure_dir(path):
     if not os.path.exists(path):
         os.makedirs(path)
@@ -55,13 +59,14 @@ class TargetRepo(object):
     then call build() to do it.
     """
 
-    def __init__(self, name, distro, tag, arches, downgradeable, all_packages, hub_url, topurl):
+    def __init__(self, name, distro, tag, arches, downgradeable, all_packages, signed, hub_url, topurl):
         self.name = name
         self.distro = distro
         self.tag = tag
         self.arches = arches
         self.downgradeable = downgradeable
         self.all_packages = all_packages
+        self.signed = signed
         self.hub_url = hub_url
         self.topurl = topurl
         self.package_names = set()
@@ -142,13 +147,26 @@ class TargetRepo(object):
                 continue
             filename = os.path.join(self.output_dir,
                     os.path.basename(pathinfo.rpm(rpm)))
-            if os.path.exists(filename) and os.path.getsize(filename) == rpm['size']:
-                print 'Skipping %s' % filename
+            if self.signed:
+                # For signed RPMs, the actual file we want to download is 
+                # always *bigger* than the size indicated in Koji. Koji only 
+                # tracks the original size of the RPM before signing.
+                if os.path.exists(filename) and os.path.getsize(filename) > rpm['size']:
+                    print 'Skipping %s' % filename
+                else:
+                    url = os.path.join(pathinfo.build(builds[rpm['build_id']]),
+                            pathinfo.signed(rpm, GPG_KEY_ID))
+                    print 'Fetching %s' % url
+                    fetch(url, filename)
             else:
-                url = os.path.join(pathinfo.build(builds[rpm['build_id']]),
-                        pathinfo.rpm(rpm))
-                print 'Fetching %s' % url
-                fetch(url, filename)
+                # For unsigned RPMs we can check the exact size here.
+                if os.path.exists(filename) and os.path.getsize(filename) == rpm['size']:
+                    print 'Skipping %s' % filename
+                else:
+                    url = os.path.join(pathinfo.build(builds[rpm['build_id']]),
+                            pathinfo.rpm(rpm))
+                    print 'Fetching %s' % url
+                    fetch(url, filename)
             self.rpm_filenames.add(os.path.basename(filename))
 
     def _mirror_rpms_for_task(self, koji_session, task_id, filenames):
@@ -224,12 +242,16 @@ def target_repos_from_config(*config_filenames):
             all_packages = False
             if config.has_option(section, 'all-packages'):
                 all_packages = config.getboolean(section, 'all-packages')
+            signed = False
+            if config.has_option(section, 'signed'):
+                signed = config.getboolean(section, 'signed')
             repos[descr] = TargetRepo(name=config.get(section, 'name'),
                     distro=config.get(section, 'distro'),
                     arches=config.get(section, 'arches').split(),
                     tag=config.get(section, 'tag'),
                     downgradeable=downgradeable,
                     all_packages=all_packages,
+                    signed=signed,
                     hub_url=hub_url, topurl=topurl)
             testing_repos[descr] = TargetRepo(name=config.get(section, 'testing-name'),
                     distro=config.get(section, 'distro'),
@@ -237,6 +259,7 @@ def target_repos_from_config(*config_filenames):
                     tag=config.get(section, 'testing-tag'),
                     downgradeable=downgradeable,
                     all_packages=all_packages,
+                    signed=False, # testing repos are always unsigned for now
                     hub_url=hub_url, topurl=topurl)
             if config.has_option(section, 'skip') and config.getboolean(section, 'skip'):
                 skipped.add(descr)
