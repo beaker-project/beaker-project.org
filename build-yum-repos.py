@@ -69,10 +69,11 @@ class TargetRepo(object):
         self.basedir = dest
         self._mirror_all_rpms()
         self._create_repo_metadata()
+        self._clean_unused_rpms()
 
     def _mirror_all_rpms(self):
         print 'Mirroring RPMs for %r' % self
-        ensure_dir(os.path.join(self.basedir, 'rpms'))
+        ensure_dir(self.output_dir)
         koji_session = koji.ClientSession(self.hub_url)
         koji_session.multicall = True
         if self.all_packages:
@@ -118,7 +119,7 @@ class TargetRepo(object):
                 continue
             if rpm['name'] not in self.rpm_names and rpm['arch'] != 'src':
                 continue
-            filename = os.path.join(self.basedir, 'rpms',
+            filename = os.path.join(self.output_dir,
                     os.path.basename(pathinfo.rpm(rpm)))
             if os.path.exists(filename) and os.path.getsize(filename):
                 # XXX check md5
@@ -143,7 +144,7 @@ class TargetRepo(object):
                 if m:
                     arch = m.group(1)
                     if arch in self.arches + ['noarch', 'src']:
-                        dest_filename = os.path.join(self.basedir, 'rpms', filename)
+                        dest_filename = os.path.join(self.output_dir, filename)
                         if os.path.exists(dest_filename):
                             print 'Skipping %s' % dest_filename
                         else:
@@ -164,7 +165,7 @@ class TargetRepo(object):
         conf.directories = [self.output_dir]
         if re.match(r'RedHatEnterpriseLinux[345]$', self.distro):
             conf.sumtype = 'sha'
-        conf.pkglist = [os.path.join('..', '..', 'rpms', fn) for fn in self.rpm_filenames]
+        conf.pkglist = self.rpm_filenames
         # not sure what this is, but it defaults to True in newer createrepo,
         # but it makes yum explode
         conf.collapse_glibc_requires = False
@@ -173,13 +174,11 @@ class TargetRepo(object):
         mdgen.doRepoMetadata()
         mdgen.doFinalMove()
 
-def clean_unused_rpms(basedir, rpm_filenames):
-    rpms_dir = os.path.join(basedir, 'rpms')
-    print 'Cleaning unused RPMs from %s' % rpms_dir
-    for filename in glob.iglob(os.path.join(basedir, 'rpms', '*.rpm')):
-        if os.path.basename(filename) not in rpm_filenames:
-            print 'Removing %s' % filename
-            os.unlink(filename)
+    def _clean_unused_rpms(self):
+        for filename in glob.iglob(os.path.join(self.output_dir, '*.rpm')):
+            if os.path.basename(filename) not in self.rpm_filenames:
+                print 'Removing %s' % filename
+                os.unlink(filename)
 
 def target_repos_from_config(*config_filenames):
     # We need the hub and package URLs for Koji and Brew.
@@ -285,11 +284,3 @@ if __name__ == '__main__':
 
     for t in target_repos:
         t.build(options.dest)
-
-    # Clean up, but only if we haven't skipped anything
-    if not options.repos and not options.distros:
-        used_rpm_filenames = set()
-        for t in target_repos:
-            used_rpm_filenames.update(t.rpm_filenames)
-        clean_unused_rpms(options.dest, used_rpm_filenames)
-
