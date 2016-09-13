@@ -16,7 +16,10 @@ import re
 import shutil
 import glob
 import urlparse
-import urllib2
+import requests
+import time
+import tempfile
+import rfc822
 from ConfigParser import SafeConfigParser
 import koji
 import xmlrpclib
@@ -26,6 +29,24 @@ def ensure_dir(path):
     if not os.path.exists(path):
         os.makedirs(path)
     assert os.path.isdir(path), '%s must be a directory' % path
+
+def fetch(url, dest):
+    response = requests.get(url, stream=True)
+    response.raise_for_status()
+    dirname, basename = os.path.split(dest)
+    fd, temp_path = tempfile.mkstemp(prefix='.' + basename, dir=dirname)
+    f = os.fdopen(fd, 'w')
+    try:
+        for chunk in response.iter_content(chunk_size=4096):
+            if chunk:
+                f.write(chunk)
+        f.flush()
+    except:
+        os.unlink(temp_path)
+        raise
+    mtime = time.mktime(rfc822.parsedate(response.headers['Last-Modified']))
+    os.utime(temp_path, (mtime, mtime))
+    os.rename(temp_path, dest)
 
 class TargetRepo(object):
     """
@@ -121,18 +142,13 @@ class TargetRepo(object):
                 continue
             filename = os.path.join(self.output_dir,
                     os.path.basename(pathinfo.rpm(rpm)))
-            if os.path.exists(filename) and os.path.getsize(filename):
-                # XXX check md5
+            if os.path.exists(filename) and os.path.getsize(filename) == rpm['size']:
                 print 'Skipping %s' % filename
             else:
                 url = os.path.join(pathinfo.build(builds[rpm['build_id']]),
                         pathinfo.rpm(rpm))
                 print 'Fetching %s' % url
-                with open(filename, 'w') as dest:
-                    src = urllib2.urlopen(url)
-                    shutil.copyfileobj(src, dest)
-            if not os.path.getsize(filename):
-                raise RuntimeError("Failed to download %s" % filename)
+                fetch(url, filename)
             self.rpm_filenames.add(os.path.basename(filename))
 
     def _mirror_rpms_for_task(self, koji_session, task_id, filenames):
