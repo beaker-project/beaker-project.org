@@ -45,12 +45,12 @@ def fetch(url, dest):
             if chunk:
                 f.write(chunk)
         f.flush()
+        mtime = time.mktime(rfc822.parsedate(response.headers['Last-Modified']))
+        os.utime(temp_path, (mtime, mtime))
+        os.rename(temp_path, dest)
     except:
         os.unlink(temp_path)
         raise
-    mtime = time.mktime(rfc822.parsedate(response.headers['Last-Modified']))
-    os.utime(temp_path, (mtime, mtime))
-    os.rename(temp_path, dest)
 
 class TargetRepo(object):
     """
