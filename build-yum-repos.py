@@ -47,6 +47,7 @@ def fetch(url, dest):
         f.flush()
         mtime = time.mktime(rfc822.parsedate(response.headers['Last-Modified']))
         os.utime(temp_path, (mtime, mtime))
+        os.chmod(temp_path, 0644)
         os.rename(temp_path, dest)
     except:
         os.unlink(temp_path)
