@@ -89,6 +89,10 @@ html_template = MarkupTemplate('''
 
 <h1>Releases</h1>
 
+<p>You can verify the integrity of the tarballs by comparing the SHA256 hash
+against the value shown on this page. Git tags for Beaker releases are also
+<a href="../gpg/">signed with a committer’s GPG key</a>.</p>
+
 <section py:for="major, releases in groupby(releases, lambda r: r.major)">
 <h2>Beaker ${major}</h2>
 

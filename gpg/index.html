@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Beaker GPG keys</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="../style.css" rel="stylesheet" type="text/css" />
+  <style type="text/css">
+    .gpgkey {
+        margin: 0.5em 0;
+        background-position: left top;
+        background-repeat: no-repeat;
+        padding-left: 74px;
+        min-height: 64px;
+        background-image: url("../images/certificate.png");
+    }
+  </style>
+</head>
+<body>
+<div class="header">
+  <div class="body_element">
+    <div class="title">
+      <a href="../"><img src="../images/logo.png" alt="Beaker" width="110" height="40" /></a>
+    </div>
+    <nav class="menu">
+      <form class="search" method="get" action="../search.html">
+        <input type="search" name="q" placeholder="search" />
+      </form>
+      <a href="../docs/">docs</a>
+      <a href="../dev/">develop</a>
+      <a href="../download.html">download</a>
+    </nav>
+  </div>
+</div>
+<div class="main_content">
+  <div class="body_element">
+    <h1>GPG keys</h1>
+    <section>
+      <h2>RPM signing key</h2>
+      <p>Packages in the Beaker server yum repos are signed with this GPG key:</p>
+      <p class="gpgkey">
+        <a href="RPM-GPG-KEY-beaker-project">RPM-GPG-KEY-beaker-project</a><br/>
+        Fingerprint: <code>87CD 4C3C 3A43 A632 E0E7  1BE8 22B0 AAAF 4DF1 6B33</code>
+      </p>
+    </section>
+    <section>
+      <h2>Committer signing keys</h2>
+      <p>Git tags for Beaker releases are signed with one of the following Beaker 
+      committers’ GPG keys.</p>
+      <p class="gpgkey">
+        <a href="9C666408.asc">Dan Callaghan &lt;dcallagh@redhat.com&gt;</a><br/>
+        Fingerprint: <code>54A6 BE05 06EA A66D CCF8  A2FB 7AA9 FECF 9C66 6408</code>
+      </p>
+      <p class="gpgkey">
+        <a href="7A3AD3DE.asc">Róman Joost &lt;rjoost@redhat.com&gt;</a><br/>
+        Fingerprint: <code>6B99 7C46 892B 7A58 BD62  A131 2689 E9AC 7A3A D3DE</code>
+      </p>
+      <p class="gpgkey">
+        <a href="90DF084C.asc">Matt Jia &lt;mjia@redhat.com&gt;</a><br/>
+        Fingerprint: <code>3CF3 7394 8427 A267 592A  805E ECF0 BCC4 90DF 084C</code>
+      </p>
+    </section>
+  </div>
+</div>
+</body>
+</html>
