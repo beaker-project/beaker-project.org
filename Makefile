@@ -77,5 +77,11 @@ check:
 # ideas: spell check everything, validate HTML, check for broken links, run sphinx linkcheck builder
 	./check-yum-repos.py
 
+# We intentionally *don't* clean out any repos under yum/ because they are 
+# really expensive to re-fetch. However we do need to clean up any obsolete 
+# directories which are no longer being produced by build-yum-repos.py.
 clean:
 	rm -f changelogs.mk downloads.mk releases/SHA1SUM releases/SHA256SUM releases/index.*
+	rm -rf \
+	    yum/{client,client-testing,server,server-testing}/Fedora{18,19,20,21,22} \
+	    yum/{client,client-testing,server,server-testing}/fedora-{18,19,20}
