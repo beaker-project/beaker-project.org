@@ -60,7 +60,7 @@ def check_deps(base, local_repo, repo_urls, arches, build_deps=False,
         return True
     return False
 
-def check_rhts_version_match(base, client_repo, harness_repo):
+def check_client_harness_version_match(base, client_repo, harness_repo):
     yb = yum.YumBase()
     yb.doConfigSetup(fn='/etc/yum/yum.conf', init_plugins=False)
     yb.setCacheDir(True)
@@ -71,10 +71,27 @@ def check_rhts_version_match(base, client_repo, harness_repo):
     harness_repo_url = urlparse.urljoin(base, harness_repo)
     harness_repo_id = harness_repo_url.replace('/', '-')
     yb.add_enable_repo(harness_repo_id, baseurls=[harness_repo_url])
+    # Check rhts subpackages
     pkgs = yb.pkgSack.returnNewestByName(patterns=['rhts*'])
     versions = set(pkg['version'] for pkg in pkgs)
     if len(versions) > 1:
         print 'Mismatched rhts versions across %s and %s:' % (client_repo, harness_repo)
+        for pkg in pkgs:
+            print '    ' + str(pkg)
+        return True
+    # Check beakerlib
+    pkgs = yb.pkgSack.returnNewestByName(patterns=['beakerlib'])
+    versions = set(pkg['version'] for pkg in pkgs)
+    if len(versions) > 1:
+        print 'Mismatched beakerlib versions across %s and %s:' % (client_repo, harness_repo)
+        for pkg in pkgs:
+            print '    ' + str(pkg)
+        return True
+    # Check beakerlib-redhat
+    pkgs = yb.pkgSack.returnNewestByName(patterns=['beakerlib-redhat'])
+    versions = set(pkg['version'] for pkg in pkgs)
+    if len(versions) > 1:
+        print 'Mismatched beakerlib-redhat versions across %s and %s:' % (client_repo, harness_repo)
         for pkg in pkgs:
             print '    ' + str(pkg)
         return True
@@ -112,6 +129,8 @@ def checks_from_config(base, config):
     # repos, otherwise users who have both client and harness configured on 
     # their system will have upgrade failures like this:
     # http://post-office.corp.redhat.com/archives/beaker-user-list/2015-December/msg00044.html
+    # Similarly for beakerlib and beakerlib-redhat:
+    # http://post-office.corp.redhat.com/archives/beaker-dev-list/2017-July/msg00009.html
     client_distros = set()
     for section in config.sections():
         local_repo, _, descr = section.partition('.')
@@ -122,8 +141,8 @@ def checks_from_config(base, config):
         # For every client repo we have, there should be a matching harness repo
         client_repo = 'client/%s' % client_distro
         harness_repo = 'harness/%s' % client_distro
-        print 'Checking rhts versions for %s and %s' % (client_repo, harness_repo)
-        failed |= check_rhts_version_match(base, client_repo, harness_repo)
+        print 'Checking for version mismatches across %s and %s' % (client_repo, harness_repo)
+        failed |= check_client_harness_version_match(base, client_repo, harness_repo)
 
     if failed:
         sys.exit(1)
