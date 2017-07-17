@@ -71,30 +71,20 @@ def check_client_harness_version_match(base, client_repo, harness_repo):
     harness_repo_url = urlparse.urljoin(base, harness_repo)
     harness_repo_id = harness_repo_url.replace('/', '-')
     yb.add_enable_repo(harness_repo_id, baseurls=[harness_repo_url])
-    # Check rhts subpackages
-    pkgs = yb.pkgSack.returnNewestByName(patterns=['rhts*'])
-    versions = set(pkg['version'] for pkg in pkgs)
-    if len(versions) > 1:
-        print 'Mismatched rhts versions across %s and %s:' % (client_repo, harness_repo)
-        for pkg in pkgs:
-            print '    ' + str(pkg)
-        return True
-    # Check beakerlib
-    pkgs = yb.pkgSack.returnNewestByName(patterns=['beakerlib'])
-    versions = set(pkg['version'] for pkg in pkgs)
-    if len(versions) > 1:
-        print 'Mismatched beakerlib versions across %s and %s:' % (client_repo, harness_repo)
-        for pkg in pkgs:
-            print '    ' + str(pkg)
-        return True
-    # Check beakerlib-redhat
-    pkgs = yb.pkgSack.returnNewestByName(patterns=['beakerlib-redhat'])
-    versions = set(pkg['version'] for pkg in pkgs)
-    if len(versions) > 1:
-        print 'Mismatched beakerlib-redhat versions across %s and %s:' % (client_repo, harness_repo)
-        for pkg in pkgs:
-            print '    ' + str(pkg)
-        return True
+    for name in ['rhts-python', 'beakerlib', 'beakerlib-redhat']:
+        client_pkgs = yb.pkgSack.returnPackages(repoid=client_repo_id, patterns=[name])
+        harness_pkgs = yb.pkgSack.returnPackages(repoid=harness_repo_id, patterns=[name])
+        if not client_pkgs and not harness_pkgs:
+            # Doesn't exist at all in the repos, that's fine
+            continue
+        if set(pkg['version'] for pkg in client_pkgs) != set(pkg['version'] for pkg in harness_pkgs):
+            print 'Mismatched %s versions across %s:' % (name, client_repo)
+            for pkg in client_pkgs:
+                print '    ' + str(pkg)
+            print '... and %s:' % harness_repo
+            for pkg in harness_pkgs:
+                print '    ' + str(pkg)
+            return True
     return False
 
 def checks_from_config(base, config):
