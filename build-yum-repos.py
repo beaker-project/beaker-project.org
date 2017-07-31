@@ -94,6 +94,10 @@ class TargetRepo(object):
 
     def build(self, dest):
         self.basedir = dest
+        if os.path.islink(self.output_dir):
+            raise RuntimeError(
+                    'Attempted to build yum repo into symlink %s\n'
+                    'Hint: delete the symlink first' % self.output_dir)
         self._mirror_all_rpms()
         self._create_repo_metadata()
         self._clean_unused_rpms()
