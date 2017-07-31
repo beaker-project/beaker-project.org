@@ -83,5 +83,5 @@ check:
 clean:
 	rm -f changelogs.mk downloads.mk releases/SHA1SUM releases/SHA256SUM releases/index.*
 	rm -rf \
-	    yum/{client,client-testing,server,server-testing}/Fedora{18,19,20,21,22} \
+	    yum/{client,client-testing,server,server-testing}/Fedora{18,19,20,21,22,23} \
 	    yum/{client,client-testing,server,server-testing}/fedora-{18,19,20}
