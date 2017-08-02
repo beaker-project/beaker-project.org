@@ -8,11 +8,20 @@ import sys
 import os, os.path
 from ConfigParser import SafeConfigParser
 import urlparse
+import rpm
 import yum
 
 # XXX dodgy
 import imp
 repoclosure = imp.load_source('repoclosure', '/usr/bin/repoclosure') # from yum-utils
+
+def highest_evr(packages):
+    """
+    Given an iterable of yum package objects for the same named package, 
+    returns the highest Epoch-Version-Release.
+    """
+    return sorted(((pkg['epoch'], pkg['version'], pkg['release'])
+                   for pkg in packages), cmp=rpm.labelCompare, reverse=True)[0]
 
 def check_deps(base, local_repo, repo_urls, arches, build_deps=False,
         ignored_packages=frozenset(), ignored_breakages=frozenset()):
@@ -77,7 +86,7 @@ def check_client_harness_version_match(base, client_repo, harness_repo):
         if not client_pkgs and not harness_pkgs:
             # Doesn't exist at all in the repos, that's fine
             continue
-        if set(pkg['version'] for pkg in client_pkgs) != set(pkg['version'] for pkg in harness_pkgs):
+        if highest_evr(client_pkgs) != highest_evr(harness_pkgs):
             print 'Mismatched %s versions across %s:' % (name, client_repo)
             for pkg in client_pkgs:
                 print '    ' + str(pkg)
