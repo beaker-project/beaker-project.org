@@ -86,6 +86,16 @@ def check_client_harness_version_match(base, client_repo, harness_repo):
         if not client_pkgs and not harness_pkgs:
             # Doesn't exist at all in the repos, that's fine
             continue
+        elif not client_pkgs:
+            print '%s has no %s packages but %s has:' % (client_repo, name, harness_repo)
+            for pkg in harness_pkgs:
+                print '    ' + str(pkg)
+            return True
+        elif not harness_pkgs:
+            print '%s has no %s packages but %s has:' % (harness_repo, name, client_repo)
+            for pkg in client_pkgs:
+                print '    ' + str(pkg)
+            return True
         if highest_evr(client_pkgs) != highest_evr(harness_pkgs):
             print 'Mismatched %s versions across %s:' % (name, client_repo)
             for pkg in client_pkgs:
