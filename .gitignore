@@ -54,6 +54,7 @@
 /yum/harness/RedHatEnterpriseLinux5/
 /yum/harness/RedHatEnterpriseLinux6/
 /yum/harness/RedHatEnterpriseLinux7/
+/yum/harness/RedHatEnterpriseLinux8/
 /yum/harness-testing/Fedora15/
 /yum/harness-testing/Fedora16/
 /yum/harness-testing/Fedora17/
@@ -73,6 +74,7 @@
 /yum/harness-testing/RedHatEnterpriseLinux5/
 /yum/harness-testing/RedHatEnterpriseLinux6/
 /yum/harness-testing/RedHatEnterpriseLinux7/
+/yum/harness-testing/RedHatEnterpriseLinux8/
 /yum/server/Fedora23/
 /yum/server/Fedora24/
 /yum/server/Fedora25/
