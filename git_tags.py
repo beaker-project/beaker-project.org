@@ -65,7 +65,7 @@ def releases(git_dir):
         timestamp = datetime.datetime.fromtimestamp(tag.tag_time,
                 tzoffset(None, tag.tag_timezone))
         releases.append(Release(version=m.group(1), timestamp=timestamp,
-                name=name, email=email, tag=tag.name))
+                name=name.decode('utf-8'), email=email, tag=tag.name))
     releases = sorted(releases, key=lambda r: r.timestamp, reverse=True)
     # skip anything prior to 0.9
     releases = list(takewhile(lambda r: r.version != '0.8.99', releases))
