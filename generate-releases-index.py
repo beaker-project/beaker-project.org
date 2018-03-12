@@ -4,16 +4,19 @@
 """
 Writes out the Releases page (or feed) to stdout, based on tags in Beaker's git.
 """
+import git_tags
+
+# Keep this, otherwise genshi will result with an UndefinedError
+from itertools import groupby, takewhile
 
 import sys
-import re
-import datetime
-from itertools import groupby, takewhile
-import lxml.html
-from genshi import Markup
 from genshi.template import MarkupTemplate
-
-import git_tags
+import codecs
+# The encoding for stdout can be None if stdout is redirected into a file, but
+# set to the preferred terminal encoding if printed to a terminal. If it's
+# None, the script may result in a Traceback if it tries to encode unicode
+# instances with non-ASCII characters.
+sys.stdout = codecs.getwriter('utf8')(sys.stdout)
 
 _checksums = dict(reversed(line.rstrip('\n').split()) for line in open('releases/SHA256SUM'))
 def checksum(filename):
@@ -177,7 +180,10 @@ if __name__ == '__main__':
     releases = git_tags.releases(args[0])
     if options.format == 'html':
         stream = html_template.generate(**globals())
-        sys.stdout.write(stream.render('xhtml', doctype='html5', encoding='utf8'))
+        # Set encoding to None to default to a unicode instance. Otherwise
+        # stdout will try to re-encode the utf-8 string resulting in a
+        # UnicodeEncodeError
+        sys.stdout.write(stream.render('xhtml', doctype='html5', encoding=None))
     elif options.format == 'atom':
         stream = atom_template.generate(**globals())
         sys.stdout.write(stream.render('xml'))
