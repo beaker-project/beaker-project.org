@@ -19,7 +19,7 @@ _checksums = dict(reversed(line.rstrip('\n').split()) for line in open('releases
 def checksum(filename):
     return _checksums[filename]
 
-html_template = MarkupTemplate('''
+html_template = MarkupTemplate(u'''
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:py="http://genshi.edgewall.org/">
 <head>
@@ -131,7 +131,7 @@ against the value shown on this page. Git tags for Beaker releases are also
 </html>
 ''')
 
-atom_template = MarkupTemplate('''
+atom_template = MarkupTemplate(u'''
 <feed xmlns="http://www.w3.org/2005/Atom"
       xmlns:py="http://genshi.edgewall.org/"
       xml:base="http://beaker-project.org/releases/index.atom">
