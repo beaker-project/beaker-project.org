@@ -2,7 +2,8 @@
 name=Beaker Server - RedHatEnterpriseLinux$releasever
 baseurl=https://beaker-project.org/yum/server/RedHatEnterpriseLinux$releasever/
 enabled=1
-gpgcheck=1
+# gpgcheck temporarily disabled as some packages are not signed
+gpgcheck=0
 gpgkey=https://beaker-project.org/gpg/RPM-GPG-KEY-beaker-project
 
 [beaker-server-testing]
