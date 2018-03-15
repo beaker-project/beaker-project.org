@@ -48,6 +48,7 @@
 /yum/harness/Fedora25/
 /yum/harness/Fedora26/
 /yum/harness/Fedora27/
+/yum/harness/Fedora28/
 /yum/harness/Fedorarawhide/
 /yum/harness/RedHatEnterpriseLinux3/
 /yum/harness/RedHatEnterpriseLinux4/
@@ -68,6 +69,7 @@
 /yum/harness-testing/Fedora25/
 /yum/harness-testing/Fedora26/
 /yum/harness-testing/Fedora27/
+/yum/harness-testing/Fedora28/
 /yum/harness-testing/Fedorarawhide/
 /yum/harness-testing/RedHatEnterpriseLinux3/
 /yum/harness-testing/RedHatEnterpriseLinux4/
