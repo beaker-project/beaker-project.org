@@ -29,6 +29,13 @@ import createrepo # needs createrepo >= 0.9
 # as it is known to Koji (8 characters lower case).
 GPG_KEY_ID = '4df16b33'
 
+# We need the hub and package URLs for Koji and Brew.
+# We can load those from the relevant config files.
+koji_config = SafeConfigParser()
+koji_config.read(['/etc/brewkoji.conf', '/etc/koji.conf'] +
+        glob.glob('/etc/koji.conf.d/*.conf') +
+        [os.path.expanduser('~/.koji/config')])
+
 def ensure_dir(path):
     if not os.path.exists(path):
         os.makedirs(path)
@@ -60,7 +67,7 @@ class TargetRepo(object):
     then call build() to do it.
     """
 
-    def __init__(self, name, distro, tag, arches, downgradeable, all_packages, signed, hub_url, topurl):
+    def __init__(self, name, distro, tag, arches, downgradeable, all_packages, signed, koji_profile):
         self.name = name
         self.distro = distro
         self.tag = tag
@@ -68,10 +75,9 @@ class TargetRepo(object):
         self.downgradeable = downgradeable
         self.all_packages = all_packages
         self.signed = signed
-        self.hub_url = hub_url
-        self.topurl = topurl
-        self.package_names = set()
-        self.package_tags = {}
+        self.koji_profile = koji_profile
+        self.package_names_by_koji_profile = {}  #: {koji profile -> [package names]}
+        self.package_tags = {}  #: {package name -> koji tag}
         self.excluded_rpms = set()
         self.rpm_names = set()
         self.rpm_filenames = set()
@@ -83,8 +89,10 @@ class TargetRepo(object):
     def output_dir(self):
         return os.path.join(self.basedir, self.name, self.distro)
 
-    def add_package(self, package_name, rpm_names=None, tag=None):
-        self.package_names.add(package_name)
+    def add_package(self, package_name, rpm_names=None, tag=None, koji_profile=None):
+        if not koji_profile:
+            koji_profile = self.koji_profile
+        self.package_names_by_koji_profile.setdefault(koji_profile, []).append(package_name)
         self.rpm_names.update(rpm_names or [package_name])
         if tag:
             self.package_tags[package_name] = tag
@@ -98,21 +106,35 @@ class TargetRepo(object):
             raise RuntimeError(
                     'Attempted to build yum repo into symlink %s\n'
                     'Hint: delete the symlink first' % self.output_dir)
-        self._mirror_all_rpms()
+        ensure_dir(self.output_dir)
+        if self.all_packages:
+            self._mirror_all_rpms()
+        for koji_profile, package_names in self.package_names_by_koji_profile.items():
+            self._mirror_rpms(koji_profile, package_names)
         self._create_repo_metadata()
         self._clean_unused_rpms()
 
     def _mirror_all_rpms(self):
-        print 'Mirroring RPMs for %r' % self
-        ensure_dir(self.output_dir)
-        koji_session = koji.ClientSession(self.hub_url)
+        print 'Mirroring RPMs for %r: all packages in %s tagged %s' % (
+                self, self.koji_profile, self.tag)
+        hub_url = koji_config.get(self.koji_profile, 'server')
+        koji_session = koji.ClientSession(hub_url)
+        if self.downgradeable:
+            result = koji_session.listTaggedRPMS(self.tag, inherit=True)
+        else:
+            result = koji_session.getLatestRPMS(self.tag)
+        if not result:
+            raise ValueError('No packages in tag %s' % self.tag)
+        rpms, builds = result
+        self.rpm_names.update(rpm['name'] for rpm in rpms
+                if rpm['name'] not in self.excluded_rpms)
+        self._mirror_rpms_for_build(self.koji_profile, builds, rpms)
+
+    def _mirror_rpms(self, koji_profile, package_names):
+        print 'Mirroring RPMs for %r: listed packages in %s' % (self, koji_profile)
+        hub_url = koji_config.get(koji_profile, 'server')
+        koji_session = koji.ClientSession(hub_url)
         koji_session.multicall = True
-        if self.all_packages:
-            if self.downgradeable:
-                koji_session.listTaggedRPMS(self.tag, inherit=True)
-            else:
-                koji_session.getLatestRPMS(self.tag)
-        package_names = list(self.package_names)
         for package_name in package_names:
             if self.downgradeable:
                 koji_session.listTaggedRPMS(
@@ -123,27 +145,18 @@ class TargetRepo(object):
                         self.package_tags.get(package_name, self.tag),
                         package_name)
         results = koji_session.multiCall()
-        if self.all_packages:
-            result = results.pop(0)
-            if 'faultCode' in result:
-                raise xmlrpclib.Fault(result['faultCode'], result['faultString'])
-            if not result:
-                raise ValueError('No packages in tag %s' % self.tag)
-            for rpms, builds in result:
-                self.rpm_names.update(rpm['name'] for rpm in rpms
-                        if rpm['name'] not in self.excluded_rpms)
-                self._mirror_rpms_for_build(builds, rpms)
         for i, result in enumerate(results):
             if 'faultCode' in result:
                 raise xmlrpclib.Fault(result['faultCode'], result['faultString'])
             if not result or not result[0] or not result[0][1]:
-                raise ValueError('Package %s not in tag %s' % (package_names[i],
-                        self.package_tags.get(package_names[i], self.tag)))
+                raise ValueError('Package %s not in tag %s in %s' % (package_names[i],
+                        self.package_tags.get(package_names[i], self.tag), koji_profile))
             (rpms, builds), = result
-            self._mirror_rpms_for_build(builds, rpms)
+            self._mirror_rpms_for_build(koji_profile, builds, rpms)
 
-    def _mirror_rpms_for_build(self, builds, rpms):
-        pathinfo = koji.PathInfo(self.topurl)
+    def _mirror_rpms_for_build(self, koji_profile, builds, rpms):
+        topurl = koji_config.get(koji_profile, 'topurl')
+        pathinfo = koji.PathInfo(topurl)
         builds = dict((build['build_id'], build) for build in builds)
         for rpm in rpms:
             if rpm['arch'] not in self.arches + ['noarch', 'src']:
@@ -220,13 +233,6 @@ class TargetRepo(object):
                 os.unlink(filename)
 
 def target_repos_from_config(*config_filenames):
-    # We need the hub and package URLs for Koji and Brew.
-    # We can load those from the relevant config files.
-    koji_config = SafeConfigParser()
-    koji_config.read(['/etc/brewkoji.conf', '/etc/koji.conf'] +
-            glob.glob('/etc/koji.conf.d/*.conf') +
-            [os.path.expanduser('~/.koji/config')])
-
     config = SafeConfigParser()
     config.optionxform = str # package names are case sensitive
     for filename in config_filenames:
@@ -239,8 +245,7 @@ def target_repos_from_config(*config_filenames):
     for section in sorted(config.sections()):
         descr, _, rest = section.partition('.')
         if not rest:
-            hub_url = koji_config.get(config.get(section, 'source'), 'server')
-            topurl = koji_config.get(config.get(section, 'source'), 'topurl')
+            koji_profile = config.get(section, 'source')
             downgradeable = True
             if config.has_option(section, 'downgradeable'):
                 downgradeable = config.getboolean(section, 'downgradeable')
@@ -257,7 +262,7 @@ def target_repos_from_config(*config_filenames):
                     downgradeable=downgradeable,
                     all_packages=all_packages,
                     signed=signed,
-                    hub_url=hub_url, topurl=topurl)
+                    koji_profile=koji_profile)
             testing_repos[descr] = TargetRepo(name=config.get(section, 'testing-name'),
                     distro=config.get(section, 'distro'),
                     arches=config.get(section, 'arches').split(),
@@ -265,7 +270,7 @@ def target_repos_from_config(*config_filenames):
                     downgradeable=downgradeable,
                     all_packages=all_packages,
                     signed=False, # testing repos are always unsigned for now
-                    hub_url=hub_url, topurl=topurl)
+                    koji_profile=koji_profile)
             if config.has_option(section, 'skip') and config.getboolean(section, 'skip'):
                 skipped.add(descr)
             if config.has_option(section, 'excluded-rpms'):
@@ -277,13 +282,15 @@ def target_repos_from_config(*config_filenames):
                 repos[descr].add_package(package_name, rpm_names.split())
                 testing_repos[descr].add_package(package_name, rpm_names.split())
         elif rest.startswith('packages.'):
-            tag = rest[len('packages.'):]
+            tag, _, source = rest[len('packages.'):].partition('.')
             for package_name, rpm_names in config.items(section):
-                repos[descr].add_package(package_name, rpm_names.split(), tag)
-                # appending -candidate here is perhaps an unwise hack...
+                repos[descr].add_package(package_name, rpm_names.split(),
+                        tag=tag, koji_profile=source or None)
+                # appending -testing here is perhaps an unwise hack...
                 # we just need to work towards eliminating these exceptional sections
-                testing_tag = tag + '-candidate' if not tag.endswith('-candidate') else tag
-                testing_repos[descr].add_package(package_name, rpm_names.split(), testing_tag)
+                testing_tag = tag + '-testing' if not tag.endswith('-testing') else tag
+                testing_repos[descr].add_package(package_name, rpm_names.split(),
+                        tag=testing_tag, koji_profile=source or None)
         else:
             raise ValueError('Unrecognised section: %s' % rest)
     for descr in skipped:
