@@ -27,6 +27,7 @@
 /yum/client/Fedora25/
 /yum/client/Fedora26/
 /yum/client/Fedora27/
+/yum/client/Fedora28/
 /yum/client-testing/RedHatEnterpriseLinux5/
 /yum/client-testing/RedHatEnterpriseLinux6/
 /yum/client-testing/RedHatEnterpriseLinux7/
@@ -35,6 +36,7 @@
 /yum/client-testing/Fedora25/
 /yum/client-testing/Fedora26/
 /yum/client-testing/Fedora27/
+/yum/client-testing/Fedora28/
 /yum/harness/Fedora15/
 /yum/harness/Fedora16/
 /yum/harness/Fedora17/
@@ -82,6 +84,7 @@
 /yum/server/Fedora25/
 /yum/server/Fedora26/
 /yum/server/Fedora27/
+/yum/server/Fedora28/
 /yum/server/RedHatEnterpriseLinux6/
 /yum/server/RedHatEnterpriseLinux7/
 /yum/server-testing/Fedora23/
@@ -89,5 +92,6 @@
 /yum/server-testing/Fedora25/
 /yum/server-testing/Fedora26/
 /yum/server-testing/Fedora27/
+/yum/server-testing/Fedora28/
 /yum/server-testing/RedHatEnterpriseLinux6/
 /yum/server-testing/RedHatEnterpriseLinux7/
