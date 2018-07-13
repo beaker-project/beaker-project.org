@@ -4,7 +4,7 @@ baseurl=https://beaker-project.org/yum/server/Fedora$releasever/
 enabled=1
 # gpgcheck temporarily disabled as some packages are not signed
 gpgcheck=0
-gpgkey=https://beaker-project.org/gpg/RPM-GPG-KEY-beaker-project
+gpgkey=https://beaker-project.org/gpg/RPM-GPG-KEY-redhatengsystems
 
 [beaker-server-testing]
 name=Beaker Server -Fedora$releasever - Testing
