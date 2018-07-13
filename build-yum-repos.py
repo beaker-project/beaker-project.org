@@ -25,9 +25,11 @@ import koji
 import xmlrpclib
 import createrepo # needs createrepo >= 0.9
 
-# This is the GPG key id of the Beaker signing key,
+# This is the GPG key id of the redhatengsystems signing key,
 # as it is known to Koji (8 characters lower case).
-GPG_KEY_ID = '4df16b33'
+GPG_KEY_ID = '60a03d62'
+# This is the GPG key id of the EPEL7 signing key.
+EPEL_GPG_KEY_ID = '352c64e5'
 
 # We need the hub and package URLs for Koji and Brew.
 # We can load those from the relevant config files.
@@ -166,6 +168,9 @@ class TargetRepo(object):
             filename = os.path.join(self.output_dir,
                     os.path.basename(pathinfo.rpm(rpm)))
             if self.signed:
+                key_id = GPG_KEY_ID
+                if koji_profile == 'koji':
+                    key_id = EPEL_GPG_KEY_ID
                 # For signed RPMs, the actual file we want to download is 
                 # always *bigger* than the size indicated in Koji. Koji only 
                 # tracks the original size of the RPM before signing.
@@ -173,7 +178,7 @@ class TargetRepo(object):
                     print 'Skipping %s' % filename
                 else:
                     url = os.path.join(pathinfo.build(builds[rpm['build_id']]),
-                            pathinfo.signed(rpm, GPG_KEY_ID))
+                            pathinfo.signed(rpm, key_id))
                     print 'Fetching %s' % url
                     fetch(url, filename)
             else:
