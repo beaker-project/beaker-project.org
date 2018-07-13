@@ -138,7 +138,9 @@ class TargetRepo(object):
         koji_session = koji.ClientSession(hub_url)
         koji_session.multicall = True
         for package_name in package_names:
-            if self.downgradeable:
+            # EPEL has some very old builds that are not signed.
+            # As a workaround we only grab the latest tagged build from EPEL.
+            if self.downgradeable and not koji_profile == 'koji':
                 koji_session.listTaggedRPMS(
                         self.package_tags.get(package_name, self.tag),
                         inherit=True, package=package_name)
