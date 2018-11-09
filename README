@@ -1,13 +1,14 @@
 
-This is the beaker-project.org web site.
+This is the README for the beaker-project.org  repo, which is used to
+create the beaker-project.org web site.
 
 Note that many parts of the web site are built elsewhere:
 
     * Beaker documentation (under the docs/ and docs-<branch>/ subdirectories) 
       is built using Sphinx from the documentation/ subdirectory of Beaker's 
-      source tree.
+      source tree (repo: 'beaker').
     * Beaker developer documentation (under the dev/ subdirectory) is built 
-      from a separate source repository.
+      from a separate source repository (repo: 'beaker-dev-docs').
 
 The process for submitting patches is the same as for Beaker itself:
 
