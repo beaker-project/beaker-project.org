@@ -20,12 +20,14 @@
 /schema/
 /yum/client/RedHatEnterpriseLinux6/
 /yum/client/RedHatEnterpriseLinux7/
+/yum/client/RedHatEnterpriseLinux8/
 /yum/client/Fedora28/
 /yum/client/Fedora29/
 /yum/client/Fedora30/
 /yum/client/Fedorarawhide/
 /yum/client-testing/RedHatEnterpriseLinux6/
 /yum/client-testing/RedHatEnterpriseLinux7/
+/yum/client-testing/RedHatEnterpriseLinux8/
 /yum/client-testing/Fedora28/
 /yum/client-testing/Fedora29/
 /yum/client-testing/Fedora30/
@@ -34,7 +36,6 @@
 /yum/harness/Fedora29/
 /yum/harness/Fedora30/
 /yum/harness/Fedorarawhide/
-/yum/harness/RedHatEnterpriseLinux4/
 /yum/harness/RedHatEnterpriseLinux5/
 /yum/harness/RedHatEnterpriseLinux6/
 /yum/harness/RedHatEnterpriseLinux7/
@@ -43,7 +44,6 @@
 /yum/harness-testing/Fedora29/
 /yum/harness-testing/Fedora30/
 /yum/harness-testing/Fedorarawhide/
-/yum/harness-testing/RedHatEnterpriseLinux4/
 /yum/harness-testing/RedHatEnterpriseLinux5/
 /yum/harness-testing/RedHatEnterpriseLinux6/
 /yum/harness-testing/RedHatEnterpriseLinux7/
