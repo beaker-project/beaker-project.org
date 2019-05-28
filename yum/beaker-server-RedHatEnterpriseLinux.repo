@@ -3,7 +3,7 @@ name=Beaker Server - RedHatEnterpriseLinux$releasever
 baseurl=https://beaker-project.org/yum/server/RedHatEnterpriseLinux$releasever/
 enabled=1
 gpgcheck=1
-gpgkey=https://beaker-project.org/gpg/RPM-GPG-KEY-redhatengsystems https://getfedora.org/static/352C64E5.txt
+gpgkey=https://beaker-project.org/gpg/RPM-GPG-KEY-redhatengsystems https://fedoraproject.org/static/352C64E5.txt
 
 [beaker-server-testing]
 name=Beaker Server - RedHatEnterpriseLinux$releasever - Testing
