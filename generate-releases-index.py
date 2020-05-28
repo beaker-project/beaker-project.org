@@ -126,7 +126,7 @@ against the value shown on this page. Git tags for Beaker releases are also
 </section>
 
 <p>For older releases, please refer to
-<a href="http://git.beaker-project.org/cgit/beaker/">Beaker’s git repo</a>.</p>
+<a href="https://github.com/beaker-project/beaker">Beaker’s git repo</a>.</p>
 
   </div>
 </div>
