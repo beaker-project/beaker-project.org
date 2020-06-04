@@ -33,41 +33,7 @@ html_template = MarkupTemplate(u'''
     <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
   <link href="../style.css" rel="stylesheet" type="text/css"/>
-  <style type="text/css">
-    article {
-        margin-bottom: 1em;
-    }
-    .release h2 {
-        display: inline-block;
-        font-size: 1em;
-    }
-    .date:before, .relnotes-link:before, .changelog-link:before {
-        content: "·";
-        margin-right: 0.3em;
-    }
-    .date, .relnotes-link, .changelog-link {
-        display: inline-block;
-        margin-left: 0.4em;
-    }
-    .download {
-        margin: 0.5em 0;
-        background-position: left top;
-        background-repeat: no-repeat;
-        padding-left: 74px;
-    }
-    .download.tarball {
-        background-image: url("../images/package.png");
-        min-height: 54px;
-    }
-    .download.patch {
-        background-image: url("../images/patch.png");
-        min-height: 64px;
-    }
-    .hash {
-        white-space: nowrap;
-        font-size: 0.9em;
-    }
-  </style>
+  <link href="../releases.css" rel="stylesheet" type="text/css"/>
   <link rel="profile" href="http://microformats.org/profile/hatom" />
   <link rel="alternate" type="application/atom+xml" title="Atom feed" href="index.atom" />
 </head>
