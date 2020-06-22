@@ -231,6 +231,7 @@ class TargetRepo(object):
         # includepkg option accept one pkg
         with tempfile.NamedTemporaryFile() as pkglist:
             pkglist.write('\n'.join(self.rpm_filenames).encode())
+            pkglist.flush()
             subprocess.run(['createrepo_c',
                             '--no-database',  # Don't create SQLite DB in repo
                             '--checksum', checksum_type,  # repomd.xml checksum
