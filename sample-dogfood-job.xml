@@ -1,42 +1,52 @@
 <job retention_tag="scratch">
     <whiteboard>
-        beaker dogfood
+        Beaker Dogfood RHEL 7
     </whiteboard>
     <recipeSet>
-        <recipe ks_meta="selinux=disabled">
+        <recipe whiteboard="Nose Tests" role="None" ks_meta="harness=restraint-rhts selinux=--disabled" kernel_options="" kernel_options_post="">
             <repos>
-                <repo name="beaker_repo_server" url="http://beaker-project.org/yum/server/RedHatEnterpriseLinux6/" />
-                <!-- A normal job would not need to define the harness repo, 
+                <repo name="beaker-project-server" url="https://beaker-project.org/yum/server-testing/RedHatEnterpriseLinux7/"/>
+                <!-- A normal job would not need to define the harness repo,
                      but when installing Beaker we need the rhts-test-env and 
                      rhts-python versions to match exactly. -->
-                <repo name="beaker_repo_harness" url="http://beaker-project.org/yum/harness/RedHatEnterpriseLinux6/" />
+                <repo name="beaker-project-harness" url="https://beaker-project.org/yum/harness-testing/RedHatEnterpriseLinux7/"/>
             </repos>
             <distroRequires>
-                <distro_name op="=" value="RHEL-6.3"/>
+                <distro_family op="=" value="RedHatEnterpriseLinux7" />
                 <distro_arch op="=" value="x86_64" />
                 <distro_variant op="=" value="Server" />
             </distroRequires>
             <hostRequires>
-                <system_type value="Machine"/>
-                <memory op="&gt;=" value="1000" />
+                <system_type value="Machine" />
+                <memory op="&gt;=" value="4000" />
             </hostRequires>
-            <task name="/distribution/install" role="STANDALONE"/>
+            <task name="/distribution/check-install" role="STANDALONE">
+                <params>
+                    <param name="RHTS_OPTION_COMPATIBLE" value=""/>
+                    <param name="RHTS_OPTION_COMPAT_SERVICE" value=""/>
+                </params>
+            </task>
             <task name="/distribution/beaker/setup" role="STANDALONE">
                 <params>
-                    <param name="RHTS_OPTION_STRONGER_AVC" value=""/>
+                    <param name="RHTS_OPTION_COMPATIBLE" value=""/>
+                    <param name="RHTS_OPTION_COMPAT_SERVICE" value=""/>
                     <param name="SOURCE" value="_repo"/>
-                    <!-- If you'd like to install a specific version, 
+                    <!-- If you'd like to install a specific version,
                          you can pass it here and below. -->
-                    <!--<param name="VERSION" value="-0.9.3-6.el6eng"/>-->
+                    <param name="VERSION" value="-27.4.el7bkr"/>
+                    <!--<param name="EXPECT_BEAKER_GIT_BUILD" value="1"/>-->
                 </params>
             </task>
-            <task name="/distribution/beaker/dogfood" role="STANDLONE">
+            <task name="/distribution/beaker/dogfood" role="STANDALONE">
                 <params>
-                    <param name="RHTS_OPTION_STRONGER_AVC" value=""/>
+                    <param name="RHTS_OPTION_COMPATIBLE" value=""/>
+                    <param name="RHTS_OPTION_COMPAT_SERVICE" value=""/>
                     <param name="BEAKER_SKIP_INIT_DB" value=""/>
+                    <param name="PACKAGES_TO_TEST" value="bkr.inttest"/>
                     <!--<param name="VERSION" value="-0.9.3-6.el6eng"/>-->
+                    <!--<param name="EXPECT_BEAKER_GIT_BUILD" value="1"/>-->
                 </params>
-            </task>
+          </task>
         </recipe>
     </recipeSet>
 </job>
