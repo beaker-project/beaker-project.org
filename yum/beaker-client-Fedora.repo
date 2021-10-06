@@ -8,4 +8,4 @@ gpgcheck=0
 name=Beaker Client - Fedora$releasever - Testing
 baseurl=https://beaker-project.org/yum/client-testing/Fedora$releasever/
 enabled=0
-gpgheck=0
+gpgcheck=0
