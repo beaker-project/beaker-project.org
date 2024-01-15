@@ -6,7 +6,7 @@ BEAKER_GIT = $(BEAKER)/.git
 # 	all-website: 	all the web site bits, *except* yum repos
 # 	all:		all of the above, plus yum repos
 .PHONY: all
-all: all-website yum
+all: all-website
 
 include downloads.mk
 include old-downloads.mk
