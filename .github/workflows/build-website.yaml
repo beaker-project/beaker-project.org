@@ -1,0 +1,44 @@
+name: Build beaker-project.org
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: centos:7
+
+    steps:
+      - name: Setup environment
+        run: |
+          yum install -y epel-release python3 https://repo.ius.io/ius-release-el7.rpm
+          yum install -y make nodejs git236-core python-genshi python-dateutil python-dulwich
+      - name: Checkout source code
+        uses: actions/checkout@v3
+        with:
+          path: docs
+      - name: Checkout beaker repository
+        uses: actions/checkout@v3
+        with:
+          path: beaker
+          repository: beaker-project/beaker
+          ref: 'master'
+          fetch-depth: 0
+          fetch-tags: true
+      - name: Cache Beaker's release tarballs
+        uses: actions/cache@v3
+        with:
+          path: docs/releases
+          # XXX: This is not unique - cache has to be manually removed
+          key: cache
+      - name: Fetch Beaker's release tarballs
+        run: |
+          pushd docs
+          make clean
+          make
+      - name: Archive docs
+        uses: actions/upload-artifact@v3
+        with:
+          name: docs
+          path: docs
