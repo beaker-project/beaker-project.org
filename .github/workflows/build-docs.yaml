@@ -1,0 +1,44 @@
+name: Build docs
+
+on:
+  pull_request:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+    container: centos:7
+
+    steps:
+      - name: Setup environment
+        run: |
+          yum install -y epel-release https://repo.ius.io/ius-release-el7.rpm
+          yum install -y make nodejs git236-core
+      - name: Checkout source code
+        uses: actions/checkout@v3
+        with:
+          path: beaker-project.org
+      - name: Checkout beaker repository
+        uses: actions/checkout@v3
+        with:
+          repository: beaker-project/beaker
+          path: beaker
+          ref: 'master'
+      - name: Install build dependencies
+        run: |
+          pushd beaker
+          curl -o /etc/yum.repos.d/beaker-server.repo https://beaker-project.org/yum/beaker-server-RedHatEnterpriseLinux.repo
+          yum-builddep beaker.spec -y
+      - name: Build docs
+        run: |
+          cd beaker
+          echo "html_theme_path = ['../../beaker-project.org/sphinx-theme']" >>documentation/conf.py
+
+          PYTHONPATH=Common:Server:Client/src python -c '__requires__ = ["CherryPy < 3.0"]; import pkg_resources; execfile("/usr/bin/sphinx-build")' -b html -D html_theme=beaker -A branch_warning="$branch_warning" documentation documentation/_build/html
+          # Latex documentation is currently unavailable
+      - name: Archive docs
+        uses: actions/upload-artifact@v3
+        with:
+          name: docs
+          path: beaker/documentation/_build/html/
