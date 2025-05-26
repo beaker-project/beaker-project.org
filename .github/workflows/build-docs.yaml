@@ -16,11 +16,11 @@ jobs:
           yum install -y epel-release https://repo.ius.io/ius-release-el7.rpm
           yum install -y make nodejs git236-core
       - name: Checkout source code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: beaker-project.org
       - name: Checkout beaker repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: beaker-project/beaker
           path: beaker
@@ -49,7 +49,7 @@ jobs:
           cp documentation/_build/latex/*.pdf documentation/tree/
 
       - name: Archive docs
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: docs
           path: beaker/documentation/tree/
