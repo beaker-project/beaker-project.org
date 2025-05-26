@@ -16,11 +16,11 @@ jobs:
           yum install -y epel-release python3 https://repo.ius.io/ius-release-el7.rpm
           yum install -y make nodejs git236-core python-genshi python-dateutil python-dulwich
       - name: Checkout source code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: website
       - name: Checkout beaker repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: beaker
           repository: beaker-project/beaker
@@ -39,7 +39,7 @@ jobs:
           make clean
           make
       - name: Archive website
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: website
           path: website
