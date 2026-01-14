@@ -25,8 +25,20 @@ jobs:
           sed -i s/^mirrorlist=http/#mirrorlist=http/g /etc/yum.repos.d/*.repo
       - name: Setup environment
         run: |
-          yum install -y epel-release python3 https://repo.ius.io/ius-release-el7.rpm
-          yum install -y make nodejs git236-core python-genshi python-dateutil python-dulwich
+          yum install -y epel-release python3
+          yum install -y make nodejs python-genshi python-dateutil python-dulwich
+      - name: Setup IUS repository
+        run: |
+          curl --fail --location --silent --show-error https://vault.ius.io/RPM-GPG-KEY-IUS-7 --output /etc/pki/rpm-gpg/RPM-GPG-KEY-IUS-7
+          cat <<'EOF' > /etc/yum.repos.d/ius.repo
+          [ius]
+          name=IUS
+          baseurl=https://vault.ius.io/el7/x86_64/
+          enabled=1
+          gpgcheck=1
+          gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-IUS-7
+          EOF
+          yum install -y git236-core
       - name: Checkout source code
         uses: actions/checkout@v4
         with:
