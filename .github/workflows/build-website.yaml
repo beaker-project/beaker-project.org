@@ -51,12 +51,17 @@ jobs:
           ref: 'master'
           fetch-depth: 0
           fetch-tags: true
+      - name: Compute tag hash
+        id: tag-hash
+        working-directory: beaker
+        run: echo "hash=$(git tag --list 'beaker-*' | sort | sha256sum | cut -c1-12)" >> $GITHUB_OUTPUT
       - name: Cache Beaker's release tarballs
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: website/releases
-          # XXX: This is not unique - cache has to be manually removed
-          key: cache
+          key: releases-${{ steps.tag-hash.outputs.hash }}
+          restore-keys: |
+            releases-
       - name: Fetch Beaker's release tarballs
         run: |
           pushd website
